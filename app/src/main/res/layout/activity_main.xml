@@ -8,27 +8,6 @@
     android:layout_height="match_parent"
     >
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/searchButton"
-        style="@style/Widget.Material3.Button.OutlinedButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="26dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="26dp"
-        android:enabled="true"
-        android:hint="@string/search_button"
-        android:textAlignment="textStart"
-        android:drawableLeft="@drawable/ic_search"
-        android:drawableTint="#817D7D"
-        android:textSize="14sp"
-        android:fontFamily="sans-serif"
-        app:cornerRadius="10dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:strokeColor="@color/light_primary" />
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment_activity_main"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -38,7 +17,7 @@
         app:layout_constraintBottom_toTopOf="@+id/nav_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchButton"
+        app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/mobile_navigation" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
