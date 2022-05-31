@@ -7,15 +7,4 @@
     android:orientation="vertical"
     tools:context=".ui.search.SearchFragment">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/Widget.Material3.Button">
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_search"
-            android:text="@string/search_button"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
 </LinearLayout>
