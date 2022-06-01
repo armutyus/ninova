@@ -7,20 +7,26 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.ActivityMainBinding
+import com.armutyus.ninova.ui.search.SearchApiFragmentDirections
 import com.armutyus.ninova.ui.splash.SplashActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
@@ -48,20 +54,50 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menu.clear()
+
         val menuInflater = menuInflater
         menuInflater.inflate(R.menu.settings_menu, menu)
+
+        val search = menu.findItem(R.id.menu_search)
+        val searchView = search?.actionView as? SearchView
+        searchView?.isSubmitButtonEnabled = false
+        searchView?.setOnQueryTextListener(this)
+
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.settings) {
-            TODO("Implement settings page")
-        } else if (item.itemId == R.id.sign_out) {
-            signOut()
-            startActivity(Intent(this, SplashActivity::class.java))
-            finish()
+
+        when (item.itemId) {
+
+            R.id.settings -> {
+                TODO("Implement settings page")
+            }
+
+            R.id.sign_out -> {
+                signOut()
+                startActivity(Intent(this, SplashActivity::class.java))
+                finish()
+            }
         }
+
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        return false
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+
+        if (newText!!.isNotEmpty()) {
+            navController.navigate(R.id.search_navigation)
+        } else {
+            navController.navigate(R.id.mobile_navigation)
+        }
+
+        return true
     }
 
     private fun signOut() {
@@ -80,6 +116,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp() || super.onSupportNavigateUp()
+        return navController.navigateUp()
+                || super.onSupportNavigateUp()
     }
 }

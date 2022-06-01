@@ -23,4 +23,6 @@
         android:name="com.armutyus.ninova.ui.shelves.ShelvesFragment"
         android:label="@string/title_shelves"
         tools:layout="@layout/fragment_shelves" />
+
+    <include app:graph="@navigation/search_navigation"/>
 </navigation>
