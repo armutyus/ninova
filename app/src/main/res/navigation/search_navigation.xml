@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/searchArchiveFragment"
         android:name="com.armutyus.ninova.ui.search.SearchArchiveFragment"
-        android:label="fragment_search_archive"
+        android:label="Ninova"
         tools:layout="@layout/fragment_search_archive" >
         <action
             android:id="@+id/action_searchArchiveFragment_to_searchApiFragment"
@@ -17,7 +17,7 @@
     <fragment
         android:id="@+id/searchApiFragment"
         android:name="com.armutyus.ninova.ui.search.SearchApiFragment"
-        android:label="fragment_search_api"
+        android:label="Ninova"
         tools:layout="@layout/fragment_search_api" >
         <action
             android:id="@+id/action_searchApiFragment_to_searchArchiveFragment"

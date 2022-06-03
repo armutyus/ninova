@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -44,6 +45,18 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         navController = navHostFragment.navController
 
+        /*navController.addOnDestinationChangedListener { _, destination, _ ->
+
+            if (destination.id == R.id.mainSearchFragment) {
+                actionBar?.hide()
+                navView.visibility = View.GONE
+            } else {
+                actionBar?.show()
+                navView.visibility = View.VISIBLE
+            }
+
+        }*/
+
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_books, R.id.navigation_discovery, R.id.navigation_shelves
@@ -59,10 +72,10 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         val menuInflater = menuInflater
         menuInflater.inflate(R.menu.settings_menu, menu)
 
-        val search = menu.findItem(R.id.menu_search)
+        /*val search = menu.findItem(R.id.menu_search)
         val searchView = search?.actionView as? SearchView
         searchView?.isSubmitButtonEnabled = false
-        searchView?.setOnQueryTextListener(this)
+        searchView?.setOnQueryTextListener(this)*/
 
         return super.onCreateOptionsMenu(menu)
     }
@@ -70,6 +83,10 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item.itemId) {
+
+            R.id.menu_search -> {
+                navController.navigate(R.id.search_navigation)
+            }
 
             R.id.settings -> {
                 TODO("Implement settings page")
@@ -91,12 +108,11 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     override fun onQueryTextChange(newText: String?): Boolean {
 
-        if (newText!!.isNotEmpty()) {
+        /*if (newText!!.isNotEmpty()) {
             navController.navigate(R.id.search_navigation)
         } else {
-            navController.navigate(R.id.mobile_navigation)
-        }
-
+            return true
+        }*/
         return true
     }
 

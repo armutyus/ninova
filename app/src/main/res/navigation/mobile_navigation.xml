@@ -25,4 +25,9 @@
         tools:layout="@layout/fragment_shelves" />
 
     <include app:graph="@navigation/search_navigation"/>
+    <fragment
+        android:id="@+id/mainSearchFragment"
+        android:name="com.armutyus.ninova.ui.search.MainSearchFragment"
+        android:label="fragment_main_search"
+        tools:layout="@layout/fragment_main_search" />
 </navigation>

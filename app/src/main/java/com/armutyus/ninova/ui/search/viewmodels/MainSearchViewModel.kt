@@ -1,13 +1,13 @@
-package com.armutyus.ninova.ui.search
+package com.armutyus.ninova.ui.search.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class SearchApiViewModel : ViewModel() {
+class MainSearchViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is Search From API Fragment"
+        value = "This is Main Search Fragment"
     }
     val text: LiveData<String> = _text
 }

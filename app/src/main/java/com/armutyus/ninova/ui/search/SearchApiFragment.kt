@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.armutyus.ninova.R
 import com.armutyus.ninova.databinding.FragmentSearchApiBinding
+import com.armutyus.ninova.ui.search.viewmodels.SearchApiViewModel
 
 class SearchApiFragment : Fragment(R.layout.fragment_search_api) {
 

@@ -6,7 +6,6 @@
         android:title="@string/search_button_title"
         android:icon="@drawable/ic_search"
         app:showAsAction="ifRoom"
-        app:actionViewClass="androidx.appcompat.widget.SearchView"
         />
     <item
         android:id="@+id/settings"
