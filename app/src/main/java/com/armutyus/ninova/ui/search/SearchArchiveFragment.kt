@@ -8,8 +8,12 @@ import androidx.navigation.fragment.findNavController
 import com.armutyus.ninova.R
 import com.armutyus.ninova.databinding.FragmentSearchArchiveBinding
 import com.armutyus.ninova.ui.search.viewmodels.SearchArchiveViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class SearchArchiveFragment : Fragment(R.layout.fragment_search_archive) {
+class SearchArchiveFragment @Inject constructor(
+
+) : Fragment(R.layout.fragment_search_archive) {
 
     private var fragmentBinding: FragmentSearchArchiveBinding? = null
     private lateinit var searchArchiveViewModel: SearchArchiveViewModel
@@ -19,7 +23,8 @@ class SearchArchiveFragment : Fragment(R.layout.fragment_search_archive) {
 
         val binding = FragmentSearchArchiveBinding.bind(view)
         fragmentBinding = binding
-        searchArchiveViewModel = ViewModelProvider(requireActivity())[SearchArchiveViewModel::class.java]
+        searchArchiveViewModel =
+            ViewModelProvider(requireActivity())[SearchArchiveViewModel::class.java]
 
         binding.searchApi.setOnClickListener {
             findNavController().navigate(R.id.action_searchArchiveFragment_to_searchApiFragment)

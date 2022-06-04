@@ -6,8 +6,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.armutyus.ninova.R
 import com.armutyus.ninova.databinding.FragmentDiscoverBinding
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class DiscoverFragment : Fragment(R.layout.fragment_discover) {
+class DiscoverFragment @Inject constructor(
+
+) : Fragment(R.layout.fragment_discover) {
 
     private var fragmentBinding: FragmentDiscoverBinding? = null
     private lateinit var discoverViewModel: DiscoverViewModel

@@ -1,15 +1,19 @@
 package com.armutyus.ninova.ui.search
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.armutyus.ninova.R
 import com.armutyus.ninova.databinding.FragmentSearchApiBinding
 import com.armutyus.ninova.ui.search.viewmodels.SearchApiViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class SearchApiFragment : Fragment(R.layout.fragment_search_api) {
+class SearchApiFragment @Inject constructor(
+
+) : Fragment(R.layout.fragment_search_api) {
 
     private var fragmentBinding: FragmentSearchApiBinding? = null
     private lateinit var searchApiViewModel: SearchApiViewModel

@@ -12,11 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/light_primary"
-        android:layoutDirection="rtl"
+        style="@style/Theme.Ninova"
         app:defaultQueryHint="@string/search_button_hint"
         app:showAsAction="always|collapseActionView"
-        app:actionViewClass="android.support.v7.widget.SearchView"
-        />
+        app:actionViewClass="android.support.v7.widget.SearchView" />
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/mainSearchTabLayout"
         android:layout_width="match_parent"
@@ -24,9 +24,20 @@
         app:tabIndicatorColor="@color/light_primary"
         app:tabSelectedTextColor="@color/light_primary"
         app:tabGravity="fill"/>
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/mainSearchViewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/homenotfound"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
 </LinearLayout>
