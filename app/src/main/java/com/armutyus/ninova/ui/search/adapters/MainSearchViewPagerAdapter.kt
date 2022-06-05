@@ -6,8 +6,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.armutyus.ninova.ui.search.SearchApiFragment
 import com.armutyus.ninova.ui.search.SearchArchiveFragment
-import dagger.Provides
-import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 class MainSearchViewPagerAdapter @Inject constructor(

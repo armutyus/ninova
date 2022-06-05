@@ -51,7 +51,6 @@
 
     <action
         android:id="@+id/action_main_to_search"
-        app:destination="@id/mainSearchFragment"
-        app:popUpTo="@id/navigation_books" />
+        app:destination="@id/mainSearchFragment" />
 
 </navigation>

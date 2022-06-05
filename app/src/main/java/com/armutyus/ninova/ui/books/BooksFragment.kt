@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.armutyus.ninova.R
 import com.armutyus.ninova.databinding.FragmentBooksBinding
-import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 class BooksFragment @Inject constructor(

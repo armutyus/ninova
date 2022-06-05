@@ -7,15 +7,16 @@
     tools:context=".ui.search.MainSearchFragment"
     android:orientation="vertical">
 
-    <SearchView
+    <androidx.appcompat.widget.SearchView
         android:id="@+id/main_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/light_primary"
+        android:iconifiedByDefault="false"
         style="@style/Theme.Ninova"
         app:defaultQueryHint="@string/search_button_hint"
-        app:showAsAction="always|collapseActionView"
-        app:actionViewClass="android.support.v7.widget.SearchView" />
+        app:showAsAction="always"
+        app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/mainSearchTabLayout"

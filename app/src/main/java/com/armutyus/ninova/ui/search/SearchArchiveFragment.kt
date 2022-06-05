@@ -8,7 +8,6 @@ import androidx.navigation.fragment.findNavController
 import com.armutyus.ninova.R
 import com.armutyus.ninova.databinding.FragmentSearchArchiveBinding
 import com.armutyus.ninova.ui.search.viewmodels.SearchArchiveViewModel
-import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 class SearchArchiveFragment @Inject constructor(

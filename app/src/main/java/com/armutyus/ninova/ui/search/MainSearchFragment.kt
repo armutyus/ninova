@@ -9,19 +9,15 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.viewModels
 import com.armutyus.ninova.R
 import com.armutyus.ninova.databinding.FragmentMainSearchBinding
 import com.armutyus.ninova.ui.search.adapters.MainSearchViewPagerAdapter
 import com.armutyus.ninova.ui.search.viewmodels.MainSearchViewModel
 import com.google.android.material.tabs.TabLayoutMediator
-import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 class MainSearchFragment @Inject constructor(
-    private val viewPagerAdapter: MainSearchViewPagerAdapter
 ) : Fragment(R.layout.fragment_main_search), SearchView.OnQueryTextListener {
 
     private var fragmentBinding: FragmentMainSearchBinding? = null
@@ -32,7 +28,7 @@ class MainSearchFragment @Inject constructor(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        isSearchActive = activity?.getPreferences(Context.MODE_PRIVATE) ?: return
+        isSearchActive = requireActivity().getPreferences(Context.MODE_PRIVATE) ?: return
     }
 
     override fun onCreateView(
@@ -41,30 +37,32 @@ class MainSearchFragment @Inject constructor(
         savedInstanceState: Bundle?
     ): View? {
         fragmentBinding = FragmentMainSearchBinding.inflate(inflater, container, false)
-
-        if (isSearchActive.getBoolean("active", false)) {
-            binding?.animationView?.visibility = View.VISIBLE
-        } else {
-            binding?.animationView?.visibility = View.GONE
-            val tabLayout = binding?.mainSearchTabLayout
-            val viewPager = binding?.mainSearchViewPager
-            viewPager?.adapter = viewPagerAdapter
-
-            if (tabLayout != null && viewPager != null) {
-                TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-                    when (position) {
-                        0 -> {
-                            tab.text = "YOUR LIBRARY"
-                        }
-                        1 -> {
-                            tab.text = "FROM NINOVA"
-                        }
-                    }
-                }.attach()
-            }
-        }
+        val searchView = binding?.mainSearch
+        searchView?.setOnQueryTextListener(this)
+        searchView?.setIconifiedByDefault(false)
 
         return binding?.root
+    }
+
+    private fun showChildSearchFragments() {
+        binding?.animationView?.visibility = View.GONE
+        val tabLayout = binding?.mainSearchTabLayout
+        val viewPager = binding?.mainSearchViewPager
+        val vpAdapter = MainSearchViewPagerAdapter(childFragmentManager, lifecycle)
+        viewPager?.adapter = vpAdapter
+
+        if (tabLayout != null && viewPager != null) {
+            TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+                when (position) {
+                    0 -> {
+                        tab.text = "YOUR LIBRARY"
+                    }
+                    1 -> {
+                        tab.text = "FROM NINOVA"
+                    }
+                }
+            }.attach()
+        }
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
@@ -72,16 +70,19 @@ class MainSearchFragment @Inject constructor(
     }
 
     override fun onQueryTextChange(searchQuery: String?): Boolean {
-        if (searchQuery!!.isNotEmpty()) {
+        if (searchQuery?.length!! > 0) {
 
-            isSearchActive.edit {
-                putBoolean("active", true)
-                apply()
-            }
+            showChildSearchFragments()
 
-        } else {
-            return true
+        } else if (searchQuery.isNullOrBlank()) {
+
+            binding?.animationView?.visibility = View.VISIBLE
+            binding?.mainSearchTabLayout?.visibility = View.GONE
+            binding?.mainSearchViewPager?.visibility = View.GONE
+
         }
+
+
         return true
     }
 

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -24,7 +25,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity @Inject constructor(
-): AppCompatActivity() {
+) : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
@@ -49,17 +50,17 @@ class MainActivity @Inject constructor(
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         navController = navHostFragment.navController
 
-        /*navController.addOnDestinationChangedListener { _, destination, _ ->
+        navController.addOnDestinationChangedListener { _, destination, _ ->
 
             if (destination.id == R.id.mainSearchFragment) {
-                actionBar?.hide()
+                supportActionBar?.hide()
                 navView.visibility = View.GONE
             } else {
-                actionBar?.show()
+                supportActionBar?.show()
                 navView.visibility = View.VISIBLE
             }
 
-        }*/
+        }
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -116,16 +117,8 @@ class MainActivity @Inject constructor(
         }
     }
 
-    override fun onBackPressed() {
-        if (this.supportFragmentManager.backStackEntryCount > 0) {
-            navController.popBackStack()
-        } else {
-            finish()
-        }
-    }
-
-    /*override fun onSupportNavigateUp(): Boolean {
+    override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp()
                 || super.onSupportNavigateUp()
-    }*/
+    }
 }

@@ -9,7 +9,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchApiViewModel @Inject constructor(
 
-): ViewModel() {
+) : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is Search From API Fragment"
