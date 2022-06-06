@@ -19,4 +19,10 @@
     <string name="title_search">Search</string>
     <string name="your_library">YOUR LIBRARY</string>
     <string name="from_ninova">FROM NINOVA</string>
+    <string name="nothing_to_show_here">We look far and wide but.. Nothing to show here..</string>
+    <string name="dusty_shelves">Dusty Shelves</string>
+    <string name="name_of_the_book">Name of the Book</string>
+    <string name="author_of_the_book">Author of the Book</string>
+    <string name="page_number">320</string>
+    <string name="release_date">01.01.2010</string>
 </resources>

@@ -48,6 +48,8 @@ class MainSearchFragment @Inject constructor(
         binding?.animationView?.visibility = View.GONE
         val tabLayout = binding?.mainSearchTabLayout
         val viewPager = binding?.mainSearchViewPager
+        tabLayout?.visibility = View.VISIBLE
+        viewPager?.visibility = View.VISIBLE
         val vpAdapter = MainSearchViewPagerAdapter(childFragmentManager, lifecycle)
         viewPager?.adapter = vpAdapter
 
@@ -81,7 +83,6 @@ class MainSearchFragment @Inject constructor(
             binding?.mainSearchViewPager?.visibility = View.GONE
 
         }
-
 
         return true
     }
