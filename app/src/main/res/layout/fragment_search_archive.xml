@@ -7,46 +7,19 @@
     android:orientation="vertical"
     tools:context=".ui.search.SearchArchiveFragment">
 
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/search_button_group"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchArchiveRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="2dp">
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/search_archive"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/your_library"
-            android:textSize="14sp"
-            android:textColor="@color/light_primary"
-            app:strokeColor="@color/light_primary"/>
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/search_api"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/from_ninova"
-            android:textSize="14sp"
-            style="?attr/materialButtonOutlinedStyle"
-            android:textColor="@color/light_primary"
-            app:strokeColor="@color/light_primary"/>
-    </com.google.android.material.button.MaterialButtonToggleGroup>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/light_primary"/>
+        android:visibility="gone"/>
 
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         style="?android:attr/progressBarStyleSmall"
-        android:visibility="gone"
-        tools:visibility="visible"/>
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/linearLayoutSearchError"
@@ -65,7 +38,6 @@
             android:textSize="16sp" />
 
         <com.airbnb.lottie.LottieAnimationView
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:lottie_autoPlay="true"

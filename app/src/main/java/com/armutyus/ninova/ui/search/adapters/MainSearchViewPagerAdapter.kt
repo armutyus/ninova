@@ -9,8 +9,8 @@ import com.armutyus.ninova.ui.search.SearchArchiveFragment
 import javax.inject.Inject
 
 class MainSearchViewPagerAdapter @Inject constructor(
-    private val fragmentManager: FragmentManager,
-    private val lifecycle: Lifecycle
+    fragmentManager: FragmentManager,
+    lifecycle: Lifecycle
 ) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
 
@@ -24,11 +24,8 @@ class MainSearchViewPagerAdapter @Inject constructor(
                 SearchArchiveFragment()
             }
 
-            1 -> {
-                SearchApiFragment()
-            }
             else -> {
-                Fragment()
+                SearchApiFragment()
             }
         }
     }

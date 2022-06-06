@@ -7,17 +7,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.armutyus.ninova.R
 import com.armutyus.ninova.databinding.FragmentMainSearchBinding
+import com.armutyus.ninova.ui.search.adapters.MainSearchRecyclerViewAdapter
 import com.armutyus.ninova.ui.search.adapters.MainSearchViewPagerAdapter
 import com.armutyus.ninova.ui.search.viewmodels.MainSearchViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 import javax.inject.Inject
 
 class MainSearchFragment @Inject constructor(
+    private val recyclerViewAdapter: MainSearchRecyclerViewAdapter
 ) : Fragment(R.layout.fragment_main_search), SearchView.OnQueryTextListener {
 
     private var fragmentBinding: FragmentMainSearchBinding? = null
@@ -41,11 +44,19 @@ class MainSearchFragment @Inject constructor(
         searchView?.setOnQueryTextListener(this)
         searchView?.setIconifiedByDefault(false)
 
+        val recyclerView = binding?.mainSearchRecyclerView
+        recyclerView?.adapter = recyclerViewAdapter
+        recyclerView?.layoutManager = LinearLayoutManager(requireContext())
+
+        recyclerView?.visibility = View.VISIBLE
+
         return binding?.root
     }
 
     private fun showChildSearchFragments() {
-        binding?.animationView?.visibility = View.GONE
+        binding?.mainSearchRecyclerView?.visibility = View.GONE
+        binding?.mainSearchBooksTitle?.visibility = View.GONE
+        binding?.itemDivider?.visibility = View.GONE
         val tabLayout = binding?.mainSearchTabLayout
         val viewPager = binding?.mainSearchViewPager
         tabLayout?.visibility = View.VISIBLE
@@ -78,7 +89,9 @@ class MainSearchFragment @Inject constructor(
 
         } else if (searchQuery.isNullOrBlank()) {
 
-            binding?.animationView?.visibility = View.VISIBLE
+            binding?.mainSearchRecyclerView?.visibility = View.VISIBLE
+            binding?.mainSearchBooksTitle?.visibility = View.VISIBLE
+            binding?.itemDivider?.visibility = View.VISIBLE
             binding?.mainSearchTabLayout?.visibility = View.GONE
             binding?.mainSearchViewPager?.visibility = View.GONE
 

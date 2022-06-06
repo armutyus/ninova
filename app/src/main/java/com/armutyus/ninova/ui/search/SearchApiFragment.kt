@@ -24,9 +24,7 @@ class SearchApiFragment @Inject constructor(
         fragmentBinding = binding
         searchApiViewModel = ViewModelProvider(requireActivity())[SearchApiViewModel::class.java]
 
-        binding.searchArchive.setOnClickListener {
-            findNavController().navigate(R.id.action_searchApiFragment_to_searchArchiveFragment)
-        }
+        binding.linearLayoutSearchError.visibility = View.VISIBLE
 
     }
 
