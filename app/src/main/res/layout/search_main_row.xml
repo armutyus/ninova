@@ -10,6 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -22,7 +23,7 @@
         </ImageView>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="match_parent"
             android:layout_marginStart="8dp"
             android:orientation="vertical"
@@ -33,8 +34,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
                 android:text="@string/name_of_the_book"
+                android:fontFamily="sans-serif-condensed"
                 android:textSize="18sp"
-                android:textColor="@color/light_primary">
+                android:textColor="@color/light_primary_variant"
+                >
             </TextView>
 
             <TextView
@@ -43,6 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
                 android:text="@string/author_of_the_book"
+                android:fontFamily="sans-serif-condensed"
                 android:textSize="16sp"
                 android:textColor="@color/light_primary">
             </TextView>
@@ -57,8 +61,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/page_number"
+                    android:fontFamily="sans-serif-condensed"
                     android:textSize="12sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/light_primary_variant"
                     android:gravity="bottom"
                     app:drawableStartCompat="@drawable/ic_pages_icon">
                 </TextView>
@@ -69,22 +74,36 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="@string/release_date"
+                    android:fontFamily="sans-serif-condensed"
                     android:textSize="12sp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/light_primary_variant"
                     android:gravity="bottom"
                     app:drawableStartCompat="@drawable/ic_release_date">
                 </TextView>
 
             </LinearLayout>
+
         </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/main_search_add_button"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_add_button"
+            android:layout_gravity="center"
+            android:background="?android:attr/selectableItemBackground"
+            tools:ignore="ContentDescription">
+        </ImageButton>
+
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="1dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
         android:background="@color/light_primary"/>
 
 </LinearLayout>
