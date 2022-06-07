@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.armutyus.ninova.R
 import com.armutyus.ninova.databinding.FragmentMainSearchBinding
@@ -26,12 +26,14 @@ class MainSearchFragment @Inject constructor(
     private var fragmentBinding: FragmentMainSearchBinding? = null
     private val binding get() = fragmentBinding
     private lateinit var isSearchActive: SharedPreferences
+    private lateinit var mainSearchViewModel: MainSearchViewModel
 
-    private val mainSearchViewModel by viewModels<MainSearchViewModel>()
+    //private val mainSearchViewModel by viewModels<MainSearchViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isSearchActive = requireActivity().getPreferences(Context.MODE_PRIVATE) ?: return
+        mainSearchViewModel = ViewModelProvider(requireActivity())[MainSearchViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -47,10 +49,15 @@ class MainSearchFragment @Inject constructor(
         val recyclerView = binding?.mainSearchRecyclerView
         recyclerView?.adapter = recyclerViewAdapter
         recyclerView?.layoutManager = LinearLayoutManager(requireContext())
-
         recyclerView?.visibility = View.VISIBLE
 
         return binding?.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mainSearchViewModel.getBooksList()
+        getFakeBooksList()
     }
 
     private fun showChildSearchFragments() {
@@ -95,9 +102,19 @@ class MainSearchFragment @Inject constructor(
             binding?.mainSearchTabLayout?.visibility = View.GONE
             binding?.mainSearchViewPager?.visibility = View.GONE
 
+            getFakeBooksList()
+
         }
 
         return true
+    }
+
+    private fun getFakeBooksList() {
+
+        mainSearchViewModel.fakeBooksList.observe(viewLifecycleOwner) {
+            val newBooksList = it.toList()
+            recyclerViewAdapter.mainSearchBooksList = newBooksList
+        }
     }
 
     override fun onDestroyView() {

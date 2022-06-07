@@ -84,7 +84,7 @@
         </LinearLayout>
 
         <ImageButton
-            android:id="@+id/main_search_add_button"
+            android:id="@+id/search_archive_add_button"
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_gravity="center"

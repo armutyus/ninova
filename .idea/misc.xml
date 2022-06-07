@@ -5,6 +5,7 @@
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.15109749872383868" />
         <entry key="app/src/main/res/drawable/home_library.xml" value="0.127" />
+        <entry key="app/src/main/res/drawable/ic_add_button.xml" value="0.197" />
         <entry key="app/src/main/res/drawable/ic_login_email_gray.xml" value="0.16" />
         <entry key="app/src/main/res/drawable/ic_login_lock_gray.xml" value="0.16" />
         <entry key="app/src/main/res/drawable/ic_search.xml" value="0.127" />
@@ -27,6 +28,8 @@
         <entry key="app/src/main/res/layout/fragment_search_archive.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/fragment_shelves.xml" value="0.2682291666666667" />
         <entry key="app/src/main/res/layout/register_user_bottom_sheet.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/search_api_row.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/search_archive_row.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/search_main_row.xml" value="0.28125" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
         <entry key="app/src/main/res/menu/settings_menu.xml" value="0.28125" />

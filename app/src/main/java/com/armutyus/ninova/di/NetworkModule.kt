@@ -4,6 +4,8 @@ import android.content.Context
 import com.armutyus.ninova.R
 import com.armutyus.ninova.repository.AuthRepository
 import com.armutyus.ninova.repository.AuthRepositoryInterface
+import com.armutyus.ninova.repository.BooksRepository
+import com.armutyus.ninova.repository.BooksRepositoryInterface
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.FirebaseAuth
@@ -42,6 +44,12 @@ object NetworkModule {
         auth: FirebaseAuth,
         db: FirebaseFirestore
     ) = AuthRepository(auth, db) as AuthRepositoryInterface
+
+    @Singleton
+    @Provides
+    fun provideBooksRepository(
+
+    ) = BooksRepository() as BooksRepositoryInterface
 
     @Singleton
     @Provides
