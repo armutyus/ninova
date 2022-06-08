@@ -10,7 +10,8 @@ import javax.inject.Inject
 
 class MainSearchViewPagerAdapter @Inject constructor(
     fragmentManager: FragmentManager,
-    lifecycle: Lifecycle
+    lifecycle: Lifecycle,
+    private val fragments: ArrayList<Fragment>
 ) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
 
@@ -19,7 +20,9 @@ class MainSearchViewPagerAdapter @Inject constructor(
     }
 
     override fun createFragment(position: Int): Fragment {
-        return when (position) {
+        return fragments[position]
+
+    /*when (position) {
             0 -> {
                 SearchArchiveFragment()
             }
@@ -27,6 +30,7 @@ class MainSearchViewPagerAdapter @Inject constructor(
             else -> {
                 SearchApiFragment()
             }
-        }
+        }*/
     }
+
 }

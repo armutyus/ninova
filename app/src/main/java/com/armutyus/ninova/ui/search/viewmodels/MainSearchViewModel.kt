@@ -7,6 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.armutyus.ninova.model.Books
 import com.armutyus.ninova.repository.BooksRepositoryInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,9 +33,17 @@ class MainSearchViewModel @Inject constructor(
         get() = booksArchiveList
 
     fun getBooksArchiveList(searchString: String) {
+
         viewModelScope.launch {
             booksArchiveList.value = booksRepository.searchBooksFromLocal(searchString)
         }
+
+        /*CoroutineScope(Dispatchers.IO).launch {
+            booksRepository.searchBooksFromLocal(searchString).collectLatest {
+                booksArchiveList.postValue(it)
+            }
+        }*/
+
     }
 
     private val booksApiList = MutableLiveData<List<Books>>()
@@ -40,9 +51,17 @@ class MainSearchViewModel @Inject constructor(
         get() = booksApiList
 
     fun getBooksApiList(searchString: String) {
+
         viewModelScope.launch {
             booksApiList.value = booksRepository.searchBooksFromApi(searchString)
         }
+
+        /*CoroutineScope(Dispatchers.IO).launch {
+            booksRepository.searchBooksFromApi(searchString).collectLatest {
+                booksApiList.postValue(it)
+            }
+        }*/
+
     }
 
 }
