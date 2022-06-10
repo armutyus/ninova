@@ -52,12 +52,22 @@ class MainActivity @Inject constructor(
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
 
-            if (destination.id == R.id.mainSearchFragment) {
-                supportActionBar?.hide()
-                navView.visibility = View.GONE
-            } else {
-                supportActionBar?.show()
-                navView.visibility = View.VISIBLE
+            when (destination.id) {
+
+                R.id.mainSearchFragment -> {
+                    supportActionBar?.hide()
+                    navView.visibility = View.GONE
+                }
+
+                R.id.settingsFragment -> {
+                    navView.visibility = View.GONE
+                }
+
+                else -> {
+                    supportActionBar?.show()
+                    navView.visibility = View.VISIBLE
+                }
+
             }
 
         }
@@ -89,32 +99,12 @@ class MainActivity @Inject constructor(
             }
 
             R.id.settings -> {
-                TODO("Implement settings page")
+                navController.navigate(R.id.action_main_to_settings)
             }
 
-            R.id.sign_out -> {
-                signOut()
-                startActivity(Intent(this, SplashActivity::class.java))
-                finish()
-            }
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun signOut() {
-        viewModel.signOut().observe(this) { response ->
-            when (response) {
-                is Response.Loading -> binding.progressBar.show()
-                is Response.Success -> binding.progressBar.hide()
-                is Response.Failure -> {
-                    println("Create Error: " + response.errorMessage)
-                    Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
-                        .show()
-                    binding.progressBar.hide()
-                }
-            }
-        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

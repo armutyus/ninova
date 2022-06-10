@@ -19,6 +19,7 @@ class SplashActivity : AppCompatActivity() {
     @Named(MAIN_INTENT)
     @Inject
     lateinit var mainIntent: Intent
+
     private val viewModel by viewModels<SplashViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
