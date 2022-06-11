@@ -25,6 +25,12 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    fun signInAnonymously() = liveData(Dispatchers.IO) {
+        repository.signInAnonymous().collect { response ->
+            emit(response)
+        }
+    }
+
     fun signUpUser(email: String, password: String) = liveData(Dispatchers.IO) {
         repository.signUpWithEmailPassword(email, password).collect { response ->
             emit(response)

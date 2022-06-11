@@ -6,11 +6,14 @@ import com.armutyus.ninova.constants.Constants.ERROR_MESSAGE
 import com.armutyus.ninova.constants.Constants.NAME
 import com.armutyus.ninova.constants.Constants.PHOTO_URL
 import com.armutyus.ninova.constants.Constants.USERS_REF
+import com.armutyus.ninova.constants.Constants.USER_TYPE
 import com.armutyus.ninova.constants.Response
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -24,6 +27,30 @@ class AuthRepository @Inject constructor(
         try {
             emit(Response.Loading)
             val authResult = auth.signInWithEmailAndPassword(email, password).await()
+            authResult.apply {
+                emit(Response.Success(true))
+            }
+        } catch (e: Exception) {
+            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+        }
+    }
+
+    override suspend fun anonymousToPermanent(credential: AuthCredential) = flow {
+        try {
+            emit(Response.Loading)
+            val authResult = auth.currentUser!!.linkWithCredential(credential).await()
+            authResult.apply {
+                emit(Response.Success(true))
+            }
+        } catch (e: Exception) {
+            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+        }
+    }
+
+    override suspend fun signInAnonymous() = flow {
+        try {
+            emit(Response.Loading)
+            val authResult = auth.signInAnonymously().await()
             authResult.apply {
                 emit(Response.Success(true))
             }

@@ -60,6 +60,7 @@ class MainActivity @Inject constructor(
                 }
 
                 R.id.settingsFragment -> {
+                    supportActionBar?.show()
                     navView.visibility = View.GONE
                 }
 

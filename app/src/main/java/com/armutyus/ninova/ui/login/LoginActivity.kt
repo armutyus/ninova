@@ -11,9 +11,9 @@ import com.armutyus.ninova.constants.Constants.MAIN_INTENT
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.ActivityLoginBinding
 import com.armutyus.ninova.databinding.RegisterUserBottomSheetBinding
-import com.armutyus.ninova.ui.main.MainActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.auth.EmailAuthProvider
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import javax.inject.Named
@@ -24,6 +24,7 @@ class LoginActivity : AppCompatActivity() {
     @Named(MAIN_INTENT)
     @Inject
     lateinit var mainIntent: Intent
+
     private lateinit var binding: ActivityLoginBinding
     private lateinit var bottomSheetBinding: RegisterUserBottomSheetBinding
     private val viewModel by viewModels<LoginViewModel>()
@@ -43,7 +44,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.withoutRegister.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
+            anonymousSignIn()
         }
 
     }
@@ -69,6 +70,25 @@ class LoginActivity : AppCompatActivity() {
                             .show()
                         binding.progressBar.visibility = View.GONE
                     }
+                }
+            }
+        }
+    }
+
+    private fun anonymousSignIn() {
+        viewModel.signInAnonymously().observe(this) { response ->
+            when (response) {
+                is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
+                is Response.Success -> {
+                    createUserProfile()
+                    goToMainActivity()
+                    binding.progressBar.visibility = View.GONE
+                }
+                is Response.Failure -> {
+                    println("SignIn Error: " + response.errorMessage)
+                    Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
+                        .show()
+                    binding.progressBar.visibility = View.GONE
                 }
             }
         }
@@ -141,10 +161,6 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    private fun currentUserUpdate() {
-        viewModel.getCurrentUser()
     }
 
     private fun goToMainActivity() {

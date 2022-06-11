@@ -1,12 +1,17 @@
 package com.armutyus.ninova.repository
 
 import com.armutyus.ninova.constants.Response
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepositoryInterface {
 
     suspend fun signInWithEmailPassword(email: String, password: String): Flow<Response<Boolean>>
+
+    suspend fun signInAnonymous(): Flow<Response<Boolean>>
+
+    suspend fun anonymousToPermanent(credential: AuthCredential): Flow<Response<Boolean>>
 
     suspend fun signUpWithEmailPassword(email: String, password: String): Flow<Response<Boolean>>
 
