@@ -11,7 +11,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val repository: AuthRepository
-): ViewModel() {
+) : ViewModel() {
 
     fun registerAnonymousUser(credential: AuthCredential) = liveData(Dispatchers.IO) {
         repository.anonymousToPermanent(credential).collect { response ->

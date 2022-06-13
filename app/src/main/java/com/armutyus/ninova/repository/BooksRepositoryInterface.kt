@@ -1,7 +1,6 @@
 package com.armutyus.ninova.repository
 
 import com.armutyus.ninova.model.Books
-import kotlinx.coroutines.flow.Flow
 
 interface BooksRepositoryInterface {
 

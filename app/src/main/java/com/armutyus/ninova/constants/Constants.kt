@@ -8,6 +8,7 @@ object Constants {
     const val SPLASH_INTENT = "splashIntent"
     const val LOGIN_INTENT = "loginIntent"
     const val MAIN_INTENT = "mainIntent"
+    const val REGISTER_INTENT = "registerIntent"
 
     //References
     const val USERS_REF = "users"

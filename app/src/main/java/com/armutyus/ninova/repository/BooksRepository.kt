@@ -1,10 +1,6 @@
 package com.armutyus.ninova.repository
 
 import com.armutyus.ninova.model.Books
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.toList
 import javax.inject.Inject
 
 class BooksRepository @Inject constructor(
@@ -24,7 +20,7 @@ class BooksRepository @Inject constructor(
         return mutableListOf(book1, book2, book3, book4, book5)
     }
 
-    override fun searchBooksFromLocal(searchString: String): List<Books>  {
+    override fun searchBooksFromLocal(searchString: String): List<Books> {
 
         val book1 = Books("Körlük", "Jose Saramago", "451", "01.02.1998")
         val book2 = Books("Satranç", "Stefan Zweig", "243", "02.01.1946")
@@ -35,7 +31,9 @@ class BooksRepository @Inject constructor(
         val localBooks = listOf(book1, book2, book3, book4, book5)
 
         val filteredBooks: List<Books> = localBooks.filter { books ->
-            books.bookTitle.lowercase().contains(searchString) || books.bookAuthor.lowercase().contains(searchString) }
+            books.bookTitle.lowercase().contains(searchString) || books.bookAuthor.lowercase()
+                .contains(searchString)
+        }
 
         return filteredBooks
 
@@ -53,7 +51,9 @@ class BooksRepository @Inject constructor(
         val apiBooks = listOf(book1, book2, book3, book4, book5)
 
         val filteredBooks: List<Books> = apiBooks.filter { books ->
-            books.bookTitle.lowercase().contains(searchString) || books.bookAuthor.lowercase().contains(searchString) }
+            books.bookTitle.lowercase().contains(searchString) || books.bookAuthor.lowercase()
+                .contains(searchString)
+        }
 
         return filteredBooks
     }

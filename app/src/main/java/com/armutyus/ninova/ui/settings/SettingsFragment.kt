@@ -2,9 +2,9 @@ package com.armutyus.ninova.ui.settings
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Constants.LOGIN_INTENT
@@ -95,7 +95,11 @@ class SettingsFragment @Inject constructor(
         val confirmPassword = bottomSheetBinding.registerConfirmPasswordText.text.toString().trim()
 
         if (email.isEmpty() || password.isEmpty() || password != confirmPassword) {
-            Toast.makeText(requireContext(), "Please enter your information correctly!", Toast.LENGTH_LONG)
+            Toast.makeText(
+                requireContext(),
+                "Please enter your information correctly!",
+                Toast.LENGTH_LONG
+            )
                 .show()
         } else {
             val credential = EmailAuthProvider.getCredential(email, password)
@@ -104,21 +108,22 @@ class SettingsFragment @Inject constructor(
     }
 
     private fun registerAnonymousUser(credential: AuthCredential) {
-        settingsViewModel.registerAnonymousUser(credential).observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is Response.Loading -> fragmentBinding?.progressBar?.visibility = View.VISIBLE
-                is Response.Success -> {
-                    createUserProfile()
-                    fragmentBinding?.progressBar?.visibility = View.GONE
-                }
-                is Response.Failure -> {
-                    println("SignUp Error: " + response.errorMessage)
-                    Toast.makeText(requireContext(), response.errorMessage, Toast.LENGTH_LONG)
-                        .show()
-                    fragmentBinding?.progressBar?.visibility = View.GONE
+        settingsViewModel.registerAnonymousUser(credential)
+            .observe(viewLifecycleOwner) { response ->
+                when (response) {
+                    is Response.Loading -> fragmentBinding?.progressBar?.visibility = View.VISIBLE
+                    is Response.Success -> {
+                        createUserProfile()
+                        fragmentBinding?.progressBar?.visibility = View.GONE
+                    }
+                    is Response.Failure -> {
+                        println("SignUp Error: " + response.errorMessage)
+                        Toast.makeText(requireContext(), response.errorMessage, Toast.LENGTH_LONG)
+                            .show()
+                        fragmentBinding?.progressBar?.visibility = View.GONE
+                    }
                 }
             }
-        }
     }
 
     private fun createUserProfile() {
