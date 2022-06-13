@@ -163,6 +163,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goToMainActivity() {
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(mainIntent)
         finish()
     }

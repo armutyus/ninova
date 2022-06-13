@@ -51,6 +51,23 @@ class SettingsFragment2 @Inject constructor(
         settingsViewModel = ViewModelProvider(requireActivity())[SettingsViewModel::class.java]
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
+        val changeEmailListener = Preference.OnPreferenceClickListener {
+            registerIntent.putExtra("action", "change_email")
+            //must finish activity AFTER register
+            goToRegisterActivity()
+            true
+        }
+        findPreference<Preference>("change_email")?.onPreferenceClickListener = changeEmailListener
+
+        val changePasswordListener = Preference.OnPreferenceClickListener {
+            registerIntent.putExtra("action", "change_password")
+            //must finish activity AFTER register
+            goToRegisterActivity()
+            true
+        }
+        findPreference<Preference>("change_password")?.onPreferenceClickListener =
+            changePasswordListener
+
         val aboutNinovaListener = Preference.OnPreferenceClickListener {
             //intent to about activity
             println("About ninova")
@@ -66,17 +83,19 @@ class SettingsFragment2 @Inject constructor(
         findPreference<Preference>("privacy_policy")?.onPreferenceClickListener =
             privacyPolicyListener
 
-        val registerListener = Preference.OnPreferenceClickListener {
-            goToRegisterActivity()
-            true
-        }
-        findPreference<Preference>("register")?.onPreferenceClickListener = registerListener
-
         val signOutListener = Preference.OnPreferenceClickListener {
             signOut()
             true
         }
         findPreference<Preference>("sign_out")?.onPreferenceClickListener = signOutListener
+
+        val registerListener = Preference.OnPreferenceClickListener {
+            registerIntent.putExtra("action", "register")
+            //must finish activity AFTER register
+            goToRegisterActivity()
+            true
+        }
+        findPreference<Preference>("register")?.onPreferenceClickListener = registerListener
 
         val switchAccountListener = Preference.OnPreferenceClickListener {
             startActivity(loginIntent)

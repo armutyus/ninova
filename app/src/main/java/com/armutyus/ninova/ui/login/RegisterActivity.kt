@@ -2,6 +2,7 @@ package com.armutyus.ninova.ui.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.armutyus.ninova.constants.Constants
@@ -25,6 +26,11 @@ class RegisterActivity : AppCompatActivity() {
 
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        when (intent.getStringExtra("action")) {
+            "register" -> binding.registerUserLayout.visibility = View.VISIBLE
+            "change_email" -> binding.changeEmailLayout.visibility = View.VISIBLE
+        }
 
     }
 }
