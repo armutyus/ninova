@@ -105,7 +105,7 @@
             android:layout_marginStart="26dp"
             android:layout_marginTop="14dp"
             android:layout_marginEnd="26dp"
-            android:hint="@string/change_your_e_mail"
+            android:hint="@string/enter_your_new_e_mail_address"
             app:errorEnabled="true"
             app:boxStrokeColor="@color/light_primary"
             app:startIconDrawable="@drawable/ic_login_email_gray">
@@ -210,7 +210,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="26dp"
             app:boxStrokeColor="@color/light_primary"
-            android:hint="@string/confirm_password"
+            android:hint="@string/confirm_new_password"
             app:errorEnabled="true"
             app:endIconMode="password_toggle"
             app:startIconDrawable="@drawable/ic_login_lock_gray">
@@ -223,7 +223,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/saveInfoButton"
+            android:id="@+id/changePasswordButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -275,6 +275,19 @@
             android:fontFamily="sans-serif">
         </com.google.android.material.button.MaterialButton>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone">
+
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/progressBarStyleSmall" />
     </LinearLayout>
 
 </LinearLayout>

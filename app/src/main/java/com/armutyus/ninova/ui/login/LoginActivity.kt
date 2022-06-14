@@ -8,6 +8,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Constants.MAIN_INTENT
+import com.armutyus.ninova.constants.Constants.REGISTER_INTENT
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.ActivityLoginBinding
 import com.armutyus.ninova.databinding.RegisterUserBottomSheetBinding
@@ -24,6 +25,10 @@ class LoginActivity : AppCompatActivity() {
     @Inject
     lateinit var mainIntent: Intent
 
+    @Named(REGISTER_INTENT)
+    @Inject
+    lateinit var registerIntent: Intent
+
     private lateinit var binding: ActivityLoginBinding
     private lateinit var bottomSheetBinding: RegisterUserBottomSheetBinding
     private val viewModel by viewModels<LoginViewModel>()
@@ -33,6 +38,10 @@ class LoginActivity : AppCompatActivity() {
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.forgotPasswordText.setOnClickListener {
+            goToForgotPasswordPage()
+        }
 
         binding.login.setOnClickListener {
             loginUser()
@@ -47,6 +56,9 @@ class LoginActivity : AppCompatActivity() {
         }
 
     }
+
+    private var email = ""
+    private var password = ""
 
     private fun loginUser() {
         email = binding.userEmailText.text.toString().trim()
@@ -106,9 +118,6 @@ class LoginActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private var email = ""
-    private var password = ""
-
     private fun registerUser() {
         email = bottomSheetBinding.registerEmailText.text.toString().trim()
         password = bottomSheetBinding.registerPasswordText.text.toString().trim()
@@ -166,6 +175,11 @@ class LoginActivity : AppCompatActivity() {
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(mainIntent)
         finish()
+    }
+
+    private fun goToForgotPasswordPage() {
+        registerIntent.putExtra("action", "forgot_password")
+        startActivity(registerIntent)
     }
 
 }

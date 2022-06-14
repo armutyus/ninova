@@ -17,10 +17,12 @@ interface AuthRepositoryInterface {
 
     suspend fun createUserInFirestore(): Flow<Response<Void>>
 
-    fun signOut(): Flow<Response<Unit>>
+    suspend fun signOut(): Flow<Response<Unit>>
+
+    suspend fun reAuthUser(credential: AuthCredential): Flow<Response<Boolean>>
+
+    suspend fun sendResetPassword(email: String): Flow<Response<Boolean>>
 
     fun getCurrentUser(): FirebaseUser?
-
-    suspend fun sendResetPassword(email: String): Boolean
 
 }

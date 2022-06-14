@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.armutyus.ninova.repository.AuthRepositoryInterface
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +40,18 @@ class LoginViewModel @Inject constructor(
 
     fun createUser() = liveData(Dispatchers.IO) {
         repository.createUserInFirestore().collect { response ->
+            emit(response)
+        }
+    }
+
+    fun reAuthUser(credential: AuthCredential) = liveData(Dispatchers.IO) {
+        repository.reAuthUser(credential).collect { response ->
+            emit(response)
+        }
+    }
+
+    fun sendPasswordEmail(email: String) = liveData(Dispatchers.IO) {
+        repository.sendResetPassword(email).collect { response ->
             emit(response)
         }
     }

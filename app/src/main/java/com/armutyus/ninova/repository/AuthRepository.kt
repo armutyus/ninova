@@ -89,7 +89,7 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    override fun signOut() = flow {
+    override suspend fun signOut() = flow {
         try {
             emit(Response.Loading)
             auth.signOut().also {
@@ -100,13 +100,32 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    override fun getCurrentUser(): FirebaseUser? {
-        return auth.currentUser
+    override suspend fun reAuthUser(credential: AuthCredential) = flow {
+        try {
+            emit(Response.Loading)
+            val reAuthResult = auth.currentUser!!.reauthenticate(credential).await()
+            reAuthResult.apply {
+                emit(Response.Success(true))
+            }
+        } catch (e: Exception) {
+            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+        }
     }
 
-    override suspend fun sendResetPassword(email: String): Boolean {
-        auth.sendPasswordResetEmail(email)
-        return true
+    override suspend fun sendResetPassword(email: String) = flow {
+        try {
+            emit(Response.Loading)
+            auth.sendPasswordResetEmail(email).await().apply {
+                emit(Response.Success(true))
+            }
+        } catch (e: Exception) {
+            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+        }
+    }
+
+
+    override fun getCurrentUser(): FirebaseUser? {
+        return auth.currentUser
     }
 
 }
