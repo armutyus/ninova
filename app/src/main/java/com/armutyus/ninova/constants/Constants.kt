@@ -9,6 +9,7 @@ object Constants {
     const val LOGIN_INTENT = "loginIntent"
     const val MAIN_INTENT = "mainIntent"
     const val REGISTER_INTENT = "registerIntent"
+    const val ABOUT_INTENT = "aboutIntent"
 
     //Preferences
     const val REGISTER = "register"

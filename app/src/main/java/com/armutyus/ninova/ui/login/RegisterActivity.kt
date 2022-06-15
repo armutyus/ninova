@@ -85,7 +85,7 @@ class RegisterActivity : AppCompatActivity() {
                     is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                     is Response.Success -> {
                         binding.progressBar.visibility = View.GONE
-                        Toast.makeText(this,"Account confirmed.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, "Account confirmed.", Toast.LENGTH_LONG).show()
                     }
                     is Response.Failure -> {
                         Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG).show()
@@ -94,7 +94,8 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
         } else {
-            Toast.makeText(this, "Please enter your information correctly!", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Please enter your information correctly!", Toast.LENGTH_LONG)
+                .show()
         }
     }
 
@@ -152,7 +153,8 @@ class RegisterActivity : AppCompatActivity() {
         email = binding.changeEmailText.text.toString().trim()
 
         if (email.isEmpty()) {
-            Toast.makeText(this, "Please enter your information correctly!", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Please enter your information correctly!", Toast.LENGTH_LONG)
+                .show()
         } else {
             viewModel.changeUserEmail(email).observe(this) { response ->
                 when (response) {
@@ -179,14 +181,19 @@ class RegisterActivity : AppCompatActivity() {
         val confirmNewPassword = binding.confirmNewPasswordText.text.toString().trim()
 
         if (newPassword.isEmpty() || confirmNewPassword.isEmpty() || newPassword != confirmNewPassword) {
-            Toast.makeText(this, "Please enter your information correctly!", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Please enter your information correctly!", Toast.LENGTH_LONG)
+                .show()
         } else {
             viewModel.changeUserPassword(newPassword).observe(this) { response ->
                 when (response) {
                     is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                     is Response.Success -> {
                         binding.progressBar.visibility = View.GONE
-                        Toast.makeText(this,"Password changed, please login again.", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            this,
+                            "Password changed, please login again.",
+                            Toast.LENGTH_LONG
+                        ).show()
                         loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         signOut()
                     }

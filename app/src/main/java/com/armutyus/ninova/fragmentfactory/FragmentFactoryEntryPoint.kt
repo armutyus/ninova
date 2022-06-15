@@ -1,4 +1,4 @@
-package com.armutyus.ninova.ui.fragmentfactory
+package com.armutyus.ninova.fragmentfactory
 
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn

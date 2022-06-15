@@ -3,10 +3,12 @@ package com.armutyus.ninova.di
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import com.armutyus.ninova.constants.Constants.ABOUT_INTENT
 import com.armutyus.ninova.constants.Constants.LOGIN_INTENT
 import com.armutyus.ninova.constants.Constants.MAIN_INTENT
 import com.armutyus.ninova.constants.Constants.REGISTER_INTENT
 import com.armutyus.ninova.constants.Constants.SPLASH_INTENT
+import com.armutyus.ninova.ui.about.AboutActivity
 import com.armutyus.ninova.ui.login.LoginActivity
 import com.armutyus.ninova.ui.login.RegisterActivity
 import com.armutyus.ninova.ui.main.MainActivity
@@ -48,6 +50,12 @@ object AppModule {
     @Named(REGISTER_INTENT)
     fun provideRegisterIntent(context: Context): Intent {
         return Intent(context, RegisterActivity::class.java)
+    }
+
+    @Provides
+    @Named(ABOUT_INTENT)
+    fun provideAboutIntent(context: Context): Intent {
+        return Intent(context, AboutActivity::class.java)
     }
 
 }

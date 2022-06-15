@@ -1,4 +1,4 @@
-package com.armutyus.ninova.ui.fragmentfactory
+package com.armutyus.ninova.fragmentfactory
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory

@@ -44,11 +44,6 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.armutyus.ninova.ui.settings.SettingsFragment"
-        android:label="SettingsFragment" />
-
-    <fragment
-        android:id="@+id/settingsFragment2"
-        android:name="com.armutyus.ninova.ui.settings.SettingsFragment"
         android:label="Settings" />
 
     <action
@@ -58,10 +53,6 @@
     <action
         android:id="@+id/action_main_to_settings"
         app:destination="@id/settingsFragment" />
-
-    <action
-        android:id="@+id/action_main_to_settings_2"
-        app:destination="@id/settingsFragment2" />
 
 
 </navigation>

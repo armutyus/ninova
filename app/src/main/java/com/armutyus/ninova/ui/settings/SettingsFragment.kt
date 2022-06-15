@@ -4,11 +4,13 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Constants.ABOUT_INTENT
 import com.armutyus.ninova.constants.Constants.CHANGE_EMAIL
 import com.armutyus.ninova.constants.Constants.CHANGE_PASSWORD
 import com.armutyus.ninova.constants.Constants.DARK_THEME
@@ -42,6 +44,10 @@ class SettingsFragment @Inject constructor(
     @Inject
     lateinit var registerIntent: Intent
 
+    @Named(ABOUT_INTENT)
+    @Inject
+    lateinit var aboutIntent: Intent
+
     private var sharedPreferences: SharedPreferences? = null
     private lateinit var settingsViewModel: SettingsViewModel
 
@@ -74,8 +80,7 @@ class SettingsFragment @Inject constructor(
             changePasswordListener
 
         val aboutNinovaListener = Preference.OnPreferenceClickListener {
-            //intent to about activity
-            println("About ninova")
+            goToAboutActivity()
             true
         }
         findPreference<Preference>("about_ninova")?.onPreferenceClickListener = aboutNinovaListener
@@ -96,7 +101,6 @@ class SettingsFragment @Inject constructor(
 
         val registerListener = Preference.OnPreferenceClickListener {
             registerIntent.putExtra(SETTINGS_ACTION_KEY, REGISTER)
-            //must finish activity AFTER register
             goToRegisterActivity()
             true
         }
@@ -126,9 +130,20 @@ class SettingsFragment @Inject constructor(
 
         if (p1 == "theme") {
             when (themePref) {
-                LIGHT_THEME -> println("Light mode")
-                DARK_THEME -> println("Dark mode")
-                SYSTEM_THEME -> println("System mode")
+                LIGHT_THEME -> {
+                    p0.edit().putString("theme", LIGHT_THEME).apply()
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+
+                DARK_THEME -> {
+                    p0.edit().putString("theme", DARK_THEME).apply()
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
+
+                SYSTEM_THEME -> {
+                    p0.edit().putString("theme", SYSTEM_THEME).apply()
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                }
             }
         }
     }
@@ -154,6 +169,10 @@ class SettingsFragment @Inject constructor(
 
     private fun goToRegisterActivity() {
         startActivity(registerIntent)
+    }
+
+    private fun goToAboutActivity() {
+        startActivity(aboutIntent)
     }
 
 }
