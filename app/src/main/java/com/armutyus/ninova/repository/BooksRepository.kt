@@ -10,7 +10,6 @@ class BooksRepository @Inject constructor(
     //change lists to flow when databases and services are ready
 
     override fun getBooksList(): List<Books> {
-
         val book1 = Books("Semerkand", "Amin Maalouf", "300", "01.02.1989")
         val book2 = Books("Fedailerin Kalesi: Alamut", "Vladimir Bartol", "290", "03.12.1975")
         val book3 = Books("Cesur Yeni Dünya", "Aldous Huxley", "519", "12.09.1945")
@@ -21,7 +20,6 @@ class BooksRepository @Inject constructor(
     }
 
     override fun searchBooksFromLocal(searchString: String): List<Books> {
-
         val book1 = Books("Körlük", "Jose Saramago", "451", "01.02.1998")
         val book2 = Books("Satranç", "Stefan Zweig", "243", "02.01.1946")
         val book3 = Books("Altıncı Koğuş", "Anton Çehov", "187", "10.07.1966")

@@ -21,6 +21,10 @@ interface AuthRepositoryInterface {
 
     suspend fun reAuthUser(credential: AuthCredential): Flow<Response<Boolean>>
 
+    suspend fun changeUserEmail(email: String): Flow<Response<Boolean>>
+
+    suspend fun changeUserPassword(password: String): Flow<Response<Boolean>>
+
     suspend fun sendResetPassword(email: String): Flow<Response<Boolean>>
 
     fun getCurrentUser(): FirebaseUser?

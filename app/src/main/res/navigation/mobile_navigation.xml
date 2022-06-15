@@ -48,7 +48,7 @@
 
     <fragment
         android:id="@+id/settingsFragment2"
-        android:name="com.armutyus.ninova.ui.settings.SettingsFragment2"
+        android:name="com.armutyus.ninova.ui.settings.SettingsFragment"
         android:label="Settings" />
 
     <action

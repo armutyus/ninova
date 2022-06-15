@@ -1,21 +1,25 @@
 package com.armutyus.ninova.ui.settings
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Constants.CHANGE_EMAIL
+import com.armutyus.ninova.constants.Constants.CHANGE_PASSWORD
+import com.armutyus.ninova.constants.Constants.DARK_THEME
+import com.armutyus.ninova.constants.Constants.LIGHT_THEME
 import com.armutyus.ninova.constants.Constants.LOGIN_INTENT
 import com.armutyus.ninova.constants.Constants.MAIN_INTENT
+import com.armutyus.ninova.constants.Constants.REGISTER
+import com.armutyus.ninova.constants.Constants.REGISTER_INTENT
+import com.armutyus.ninova.constants.Constants.SETTINGS_ACTION_KEY
+import com.armutyus.ninova.constants.Constants.SYSTEM_THEME
 import com.armutyus.ninova.constants.Response
-import com.armutyus.ninova.databinding.FragmentSettingsBinding
-import com.armutyus.ninova.databinding.RegisterUserBottomSheetBinding
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.button.MaterialButton
-import com.google.firebase.auth.AuthCredential
-import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -24,7 +28,7 @@ import javax.inject.Named
 @AndroidEntryPoint
 class SettingsFragment @Inject constructor(
     private val auth: FirebaseAuth
-) : Fragment(R.layout.fragment_settings) {
+) : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Named(LOGIN_INTENT)
     @Inject
@@ -34,112 +38,97 @@ class SettingsFragment @Inject constructor(
     @Inject
     lateinit var mainIntent: Intent
 
-    private var fragmentBinding: FragmentSettingsBinding? = null
-    private lateinit var bottomSheetBinding: RegisterUserBottomSheetBinding
+    @Named(REGISTER_INTENT)
+    @Inject
+    lateinit var registerIntent: Intent
+
+    private var sharedPreferences: SharedPreferences? = null
     private lateinit var settingsViewModel: SettingsViewModel
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
 
-        val user = auth.currentUser
+        val user = auth.currentUser!!
 
-        val binding = FragmentSettingsBinding.bind(view)
-        fragmentBinding = binding
-        settingsViewModel =
-            ViewModelProvider(requireActivity())[SettingsViewModel::class.java]
-
-        if (user!!.isAnonymous) {
-            binding.profileSettingsAnonymous.visibility = View.VISIBLE
-            binding.aboutApp.visibility = View.VISIBLE
-            binding.registerLayout.visibility = View.VISIBLE
+        if (user.isAnonymous) {
+            setPreferencesFromResource(R.xml.anonymous_preferences, rootKey)
         } else {
-            binding.profileSettingsUser.visibility = View.VISIBLE
-            binding.aboutApp.visibility = View.VISIBLE
-            binding.signOutLayout.visibility = View.VISIBLE
+            setPreferencesFromResource(R.xml.root_preferences, rootKey)
         }
 
-        binding.signOut.setOnClickListener {
+        settingsViewModel = ViewModelProvider(requireActivity())[SettingsViewModel::class.java]
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+
+        val changeEmailListener = Preference.OnPreferenceClickListener {
+            registerIntent.putExtra(SETTINGS_ACTION_KEY, CHANGE_EMAIL)
+            goToRegisterActivity()
+            true
+        }
+        findPreference<Preference>("change_email")?.onPreferenceClickListener = changeEmailListener
+
+        val changePasswordListener = Preference.OnPreferenceClickListener {
+            registerIntent.putExtra(SETTINGS_ACTION_KEY, CHANGE_PASSWORD)
+            goToRegisterActivity()
+            true
+        }
+        findPreference<Preference>("change_password")?.onPreferenceClickListener =
+            changePasswordListener
+
+        val aboutNinovaListener = Preference.OnPreferenceClickListener {
+            //intent to about activity
+            println("About ninova")
+            true
+        }
+        findPreference<Preference>("about_ninova")?.onPreferenceClickListener = aboutNinovaListener
+
+        val privacyPolicyListener = Preference.OnPreferenceClickListener {
+            //intent to privacy policy
+            println("Privacy policy")
+            true
+        }
+        findPreference<Preference>("privacy_policy")?.onPreferenceClickListener =
+            privacyPolicyListener
+
+        val signOutListener = Preference.OnPreferenceClickListener {
             signOut()
-            goToLogInActivity()
+            true
         }
+        findPreference<Preference>("sign_out")?.onPreferenceClickListener = signOutListener
 
-        binding.register.setOnClickListener {
-            showRegisterDialog()
+        val registerListener = Preference.OnPreferenceClickListener {
+            registerIntent.putExtra(SETTINGS_ACTION_KEY, REGISTER)
+            //must finish activity AFTER register
+            goToRegisterActivity()
+            true
         }
+        findPreference<Preference>("register")?.onPreferenceClickListener = registerListener
 
-        binding.signInAnotherAccount.setOnClickListener {
-            signOut()
-            goToLogInActivity()
+        val switchAccountListener = Preference.OnPreferenceClickListener {
+            startActivity(loginIntent)
+            true
         }
+        findPreference<Preference>("switch_account")?.onPreferenceClickListener =
+            switchAccountListener
+
     }
 
-    private fun showRegisterDialog() {
-        val dialog = BottomSheetDialog(requireContext())
-        bottomSheetBinding = RegisterUserBottomSheetBinding.inflate(layoutInflater)
-        dialog.setContentView(bottomSheetBinding.root)
-        val signUpButton = dialog.findViewById<MaterialButton>(R.id.signUpButton)
-
-        signUpButton?.setOnClickListener {
-            registerUser()
-        }
-
-        dialog.show()
+    override fun onResume() {
+        super.onResume()
+        sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
     }
 
-    private var email = ""
-    private var password = ""
-
-    private fun registerUser() {
-        email = bottomSheetBinding.registerEmailText.text.toString().trim()
-        password = bottomSheetBinding.registerPasswordText.text.toString().trim()
-        val confirmPassword = bottomSheetBinding.registerConfirmPasswordText.text.toString().trim()
-
-        if (email.isEmpty() || password.isEmpty() || password != confirmPassword) {
-            Toast.makeText(
-                requireContext(),
-                "Please enter your information correctly!",
-                Toast.LENGTH_LONG
-            )
-                .show()
-        } else {
-            val credential = EmailAuthProvider.getCredential(email, password)
-            registerAnonymousUser(credential)
-        }
+    override fun onPause() {
+        super.onPause()
+        sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
     }
 
-    private fun registerAnonymousUser(credential: AuthCredential) {
-        settingsViewModel.registerAnonymousUser(credential)
-            .observe(viewLifecycleOwner) { response ->
-                when (response) {
-                    is Response.Loading -> fragmentBinding?.progressBar?.visibility = View.VISIBLE
-                    is Response.Success -> {
-                        createUserProfile()
-                        fragmentBinding?.progressBar?.visibility = View.GONE
-                    }
-                    is Response.Failure -> {
-                        println("SignUp Error: " + response.errorMessage)
-                        Toast.makeText(requireContext(), response.errorMessage, Toast.LENGTH_LONG)
-                            .show()
-                        fragmentBinding?.progressBar?.visibility = View.GONE
-                    }
-                }
-            }
-    }
+    override fun onSharedPreferenceChanged(p0: SharedPreferences?, p1: String?) {
+        val themePref = p0?.getString("theme", "system")
 
-    private fun createUserProfile() {
-        settingsViewModel.createUser().observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is Response.Loading -> fragmentBinding?.progressBar?.visibility = View.VISIBLE
-                is Response.Success -> {
-                    goToMainActivity()
-                    fragmentBinding?.progressBar?.visibility = View.GONE
-                }
-                is Response.Failure -> {
-                    println("Create Error: " + response.errorMessage)
-                    Toast.makeText(requireContext(), response.errorMessage, Toast.LENGTH_LONG)
-                        .show()
-                    fragmentBinding?.progressBar?.visibility = View.GONE
-                }
+        if (p1 == "theme") {
+            when (themePref) {
+                LIGHT_THEME -> println("Light mode")
+                DARK_THEME -> println("Dark mode")
+                SYSTEM_THEME -> println("System mode")
             }
         }
     }
@@ -147,21 +136,15 @@ class SettingsFragment @Inject constructor(
     private fun signOut() {
         settingsViewModel.signOut().observe(viewLifecycleOwner) { response ->
             when (response) {
-                is Response.Loading -> fragmentBinding?.progressBar?.show()
-                is Response.Success -> fragmentBinding?.progressBar?.hide()
+                is Response.Loading -> println("Loading")
+                is Response.Success -> goToLogInActivity()
                 is Response.Failure -> {
                     println("Create Error: " + response.errorMessage)
                     Toast.makeText(requireContext(), response.errorMessage, Toast.LENGTH_LONG)
                         .show()
-                    fragmentBinding?.progressBar?.hide()
                 }
             }
         }
-    }
-
-    private fun goToMainActivity() {
-        startActivity(mainIntent)
-        activity?.finish()
     }
 
     private fun goToLogInActivity() {
@@ -169,8 +152,8 @@ class SettingsFragment @Inject constructor(
         activity?.finish()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        fragmentBinding = null
+    private fun goToRegisterActivity() {
+        startActivity(registerIntent)
     }
+
 }

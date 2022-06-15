@@ -112,6 +112,30 @@ class AuthRepository @Inject constructor(
         }
     }
 
+    override suspend fun changeUserEmail(email: String) = flow {
+        try {
+            emit(Response.Loading)
+            val reAuthResult = auth.currentUser!!.updateEmail(email).await()
+            reAuthResult.apply {
+                emit(Response.Success(true))
+            }
+        } catch (e: Exception) {
+            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+        }
+    }
+
+    override suspend fun changeUserPassword(password: String) = flow {
+        try {
+            emit(Response.Loading)
+            val reAuthResult = auth.currentUser!!.updatePassword(password).await()
+            reAuthResult.apply {
+                emit(Response.Success(true))
+            }
+        } catch (e: Exception) {
+            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+        }
+    }
+
     override suspend fun sendResetPassword(email: String) = flow {
         try {
             emit(Response.Loading)

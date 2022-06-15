@@ -8,6 +8,19 @@
     tools:context=".ui.login.RegisterActivity">
 
     <LinearLayout
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone">
+
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/progressBarStyleSmall" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/registerUserLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -49,7 +62,7 @@
             app:startIconDrawable="@drawable/ic_login_lock_gray">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/currentPasswordText"
+                android:id="@+id/registerPasswordText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword" />
@@ -275,19 +288,6 @@
             android:fontFamily="sans-serif">
         </com.google.android.material.button.MaterialButton>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone">
-
-        <androidx.core.widget.ContentLoadingProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="?android:attr/progressBarStyleSmall" />
     </LinearLayout>
 
 </LinearLayout>
