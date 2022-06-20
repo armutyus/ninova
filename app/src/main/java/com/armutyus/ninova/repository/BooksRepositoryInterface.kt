@@ -1,13 +1,25 @@
 package com.armutyus.ninova.repository
 
-import com.armutyus.ninova.model.Books
+import com.armutyus.ninova.model.Book
+import com.armutyus.ninova.roomdb.LocalBook
+import kotlinx.coroutines.flow.Flow
 
 interface BooksRepositoryInterface {
 
-    fun getBooksList(): List<Books>
+    fun getBookList(): List<Book>
 
-    fun searchBooksFromLocal(searchString: String): List<Books>
+    fun searchBookFromLocal(searchString: String): List<Book>
 
-    fun searchBooksFromApi(searchString: String): List<Books>
+    fun searchBookFromApi(searchString: String): List<Book>
+
+    suspend fun insert(localBook: LocalBook)
+
+    suspend fun update(localBook: LocalBook)
+
+    suspend fun delete(localBook: LocalBook)
+
+    fun getLocalBooks(): Flow<List<LocalBook>>
+
+    fun searchLocalBooks(searchString: String): Flow<List<LocalBook>>
 
 }

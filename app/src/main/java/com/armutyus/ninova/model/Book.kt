@@ -1,6 +1,6 @@
 package com.armutyus.ninova.model
 
-data class Books(
+data class Book(
     val bookTitle: String,
     val bookAuthor: String,
     val bookPages: String,

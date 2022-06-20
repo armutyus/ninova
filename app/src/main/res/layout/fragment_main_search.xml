@@ -19,6 +19,35 @@
         android:keyboardNavigationCluster="true"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/searchButtonToggleGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:singleSelection="true"
+        android:layout_gravity="center"
+        android:visibility="gone">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/localSearchButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:text="@string/your_library"
+            android:textSize="14sp"
+            android:textColor="@color/light_primary"
+            app:cornerRadius="10dp"
+            app:strokeColor="@color/light_primary"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/apiSearchButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:text="@string/from_ninova"
+            android:textSize="14sp"
+            android:textColor="@color/light_primary"
+            app:cornerRadius="10dp"
+            app:strokeColor="@color/light_primary"/>
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
     <TextView
         android:id="@+id/mainSearchBooksTitle"
         android:layout_width="match_parent"
@@ -54,6 +83,32 @@
         style="?android:attr/progressBarStyleSmall"
         android:visibility="gone" />
 
+    <LinearLayout
+        android:id="@+id/linearLayoutSearchError"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nothing_to_show_here"
+            android:textColor="@color/light_primary"
+            android:textSize="16sp" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/searchnotfound"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/mainSearchTabLayout"
         android:layout_width="match_parent"
@@ -61,11 +116,13 @@
         app:tabGravity="fill"
         app:tabIndicatorColor="@color/light_primary"
         app:tabSelectedTextColor="@color/light_primary"
-        tools:ignore="SpeakableTextPresentCheck" />
+        tools:ignore="SpeakableTextPresentCheck"
+        android:visibility="gone"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/mainSearchViewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
 </LinearLayout>

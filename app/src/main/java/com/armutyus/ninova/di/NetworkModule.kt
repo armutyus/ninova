@@ -6,6 +6,7 @@ import com.armutyus.ninova.repository.AuthRepository
 import com.armutyus.ninova.repository.AuthRepositoryInterface
 import com.armutyus.ninova.repository.BooksRepository
 import com.armutyus.ninova.repository.BooksRepositoryInterface
+import com.armutyus.ninova.roomdb.NinovaDao
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.FirebaseAuth
@@ -47,9 +48,8 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideBooksRepository(
-
-    ) = BooksRepository() as BooksRepositoryInterface
+    fun provideBooksRepository(ninovaDao: NinovaDao) =
+        BooksRepository(ninovaDao) as BooksRepositoryInterface
 
     @Singleton
     @Provides
