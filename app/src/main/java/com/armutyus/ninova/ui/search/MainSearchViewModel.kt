@@ -18,6 +18,10 @@ class MainSearchViewModel @Inject constructor(
     private val booksRepository: BooksRepositoryInterface
 ) : ViewModel() {
 
+    private val _currentList = MutableLiveData<List<Book>>()
+    val currentList: LiveData<List<Book>>
+        get() = _currentList
+
     private val booksList = MutableLiveData<List<Book>>()
     val fakeBooksList: LiveData<List<Book>>
         get() = booksList
@@ -68,4 +72,7 @@ class MainSearchViewModel @Inject constructor(
         booksRepository.insert(localBook)
     }
 
+    fun setCurrentList(bookList: List<Book>){
+        _currentList.value = bookList
+    }
 }

@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.armutyus.ninova.R
 import com.armutyus.ninova.databinding.FragmentMainSearchBinding
+import com.armutyus.ninova.model.Book
 import com.armutyus.ninova.roomdb.LocalBook
 import com.armutyus.ninova.ui.search.adapters.MainSearchRecyclerViewAdapter
 import com.armutyus.ninova.ui.search.listeners.OnBookAddButtonClickListener
@@ -31,7 +32,6 @@ class MainSearchFragment @Inject constructor(
         super.onCreate(savedInstanceState)
         isSearchActive = requireActivity().getPreferences(Context.MODE_PRIVATE) ?: return
         mainSearchViewModel = ViewModelProvider(requireActivity())[MainSearchViewModel::class.java]
-
     }
 
     override fun onCreateView(
@@ -50,13 +50,30 @@ class MainSearchFragment @Inject constructor(
         recyclerView?.visibility = View.VISIBLE
         recyclerViewAdapter.setFragment(this)
 
+        val toggleButtonGroup = binding?.searchButtonToggleGroup
+        toggleButtonGroup?.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) {
+                when (checkedId) {
+                    R.id.localSearchButton -> {
+                        val list = mainSearchViewModel.fakeBooksArchiveList.value ?: listOf()
+                        mainSearchViewModel.setCurrentList(list)
+                    }
+                    R.id.apiSearchButton -> {
+                        val list = mainSearchViewModel.fakeBooksApiList.value ?: listOf()
+                        mainSearchViewModel.setCurrentList(list)
+                    }
+                }
+            }
+        }
+
+        runObservers()
+
         return binding?.root
     }
 
     override fun onResume() {
         super.onResume()
         mainSearchViewModel.getBooksList()
-        getFakeBooksList()
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
@@ -65,94 +82,62 @@ class MainSearchFragment @Inject constructor(
 
     override fun onQueryTextChange(searchQuery: String?): Boolean {
         if (searchQuery?.length!! > 0) {
-
-            mainSearchViewModel.getBooksArchiveList(searchQuery)
-            mainSearchViewModel.getBooksApiList(searchQuery)
-
             binding?.progressBar?.visibility = View.VISIBLE
             binding?.mainSearchRecyclerView?.visibility = View.GONE
             binding?.mainSearchBooksTitle?.visibility = View.GONE
 
+            mainSearchViewModel.getBooksApiList(searchQuery)
+            mainSearchViewModel.getBooksArchiveList(searchQuery)
+
             val toggleButtonGroup = binding?.searchButtonToggleGroup
             toggleButtonGroup?.visibility = View.VISIBLE
-            toggleButtonGroup?.addOnButtonCheckedListener { _, checkedId, isChecked ->
-                if (!isChecked) {
-                    showResultsFromLocal()
-                } else {
-                    when (checkedId) {
-                        R.id.localSearchButton -> {
-                            showResultsFromLocal()
-                        }
-
-                        R.id.apiSearchButton -> {
-                            showResultsFromApi()
-                        }
-                    }
-                }
-            }
-
         } else if (searchQuery.isNullOrBlank()) {
-
             binding?.mainSearchRecyclerView?.visibility = View.VISIBLE
             binding?.mainSearchBooksTitle?.visibility = View.VISIBLE
             binding?.itemDivider?.visibility = View.VISIBLE
             binding?.searchButtonToggleGroup?.visibility = View.GONE
             binding?.linearLayoutSearchError?.visibility = View.GONE
 
-            getFakeBooksList()
-
+            mainSearchViewModel.getBooksList()
         }
 
         return true
     }
 
-    private fun getFakeBooksList() {
+    private fun runObservers(){
+        val toggleButtonGroup = binding?.searchButtonToggleGroup
 
-        mainSearchViewModel.fakeBooksList.observe(viewLifecycleOwner) {
-            val newBooksList = it.toList()
-            recyclerViewAdapter.mainSearchBooksList = newBooksList
+        mainSearchViewModel.currentList.observe(viewLifecycleOwner){
+            recyclerViewAdapter.mainSearchBooksList = it
+            setVisibilities(it)
         }
-    }
-
-    private fun showResultsFromLocal() {
 
         mainSearchViewModel.fakeBooksArchiveList.observe(viewLifecycleOwner) {
-            val searchedLocalList = it?.toList()
-            recyclerViewAdapter.mainSearchBooksList = searchedLocalList!!
-
-            if (searchedLocalList.isEmpty()) {
-                binding?.linearLayoutSearchError?.visibility = View.VISIBLE
-                binding?.progressBar?.visibility = View.GONE
-                binding?.mainSearchBooksTitle?.visibility = View.GONE
-                binding?.mainSearchRecyclerView?.visibility = View.GONE
-            } else {
-                binding?.linearLayoutSearchError?.visibility = View.GONE
-                binding?.progressBar?.visibility = View.GONE
-                binding?.mainSearchBooksTitle?.visibility = View.GONE
-                binding?.mainSearchRecyclerView?.visibility = View.VISIBLE
-            }
-
+            if(toggleButtonGroup?.checkedButtonId != R.id.localSearchButton) return@observe
+            mainSearchViewModel.setCurrentList(it?.toList() ?: listOf())
         }
 
+        mainSearchViewModel.fakeBooksApiList.observe(viewLifecycleOwner) {
+            if(toggleButtonGroup?.checkedButtonId != R.id.apiSearchButton) return@observe
+            mainSearchViewModel.setCurrentList(it?.toList() ?: listOf())
+        }
+
+        mainSearchViewModel.fakeBooksList.observe(viewLifecycleOwner) {
+            mainSearchViewModel.setCurrentList(it?.toList() ?: listOf())
+        }
     }
 
-    private fun showResultsFromApi() {
-        mainSearchViewModel.fakeBooksApiList.observe(viewLifecycleOwner) {
-            val searchedApiList = it?.toList()
-            recyclerViewAdapter.mainSearchBooksList = searchedApiList!!
-
-            if (searchedApiList.isEmpty()) {
-                binding?.linearLayoutSearchError?.visibility = View.VISIBLE
-                binding?.progressBar?.visibility = View.GONE
-                binding?.mainSearchRecyclerView?.visibility = View.GONE
-                binding?.mainSearchBooksTitle?.visibility = View.GONE
-            } else {
-                binding?.linearLayoutSearchError?.visibility = View.GONE
-                binding?.progressBar?.visibility = View.GONE
-                binding?.mainSearchBooksTitle?.visibility = View.GONE
-                binding?.mainSearchRecyclerView?.visibility = View.VISIBLE
-            }
-
+    private fun setVisibilities(bookList: List<Book>){
+        if (bookList.isEmpty()) {
+            binding?.linearLayoutSearchError?.visibility = View.VISIBLE
+            binding?.progressBar?.visibility = View.GONE
+            binding?.mainSearchRecyclerView?.visibility = View.GONE
+            binding?.mainSearchBooksTitle?.visibility = View.GONE
+        } else {
+            binding?.linearLayoutSearchError?.visibility = View.GONE
+            binding?.progressBar?.visibility = View.GONE
+            binding?.mainSearchBooksTitle?.visibility = View.GONE
+            binding?.mainSearchRecyclerView?.visibility = View.VISIBLE
         }
     }
 
