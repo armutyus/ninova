@@ -66,7 +66,6 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
                     book.bookPages,
                     "",
                     "",
-                    "",
                     book.releaseDate
                 )
             )

@@ -23,7 +23,6 @@
         android:id="@+id/searchButtonToggleGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:singleSelection="true"
         android:layout_gravity="center"
         android:visibility="gone">
         <com.google.android.material.button.MaterialButton
@@ -108,21 +107,5 @@
             android:layout_gravity="center"/>
 
     </LinearLayout>
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/mainSearchTabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabGravity="fill"
-        app:tabIndicatorColor="@color/light_primary"
-        app:tabSelectedTextColor="@color/light_primary"
-        tools:ignore="SpeakableTextPresentCheck"
-        android:visibility="gone"/>
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/mainSearchViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
 
 </LinearLayout>

@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NinovaDao {
+    //Book works
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBook(localBook: LocalBook)
 

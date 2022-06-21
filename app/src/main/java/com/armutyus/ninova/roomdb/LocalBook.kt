@@ -9,7 +9,6 @@ data class LocalBook(
     val bookTitle: String?,
     val bookAuthor: String?,
     val bookPages: String?,
-    val bookCategory: String?,
     val bookCoverUrl: String?,
     val bookDescription: String?,
     val releaseDate: String?

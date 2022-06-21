@@ -73,11 +73,9 @@ class MainSearchFragment @Inject constructor(
             binding?.mainSearchRecyclerView?.visibility = View.GONE
             binding?.mainSearchBooksTitle?.visibility = View.GONE
 
-            showResultsFromLocal()
-
             val toggleButtonGroup = binding?.searchButtonToggleGroup
             toggleButtonGroup?.visibility = View.VISIBLE
-            toggleButtonGroup?.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            toggleButtonGroup?.addOnButtonCheckedListener { _, checkedId, isChecked ->
                 if (!isChecked) {
                     showResultsFromLocal()
                 } else {
