@@ -10,6 +10,7 @@ import com.armutyus.ninova.roomdb.LocalBook
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,21 +33,21 @@ class MainSearchViewModel @Inject constructor(
         }
     }
 
-    private val booksArchiveList = MutableLiveData<List<Book>>()
-    val fakeBooksArchiveList: LiveData<List<Book>>
-        get() = booksArchiveList
+    private val _searchLocalBookList = MutableLiveData<List<LocalBook>>()
+    val searchLocalBookList: LiveData<List<LocalBook>>
+        get() = _searchLocalBookList
 
-    fun getBooksArchiveList(searchString: String) {
+    fun searchLocalBooks(searchString: String) {
 
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             booksArchiveList.value = booksRepository.searchBookFromLocal(searchString)
-        }
-
-        /*CoroutineScope(Dispatchers.IO).launch {
-            booksRepository.searchBookFromLocal(searchString).collectLatest {
-                booksArchiveList.postValue(it)
-            }
         }*/
+
+        CoroutineScope(Dispatchers.IO).launch {
+            booksRepository.searchLocalBooks(searchString).collectLatest {
+                _searchLocalBookList.postValue(it)
+            }
+        }
 
     }
 
@@ -72,7 +73,7 @@ class MainSearchViewModel @Inject constructor(
         booksRepository.insert(localBook)
     }
 
-    fun setCurrentList(bookList: List<Book>){
+    fun setCurrentList(bookList: List<Book>) {
         _currentList.value = bookList
     }
 }

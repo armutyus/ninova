@@ -8,12 +8,15 @@
         <entry key="app/src/main/res/drawable/ic_action_arrow.xml" value="0.197" />
         <entry key="app/src/main/res/drawable/ic_add_button.xml" value="0.197" />
         <entry key="app/src/main/res/drawable/ic_baseline_format_paint_24.xml" value="0.1455" />
+        <entry key="app/src/main/res/drawable/ic_books_in_shelf.xml" value="0.1935" />
         <entry key="app/src/main/res/drawable/ic_login_email_gray.xml" value="0.16" />
         <entry key="app/src/main/res/drawable/ic_login_lock_gray.xml" value="0.16" />
         <entry key="app/src/main/res/drawable/ic_register_account.xml" value="0.197" />
+        <entry key="app/src/main/res/drawable/ic_release_date.xml" value="0.1935" />
         <entry key="app/src/main/res/drawable/ic_search.xml" value="0.127" />
         <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.197" />
         <entry key="app/src/main/res/drawable/ic_sign_out.xml" value="0.197" />
+        <entry key="app/src/main/res/drawable/ic_sort.xml" value="0.1935" />
         <entry key="app/src/main/res/drawable/ic_switch_account.xml" value="0.197" />
         <entry key="app/src/main/res/layout-w1240dp/activity_login.xml" value="0.164453125" />
         <entry key="app/src/main/res/layout-w936dp/activity_login.xml" value="0.1437841530054645" />
@@ -22,6 +25,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/add_new_shelf_bottom_sheet.xml" value="0.28125" />
         <entry key="app/src/main/res/layout/books_main_row.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/fragment_books.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.19067028985507245" />
@@ -41,6 +45,7 @@
         <entry key="app/src/main/res/layout/search_api_row.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/search_archive_row.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/search_main_row.xml" value="0.28125" />
+        <entry key="app/src/main/res/layout/shelves_main_row.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
         <entry key="app/src/main/res/menu/settings_menu.xml" value="0.28125" />
         <entry key="app/src/main/res/xml/anonymous_preferences.xml" value="0.28229166666666666" />

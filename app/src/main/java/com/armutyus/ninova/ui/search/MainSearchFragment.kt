@@ -55,8 +55,8 @@ class MainSearchFragment @Inject constructor(
             if (isChecked) {
                 when (checkedId) {
                     R.id.localSearchButton -> {
-                        val list = mainSearchViewModel.fakeBooksArchiveList.value ?: listOf()
-                        mainSearchViewModel.setCurrentList(list)
+                        /*val list = mainSearchViewModel.fakeBooksArchiveList.value ?: listOf()
+                        mainSearchViewModel.setCurrentList(list)*/
                     }
                     R.id.apiSearchButton -> {
                         val list = mainSearchViewModel.fakeBooksApiList.value ?: listOf()
@@ -88,7 +88,7 @@ class MainSearchFragment @Inject constructor(
             binding?.mainSearchBooksTitle?.visibility = View.GONE
 
             mainSearchViewModel.getBooksApiList(searchQuery)
-            mainSearchViewModel.getBooksArchiveList(searchQuery)
+            //mainSearchViewModel.searchLocalBooks(searchQuery)
 
             val toggleButtonGroup = binding?.searchButtonToggleGroup
             toggleButtonGroup?.visibility = View.VISIBLE
@@ -101,21 +101,21 @@ class MainSearchFragment @Inject constructor(
         return true
     }
 
-    private fun runObservers(){
+    private fun runObservers() {
         val toggleButtonGroup = binding?.searchButtonToggleGroup
 
-        mainSearchViewModel.currentList.observe(viewLifecycleOwner){
+        mainSearchViewModel.currentList.observe(viewLifecycleOwner) {
             recyclerViewAdapter.mainSearchBooksList = it
             setVisibilities(it)
         }
 
-        mainSearchViewModel.fakeBooksArchiveList.observe(viewLifecycleOwner) {
-            if(toggleButtonGroup?.checkedButtonId != R.id.localSearchButton) return@observe
+        /*mainSearchViewModel.searchLocalBookList.observe(viewLifecycleOwner) {
+            if (toggleButtonGroup?.checkedButtonId != R.id.localSearchButton) return@observe
             mainSearchViewModel.setCurrentList(it?.toList() ?: listOf())
-        }
+        }*/
 
         mainSearchViewModel.fakeBooksApiList.observe(viewLifecycleOwner) {
-            if(toggleButtonGroup?.checkedButtonId != R.id.apiSearchButton) return@observe
+            if (toggleButtonGroup?.checkedButtonId != R.id.apiSearchButton) return@observe
             mainSearchViewModel.setCurrentList(it?.toList() ?: listOf())
         }
 
@@ -124,7 +124,7 @@ class MainSearchFragment @Inject constructor(
         }
     }
 
-    private fun setVisibilities(bookList: List<Book>){
+    private fun setVisibilities(bookList: List<Book>) {
         if (bookList.isEmpty()) {
             binding?.linearLayoutSearchError?.visibility = View.VISIBLE
             binding?.progressBar?.visibility = View.GONE

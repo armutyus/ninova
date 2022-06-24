@@ -36,6 +36,9 @@ interface NinovaDao {
     @Delete
     suspend fun deleteShelf(localShelf: LocalShelf)
 
+    @Query("SELECT * FROM Shelf")
+    fun getLocalShelves(): Flow<List<LocalShelf>>
+
     @Query("SELECT * FROM Shelf WHERE shelfTitle LIKE :searchString")
     fun searchLocalShelf(searchString: String): Flow<List<LocalShelf>>
 }
