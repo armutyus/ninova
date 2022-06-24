@@ -30,6 +30,10 @@ class BooksViewModel @Inject constructor(
         }
     }
 
+    fun insertBook(localBook: LocalBook) = CoroutineScope(Dispatchers.IO).launch {
+        booksRepositoryInterface.insert(localBook)
+    }
+
     fun deleteBook(localBook: LocalBook) = viewModelScope.launch {
         booksRepositoryInterface.delete(localBook)
     }

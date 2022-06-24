@@ -21,18 +21,18 @@
 
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/searchButtonToggleGroup"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:gravity="center"
         app:checkedButton="@+id/localSearchButton"
         app:selectionRequired="true"
         app:singleSelection="true"
-        android:visibility="gone">
+        android:visibility="visible">
         <com.google.android.material.button.MaterialButton
             android:id="@+id/localSearchButton"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            style="?attr/materialButtonOutlinedStyle"
             android:text="@string/your_library"
             android:textSize="14sp"
             android:textColor="@color/light_primary"
@@ -40,9 +40,9 @@
             app:strokeColor="@color/light_primary"/>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/apiSearchButton"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            style="?attr/materialButtonOutlinedStyle"
             android:text="@string/from_ninova"
             android:textSize="14sp"
             android:textColor="@color/light_primary"
@@ -60,20 +60,14 @@
         android:text="@string/dusty_shelves"
         android:textColor="#009688"
         android:textSize="20sp"
-        android:textStyle="bold" />
-
-    <View
-        android:id="@+id/item_divider"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:background="@color/light_primary"/>
+        android:textStyle="bold"
+        android:visibility="gone"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mainSearchRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="16dp"
         android:visibility="gone"
         tools:visibility="visible"/>
 

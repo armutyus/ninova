@@ -74,6 +74,7 @@ class MainSearchFragment @Inject constructor(
     override fun onResume() {
         super.onResume()
         mainSearchViewModel.getBooksList()
+        setVisibilitiesForSearchQueryNull()
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
@@ -91,14 +92,10 @@ class MainSearchFragment @Inject constructor(
 
             val toggleButtonGroup = binding?.searchButtonToggleGroup
             toggleButtonGroup?.visibility = View.VISIBLE
-        } else if (searchQuery.isNullOrBlank()) {
-            binding?.mainSearchRecyclerView?.visibility = View.VISIBLE
-            binding?.mainSearchBooksTitle?.visibility = View.VISIBLE
-            binding?.itemDivider?.visibility = View.VISIBLE
-            binding?.searchButtonToggleGroup?.visibility = View.GONE
-            binding?.linearLayoutSearchError?.visibility = View.GONE
 
+        } else if (searchQuery.isNullOrBlank()) {
             mainSearchViewModel.getBooksList()
+            setVisibilitiesForSearchQueryNull()
         }
 
         return true
@@ -139,6 +136,13 @@ class MainSearchFragment @Inject constructor(
             binding?.mainSearchBooksTitle?.visibility = View.GONE
             binding?.mainSearchRecyclerView?.visibility = View.VISIBLE
         }
+    }
+
+    private fun setVisibilitiesForSearchQueryNull() {
+        binding?.mainSearchRecyclerView?.visibility = View.VISIBLE
+        binding?.mainSearchBooksTitle?.visibility = View.VISIBLE
+        binding?.searchButtonToggleGroup?.visibility = View.GONE
+        binding?.linearLayoutSearchError?.visibility = View.GONE
     }
 
     override fun onDestroyView() {

@@ -45,5 +45,5 @@
     <string name="send">SEND</string>
     <string name="confirm_new_password">Confirm New Password</string>
     <string name="enter_your_new_e_mail_address">Enter your new e-mail address</string>
-    <string name="your_shelf_is_empty">Your shelf is empty..</string>
+    <string name="your_library_is_empty">Your library is empty..</string>
 </resources>

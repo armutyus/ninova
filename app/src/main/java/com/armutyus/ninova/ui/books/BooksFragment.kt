@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
 import com.armutyus.ninova.databinding.FragmentBooksBinding
 import com.armutyus.ninova.ui.books.adapters.BooksRecyclerViewAdapter
+import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
 class BooksFragment @Inject constructor(
@@ -29,9 +30,13 @@ class BooksFragment @Inject constructor(
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             val layoutPosition = viewHolder.layoutPosition
-            val selectedBook = booksAdapter.mainBooksList[layoutPosition]
-            //confirm action before delete
-            booksViewModel.deleteBook(selectedBook)
+            val swipedBook = booksAdapter.mainBooksList[layoutPosition]
+            booksViewModel.deleteBook(swipedBook).invokeOnCompletion {
+                Snackbar.make(requireView(),"Book deleted from your library",Snackbar.LENGTH_LONG)
+                    .setAction("UNDO") {
+                        booksViewModel.insertBook(swipedBook)
+                    }.show()
+            }
         }
 
     }
@@ -51,9 +56,11 @@ class BooksFragment @Inject constructor(
     }
 
     override fun onResume() {
+        super.onResume()
+
         booksViewModel.getBookList()
         observeBookList()
-        super.onResume()
+
     }
 
     private fun observeBookList() {
