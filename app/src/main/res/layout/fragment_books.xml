@@ -11,7 +11,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
@@ -25,7 +24,8 @@
             android:paddingStart="0dp"
             app:iconGravity="textEnd"
             app:strokeColor="@color/light_primary"
-            android:layout_marginStart="8dp"
+            app:strokeWidth="0.5dp"
+            android:layout_marginStart="16dp"
             android:layout_marginEnd="8dp"/>
         <ImageButton
             android:id="@+id/main_shelves_add_button"
@@ -44,10 +44,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="?actionBarSize"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
         android:paddingTop="8dp"
-        android:paddingBottom="16dp"
+        android:paddingBottom="8dp"
         android:visibility="gone"
         tools:visibility="visible"/>
 
