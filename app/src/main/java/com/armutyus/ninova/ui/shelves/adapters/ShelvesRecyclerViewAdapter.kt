@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
-import com.armutyus.ninova.roomdb.LocalShelf
+import com.armutyus.ninova.roomdb.entities.LocalShelf
 import com.bumptech.glide.RequestManager
 import javax.inject.Inject
 

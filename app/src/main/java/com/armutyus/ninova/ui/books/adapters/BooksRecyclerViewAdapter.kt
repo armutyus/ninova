@@ -9,13 +9,17 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
-import com.armutyus.ninova.roomdb.LocalBook
+import com.armutyus.ninova.roomdb.entities.LocalBook
+import com.armutyus.ninova.ui.books.BooksFragment
+import com.armutyus.ninova.ui.search.MainSearchFragment
 import com.bumptech.glide.RequestManager
 import javax.inject.Inject
 
 class BooksRecyclerViewAdapter @Inject constructor(
     private val glide: RequestManager
 ) : RecyclerView.Adapter<BooksRecyclerViewAdapter.MainBooksViewHolder>() {
+
+    private lateinit var booksFragment: BooksFragment
 
     class MainBooksViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
@@ -50,6 +54,11 @@ class BooksRecyclerViewAdapter @Inject constructor(
         val bookReleaseDate = holder.itemView.findViewById<TextView>(R.id.bookReleaseDateText)
         val book = mainBooksList[position]
 
+        holder.itemView.setOnLongClickListener {
+            booksFragment.onLongClick(book) //or book id for parameter
+            true
+        }
+
         holder.itemView.apply {
             bookTitle.text = book.bookTitle
             bookAuthor.text = book.bookAuthor
@@ -61,6 +70,10 @@ class BooksRecyclerViewAdapter @Inject constructor(
 
     override fun getItemCount(): Int {
         return mainBooksList.size
+    }
+
+    fun setFragment(fragment: BooksFragment) {
+        this.booksFragment = fragment
     }
 
 }

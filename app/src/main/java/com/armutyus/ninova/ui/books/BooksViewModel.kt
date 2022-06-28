@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.armutyus.ninova.repository.BooksRepositoryInterface
-import com.armutyus.ninova.roomdb.LocalBook
+import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
+import com.armutyus.ninova.roomdb.entities.BookWithShelves
+import com.armutyus.ninova.roomdb.entities.LocalBook
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +24,10 @@ class BooksViewModel @Inject constructor(
     val bookList: LiveData<List<LocalBook>>
         get() = mainBookList
 
+    private val _bookWithShelvesList = MutableLiveData<List<BookWithShelves>>()
+    val bookWithShelvesList: LiveData<List<BookWithShelves>>
+        get() = _bookWithShelvesList
+
     fun getBookList() {
         CoroutineScope(Dispatchers.IO).launch {
             booksRepositoryInterface.getLocalBooks().collectLatest {
@@ -37,4 +43,17 @@ class BooksViewModel @Inject constructor(
     fun deleteBook(localBook: LocalBook) = viewModelScope.launch {
         booksRepositoryInterface.delete(localBook)
     }
+
+    fun insertBookShelfCrossRef(crossRef: BookShelfCrossRef) = CoroutineScope(Dispatchers.IO).launch {
+        booksRepositoryInterface.insertBookShelfCrossRef(crossRef)
+    }
+
+    fun getBookWithShelves(bookId: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            booksRepositoryInterface.getBookWithShelves(bookId).collectLatest {
+                _bookWithShelvesList.postValue(it)
+            }
+        }
+    }
+
 }

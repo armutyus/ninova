@@ -51,4 +51,6 @@
     <string name="my_shelf">My Shelf</string>
     <string name="create">CREATE</string>
     <string name="shelf_title">Shelf title</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

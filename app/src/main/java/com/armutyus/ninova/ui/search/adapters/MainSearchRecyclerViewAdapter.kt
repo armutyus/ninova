@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
 import com.armutyus.ninova.model.Book
-import com.armutyus.ninova.roomdb.LocalBook
+import com.armutyus.ninova.roomdb.entities.LocalBook
 import com.armutyus.ninova.ui.search.MainSearchFragment
 import com.bumptech.glide.RequestManager
 import javax.inject.Inject

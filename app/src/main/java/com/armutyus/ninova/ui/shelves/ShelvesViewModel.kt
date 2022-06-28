@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.armutyus.ninova.repository.ShelfRepositoryInterface
-import com.armutyus.ninova.roomdb.LocalBook
-import com.armutyus.ninova.roomdb.LocalShelf
+import com.armutyus.ninova.roomdb.entities.LocalShelf
+import com.armutyus.ninova.roomdb.entities.ShelfWithBooks
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +23,10 @@ class ShelvesViewModel @Inject constructor(
     val currentShelfList: LiveData<List<LocalShelf>>
         get() = _currentShelfList
 
+    private val _shelfWithBooksList = MutableLiveData<List<ShelfWithBooks>>()
+    val shelfWithBooksList: LiveData<List<ShelfWithBooks>>
+        get() = _shelfWithBooksList
+
     fun getShelfList() {
         CoroutineScope(Dispatchers.IO).launch {
             shelfRepositoryInterface.getLocalShelves().collectLatest {
@@ -37,6 +41,14 @@ class ShelvesViewModel @Inject constructor(
 
     fun deleteShelf(localShelf: LocalShelf) = viewModelScope.launch {
         shelfRepositoryInterface.delete(localShelf)
+    }
+
+    fun getShelfWithBookList(shelfId: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            shelfRepositoryInterface.getShelfWithBooks(shelfId).collectLatest {
+                _shelfWithBooksList.postValue(it)
+            }
+        }
     }
 
 }

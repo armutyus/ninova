@@ -1,7 +1,9 @@
 package com.armutyus.ninova.repository
 
 import com.armutyus.ninova.model.Book
-import com.armutyus.ninova.roomdb.LocalBook
+import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
+import com.armutyus.ninova.roomdb.entities.BookWithShelves
+import com.armutyus.ninova.roomdb.entities.LocalBook
 import kotlinx.coroutines.flow.Flow
 
 interface BooksRepositoryInterface {
@@ -21,5 +23,9 @@ interface BooksRepositoryInterface {
     fun getLocalBooks(): Flow<List<LocalBook>>
 
     fun searchLocalBooks(searchString: String): Flow<List<LocalBook>>
+
+    suspend fun insertBookShelfCrossRef(crossRef: BookShelfCrossRef)
+
+    suspend fun getBookWithShelves(bookId: Int): Flow<List<BookWithShelves>>
 
 }
