@@ -28,6 +28,7 @@
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/add_new_shelf_bottom_sheet.xml" value="0.28125" />
         <entry key="app/src/main/res/layout/books_main_row.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/fragment_book_to_shelf.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_books.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/fragment_books_in_shelf.xml" value="0.2682291666666667" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.19067028985507245" />
@@ -42,6 +43,7 @@
         <entry key="app/src/main/res/layout/fragment_search_api.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/fragment_search_archive.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/fragment_shelf_with_books.xml" value="0.13229166666666667" />
         <entry key="app/src/main/res/layout/fragment_shelves.xml" value="0.2682291666666667" />
         <entry key="app/src/main/res/layout/register_user_bottom_sheet.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/search_api_row.xml" value="0.28229166666666666" />

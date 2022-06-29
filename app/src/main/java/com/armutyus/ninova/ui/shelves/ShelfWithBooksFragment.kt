@@ -1,12 +1,9 @@
 package com.armutyus.ninova.ui.shelves
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.View
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
 import com.armutyus.ninova.R
-import com.armutyus.ninova.databinding.FragmentBooksBinding
 import com.armutyus.ninova.databinding.FragmentShelfWithBooksBinding
 import javax.inject.Inject
 
@@ -21,6 +18,7 @@ class ShelfWithBooksFragment @Inject constructor(
 
         val binding = FragmentShelfWithBooksBinding.bind(view)
         fragmentBinding = binding
+        //activity?.actionBar?.title = shelfTitle
 
     }
 

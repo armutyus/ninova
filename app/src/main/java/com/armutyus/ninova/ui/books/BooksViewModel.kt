@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.armutyus.ninova.repository.BooksRepositoryInterface
-import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.BookWithShelves
 import com.armutyus.ninova.roomdb.entities.LocalBook
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -42,10 +41,6 @@ class BooksViewModel @Inject constructor(
 
     fun deleteBook(localBook: LocalBook) = viewModelScope.launch {
         booksRepositoryInterface.delete(localBook)
-    }
-
-    fun insertBookShelfCrossRef(crossRef: BookShelfCrossRef) = CoroutineScope(Dispatchers.IO).launch {
-        booksRepositoryInterface.insertBookShelfCrossRef(crossRef)
     }
 
     fun getBookWithShelves(bookId: Int) {

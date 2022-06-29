@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.armutyus.ninova.repository.ShelfRepositoryInterface
+import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.LocalShelf
 import com.armutyus.ninova.roomdb.entities.ShelfWithBooks
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +24,14 @@ class ShelvesViewModel @Inject constructor(
     val currentShelfList: LiveData<List<LocalShelf>>
         get() = _currentShelfList
 
+    private val _shelfList = MutableLiveData<List<LocalShelf>>()
+    val shelfList: LiveData<List<LocalShelf>>
+        get() = _shelfList
+
+    private val _searchShelvesList = MutableLiveData<List<LocalShelf>>()
+    val searchShelvesList: LiveData<List<LocalShelf>>
+        get() = _searchShelvesList
+
     private val _shelfWithBooksList = MutableLiveData<List<ShelfWithBooks>>()
     val shelfWithBooksList: LiveData<List<ShelfWithBooks>>
         get() = _shelfWithBooksList
@@ -30,9 +39,13 @@ class ShelvesViewModel @Inject constructor(
     fun getShelfList() {
         CoroutineScope(Dispatchers.IO).launch {
             shelfRepositoryInterface.getLocalShelves().collectLatest {
-                _currentShelfList.postValue(it)
+                _shelfList.postValue(it)
             }
         }
+    }
+
+    fun setCurrentList(shelfList: List<LocalShelf>) {
+        _currentShelfList.value = shelfList
     }
 
     fun insertShelf(localShelf: LocalShelf) = CoroutineScope(Dispatchers.IO).launch {
@@ -41,6 +54,21 @@ class ShelvesViewModel @Inject constructor(
 
     fun deleteShelf(localShelf: LocalShelf) = viewModelScope.launch {
         shelfRepositoryInterface.delete(localShelf)
+    }
+
+    fun insertBookShelfCrossRef(crossRef: BookShelfCrossRef) =
+        CoroutineScope(Dispatchers.IO).launch {
+            shelfRepositoryInterface.insertBookShelfCrossRef(crossRef)
+        }
+
+    fun searchShelves(searchString: String) {
+
+        CoroutineScope(Dispatchers.IO).launch {
+            shelfRepositoryInterface.searchLocalShelves(searchString).collectLatest {
+                _searchShelvesList.postValue(it)
+            }
+        }
+
     }
 
     fun getShelfWithBookList(shelfId: Int) {

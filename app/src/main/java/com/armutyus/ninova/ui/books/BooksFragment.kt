@@ -2,7 +2,6 @@ package com.armutyus.ninova.ui.books
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -10,15 +9,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
 import com.armutyus.ninova.databinding.FragmentBooksBinding
-import com.armutyus.ninova.roomdb.entities.LocalBook
 import com.armutyus.ninova.ui.books.adapters.BooksRecyclerViewAdapter
-import com.armutyus.ninova.ui.books.listeners.OnBookLongClickListener
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
 
 class BooksFragment @Inject constructor(
     private val booksAdapter: BooksRecyclerViewAdapter
-) : Fragment(R.layout.fragment_books), OnBookLongClickListener {
+) : Fragment(R.layout.fragment_books) {
 
     private var fragmentBinding: FragmentBooksBinding? = null
     private lateinit var booksViewModel: BooksViewModel
@@ -54,7 +51,6 @@ class BooksFragment @Inject constructor(
         val recyclerView = binding.mainBooksRecyclerView
         recyclerView.adapter = booksAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        booksAdapter.setFragment(this)
         ItemTouchHelper(swipeCallBack).attachToRecyclerView(recyclerView)
 
     }
@@ -82,9 +78,5 @@ class BooksFragment @Inject constructor(
     override fun onDestroyView() {
         super.onDestroyView()
         fragmentBinding = null
-    }
-
-    override fun onLongClick(localBook: LocalBook) {
-        Toast.makeText(requireContext(),"Clicked ${localBook.bookId}",Toast.LENGTH_LONG).show()
     }
 }

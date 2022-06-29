@@ -5,21 +5,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
 import com.armutyus.ninova.roomdb.entities.LocalBook
-import com.armutyus.ninova.ui.books.BooksFragment
-import com.armutyus.ninova.ui.search.MainSearchFragment
+import com.armutyus.ninova.ui.books.BooksFragmentDirections
 import com.bumptech.glide.RequestManager
 import javax.inject.Inject
 
 class BooksRecyclerViewAdapter @Inject constructor(
     private val glide: RequestManager
 ) : RecyclerView.Adapter<BooksRecyclerViewAdapter.MainBooksViewHolder>() {
-
-    private lateinit var booksFragment: BooksFragment
 
     class MainBooksViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
@@ -55,7 +53,9 @@ class BooksRecyclerViewAdapter @Inject constructor(
         val book = mainBooksList[position]
 
         holder.itemView.setOnLongClickListener {
-            booksFragment.onLongClick(book) //or book id for parameter
+            val action =
+                BooksFragmentDirections.actionNavigationBooksToBookToShelfFragment(book.bookId)
+            Navigation.findNavController(it).navigate(action)
             true
         }
 
@@ -70,10 +70,6 @@ class BooksRecyclerViewAdapter @Inject constructor(
 
     override fun getItemCount(): Int {
         return mainBooksList.size
-    }
-
-    fun setFragment(fragment: BooksFragment) {
-        this.booksFragment = fragment
     }
 
 }

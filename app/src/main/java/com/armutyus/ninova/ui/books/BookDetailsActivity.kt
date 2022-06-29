@@ -1,8 +1,7 @@
 package com.armutyus.ninova.ui.books
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.armutyus.ninova.R
+import androidx.appcompat.app.AppCompatActivity
 import com.armutyus.ninova.databinding.ActivityBookDetailsBinding
 import dagger.hilt.android.AndroidEntryPoint
 

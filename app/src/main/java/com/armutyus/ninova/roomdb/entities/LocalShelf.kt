@@ -7,4 +7,5 @@ import androidx.room.PrimaryKey
 data class LocalShelf(
     @PrimaryKey(autoGenerate = true) val shelfId: Int,
     val shelfTitle: String?,
+    val createdAt: String?
 )
