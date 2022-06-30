@@ -48,6 +48,9 @@ interface NinovaDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBookShelfCrossRef(crossRef: BookShelfCrossRef)
 
+    @Delete
+    suspend fun deleteBookShelfCrossRef(crossRef: BookShelfCrossRef)
+
     @Transaction
     @Query("SELECT * FROM Shelf WHERE shelfId = :shelfId")
     fun getBooksOfShelf(shelfId: Int): Flow<List<ShelfWithBooks>>

@@ -54,7 +54,7 @@ class BooksRecyclerViewAdapter @Inject constructor(
 
         holder.itemView.setOnLongClickListener {
             val action =
-                BooksFragmentDirections.actionNavigationBooksToBookToShelfFragment(book.bookId)
+                BooksFragmentDirections.actionMainToBookToShelfFragment(book.bookId)
             Navigation.findNavController(it).navigate(action)
             true
         }

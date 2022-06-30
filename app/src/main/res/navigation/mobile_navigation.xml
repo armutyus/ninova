@@ -10,9 +10,6 @@
         android:name="com.armutyus.ninova.ui.books.BooksFragment"
         android:label="@string/title_books"
         tools:layout="@layout/fragment_books">
-        <action
-            android:id="@+id/action_navigation_books_to_bookToShelfFragment"
-            app:destination="@id/bookToShelfFragment" />
     </fragment>
 
     <fragment
@@ -25,7 +22,11 @@
         android:id="@+id/navigation_shelves"
         android:name="com.armutyus.ninova.ui.shelves.ShelvesFragment"
         android:label="@string/title_shelves"
-        tools:layout="@layout/fragment_shelves" />
+        tools:layout="@layout/fragment_shelves" >
+        <action
+            android:id="@+id/action_navigation_shelves_to_shelfWithBooksFragment"
+            app:destination="@id/shelfWithBooksFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/mainSearchFragment"
@@ -38,18 +39,15 @@
         android:name="com.armutyus.ninova.ui.settings.SettingsFragment"
         android:label="@string/title_settings" />
 
-    <action
-        android:id="@+id/action_main_to_search"
-        app:destination="@id/mainSearchFragment" />
-
-    <action
-        android:id="@+id/action_main_to_settings"
-        app:destination="@id/settingsFragment" />
     <fragment
         android:id="@+id/shelfWithBooksFragment"
         android:name="com.armutyus.ninova.ui.shelves.ShelfWithBooksFragment"
-        android:label="Shelf Title"
-        tools:layout="@layout/fragment_shelf_with_books" />
+        tools:layout="@layout/fragment_shelf_with_books" >
+        <argument
+            android:name="currentShelfId"
+            app:argType="integer" />
+    </fragment>
+
     <fragment
         android:id="@+id/bookToShelfFragment"
         android:name="com.armutyus.ninova.ui.shelves.BookToShelfFragment"
@@ -60,5 +58,16 @@
             app:argType="integer" />
     </fragment>
 
+    <action
+        android:id="@+id/action_main_to_bookToShelfFragment"
+        app:destination="@id/bookToShelfFragment" />
+
+    <action
+        android:id="@+id/action_main_to_search"
+        app:destination="@id/mainSearchFragment" />
+
+    <action
+        android:id="@+id/action_main_to_settings"
+        app:destination="@id/settingsFragment" />
 
 </navigation>

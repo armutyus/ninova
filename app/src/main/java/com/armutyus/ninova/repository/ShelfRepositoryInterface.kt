@@ -19,6 +19,8 @@ interface ShelfRepositoryInterface {
 
     suspend fun insertBookShelfCrossRef(crossRef: BookShelfCrossRef)
 
+    suspend fun deleteBookShelfCrossRef(crossRef: BookShelfCrossRef)
+
     suspend fun getShelfWithBooks(shelfId: Int): Flow<List<ShelfWithBooks>>
 
 }

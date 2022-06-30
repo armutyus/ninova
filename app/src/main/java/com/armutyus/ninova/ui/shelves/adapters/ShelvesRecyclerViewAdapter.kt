@@ -5,11 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Constants.currentShelf
 import com.armutyus.ninova.roomdb.entities.LocalShelf
+import com.armutyus.ninova.ui.books.BooksFragmentDirections
+import com.armutyus.ninova.ui.shelves.ShelvesFragmentDirections
 import com.bumptech.glide.RequestManager
 import javax.inject.Inject
 
@@ -49,6 +53,13 @@ class ShelvesRecyclerViewAdapter @Inject constructor(
         val booksInShelf = holder.itemView.findViewById<TextView>(R.id.booksInShelfText)
         val shelfCreatedDate = holder.itemView.findViewById<TextView>(R.id.shelfCreatedDateText)
         val shelf = mainShelfList[position]
+
+        holder.itemView.setOnClickListener {
+            currentShelf = shelf
+            val action =
+                ShelvesFragmentDirections.actionNavigationShelvesToShelfWithBooksFragment(shelf.shelfId)
+            Navigation.findNavController(it).navigate(action)
+        }
 
         holder.itemView.apply {
             shelfTitle.text = shelf.shelfTitle

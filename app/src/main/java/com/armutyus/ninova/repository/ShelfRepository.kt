@@ -34,6 +34,10 @@ class ShelfRepository @Inject constructor(
         ninovaDao.insertBookShelfCrossRef(crossRef)
     }
 
+    override suspend fun deleteBookShelfCrossRef(crossRef: BookShelfCrossRef) {
+        ninovaDao.deleteBookShelfCrossRef(crossRef)
+    }
+
     override suspend fun getShelfWithBooks(shelfId: Int): Flow<List<ShelfWithBooks>> {
         return ninovaDao.getBooksOfShelf(shelfId)
     }

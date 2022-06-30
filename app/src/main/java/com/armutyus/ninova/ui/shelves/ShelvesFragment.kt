@@ -3,6 +3,7 @@ package com.armutyus.ninova.ui.shelves
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +20,7 @@ import javax.inject.Inject
 
 class ShelvesFragment @Inject constructor(
     private val shelvesAdapter: ShelvesRecyclerViewAdapter
-) : Fragment(R.layout.fragment_shelves) {
+) : Fragment(R.layout.fragment_shelves), SearchView.OnQueryTextListener {
 
     private var fragmentBinding: FragmentShelvesBinding? = null
     private lateinit var shelvesViewModel: ShelvesViewModel
@@ -36,11 +37,14 @@ class ShelvesFragment @Inject constructor(
         recyclerView.adapter = shelvesAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        val searchView = binding.shelvesSearch
+        searchView.setOnQueryTextListener(this)
+        searchView.setIconifiedByDefault(false)
+
         binding.mainShelvesAddButton.setOnClickListener {
             showAddShelfDialog()
         }
 
-        shelvesViewModel.getShelfList()
         observeShelfList()
 
     }
@@ -91,6 +95,23 @@ class ShelvesFragment @Inject constructor(
         shelvesViewModel.searchShelvesList.observe(viewLifecycleOwner) {
             shelvesViewModel.setCurrentList(it?.toList() ?: listOf())
         }
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        return false
+    }
+
+    override fun onQueryTextChange(searchQuery: String?): Boolean {
+        if (searchQuery?.length!! > 0) {
+            fragmentBinding?.progressBar?.visibility = View.VISIBLE
+            fragmentBinding?.mainShelvesRecyclerView?.visibility = View.GONE
+            shelvesViewModel.searchShelves("%$searchQuery%")
+
+        } else if (searchQuery.isNullOrBlank()) {
+            shelvesViewModel.getShelfList()
+        }
+
+        return true
     }
 
     override fun onDestroyView() {

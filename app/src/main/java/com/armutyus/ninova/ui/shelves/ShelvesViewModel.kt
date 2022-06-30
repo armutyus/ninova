@@ -61,6 +61,11 @@ class ShelvesViewModel @Inject constructor(
             shelfRepositoryInterface.insertBookShelfCrossRef(crossRef)
         }
 
+    fun deleteBookShelfCrossRef(crossRef: BookShelfCrossRef) =
+        CoroutineScope(Dispatchers.IO).launch {
+            shelfRepositoryInterface.deleteBookShelfCrossRef(crossRef)
+        }
+
     fun searchShelves(searchString: String) {
 
         CoroutineScope(Dispatchers.IO).launch {
