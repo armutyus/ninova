@@ -52,4 +52,5 @@ abstract class FragmentFactoryModule {
     @IntoMap
     @FragmentKey(SettingsFragment::class)
     abstract fun bindSettingsFragment(fragment: SettingsFragment): Fragment
+
 }

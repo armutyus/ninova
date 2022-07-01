@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -14,6 +15,8 @@ import androidx.navigation.ui.setupWithNavController
 import com.armutyus.ninova.R
 import com.armutyus.ninova.databinding.ActivityMainBinding
 import com.armutyus.ninova.fragmentfactory.NinovaFragmentFactoryEntryPoint
+import com.armutyus.ninova.ui.fragmentfactory.NinovaFragmentFactoryEntryPoint
+import com.armutyus.ninova.ui.splash.SplashActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
@@ -64,8 +67,6 @@ class MainActivity @Inject constructor(
                     supportActionBar?.show()
                     navView.visibility = View.VISIBLE
                 }
-
-            }
 
         }
 

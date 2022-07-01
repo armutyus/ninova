@@ -7,6 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.armutyus.ninova.model.Books
 import com.armutyus.ninova.repository.BooksRepositoryInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

@@ -15,6 +15,10 @@
         <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.197" />
         <entry key="app/src/main/res/drawable/ic_sign_out.xml" value="0.197" />
         <entry key="app/src/main/res/drawable/ic_switch_account.xml" value="0.197" />
+        <entry key="app/src/main/res/drawable/ic_add_button.xml" value="0.197" />
+        <entry key="app/src/main/res/drawable/ic_login_email_gray.xml" value="0.16" />
+        <entry key="app/src/main/res/drawable/ic_login_lock_gray.xml" value="0.16" />
+        <entry key="app/src/main/res/drawable/ic_search.xml" value="0.127" />
         <entry key="app/src/main/res/layout-w1240dp/activity_login.xml" value="0.164453125" />
         <entry key="app/src/main/res/layout-w936dp/activity_login.xml" value="0.1437841530054645" />
         <entry key="app/src/main/res/layout/activity_about.xml" value="0.28229166666666666" />
