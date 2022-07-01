@@ -80,5 +80,4 @@ object AppModule {
     @Provides
     fun injectNinovaDao(database: NinovaLocalDB) = database.ninovaDao()
 
-
 }
