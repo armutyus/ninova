@@ -35,6 +35,7 @@
         android:name="com.armutyus.ninova.ui.search.SearchArchiveFragment"
         android:label="Ninova"
         tools:layout="@layout/fragment_search_archive" />
+    </fragment>
     <fragment
         android:id="@+id/searchApiFragment"
         android:name="com.armutyus.ninova.ui.search.SearchApiFragment"
@@ -53,6 +54,5 @@
     <action
         android:id="@+id/action_main_to_settings"
         app:destination="@id/settingsFragment" />
-
 
 </navigation>

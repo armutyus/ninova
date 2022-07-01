@@ -18,10 +18,8 @@ import com.armutyus.ninova.ui.splash.SplashActivity
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Named
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -68,9 +66,12 @@ object AppModule {
         context, NinovaLocalDB::class.java, "NinovaLocalDB"
     ).build()
 
-    @Singleton
     @Provides
     fun injectNinovaDao(database: NinovaLocalDB) = database.ninovaDao()
 
+    @Named(ABOUT_INTENT)
+    fun provideAboutIntent(context: Context): Intent {
+        return Intent(context, AboutActivity::class.java)
+    }
 
 }

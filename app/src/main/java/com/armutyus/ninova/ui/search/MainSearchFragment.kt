@@ -32,6 +32,7 @@ class MainSearchFragment @Inject constructor(
         super.onCreate(savedInstanceState)
         isSearchActive = requireActivity().getPreferences(Context.MODE_PRIVATE) ?: return
         mainSearchViewModel = ViewModelProvider(requireActivity())[MainSearchViewModel::class.java]
+
     }
 
     override fun onCreateView(
@@ -67,7 +68,6 @@ class MainSearchFragment @Inject constructor(
         }
 
         runObservers()
-
         return binding?.root
     }
 
@@ -75,6 +75,7 @@ class MainSearchFragment @Inject constructor(
         super.onResume()
         mainSearchViewModel.getBooksList()
         setVisibilitiesForSearchQueryNull()
+        getFakeBooksList()
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
