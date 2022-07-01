@@ -40,6 +40,6 @@ object Constants {
     const val CREATED_AT = "createdAt"
     const val USER_TYPE = "userType"
 
-    //Items
+    //Items &
     var currentShelf: LocalShelf? = null
 }
