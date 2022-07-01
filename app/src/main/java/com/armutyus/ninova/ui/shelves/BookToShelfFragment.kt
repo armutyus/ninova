@@ -80,7 +80,9 @@ class BookToShelfFragment @Inject constructor(
                     LocalShelf(
                         0,
                         shelfTitle,
-                        formattedDate
+                        formattedDate,
+                        "",
+                        0
                     )
                 )
                 dialog.hide()
@@ -117,6 +119,14 @@ class BookToShelfFragment @Inject constructor(
         val shelfId = localShelf.shelfId
         val crossRef = BookShelfCrossRef(bookId, shelfId)
         shelvesViewModel.insertBookShelfCrossRef(crossRef)
+        /*shelvesViewModel.shelfWithBooksList.observe(viewLifecycleOwner) { booksOfShelfList ->
+            if (booksOfShelfList.isNotEmpty()) {
+                booksOfShelfList.forEach {
+                    localShelf.booksInShelf = it.book.size
+                    shelvesViewModel.updateShelf(localShelf)
+                }
+            }
+        }*/
         findNavController().popBackStack()
     }
 

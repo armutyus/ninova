@@ -12,6 +12,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Constants.currentShelf
 import com.armutyus.ninova.databinding.ActivityMainBinding
 import com.armutyus.ninova.fragmentfactory.NinovaFragmentFactoryEntryPoint
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -58,6 +59,12 @@ class MainActivity @Inject constructor(
                 R.id.settingsFragment -> {
                     supportActionBar?.show()
                     navView.visibility = View.GONE
+                }
+
+                R.id.shelfWithBooksFragment -> {
+                    supportActionBar?.show()
+                    navView.visibility = View.VISIBLE
+                    supportActionBar?.title = currentShelf?.shelfTitle
                 }
 
                 else -> {

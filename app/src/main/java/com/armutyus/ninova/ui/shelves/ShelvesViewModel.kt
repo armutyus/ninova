@@ -52,6 +52,10 @@ class ShelvesViewModel @Inject constructor(
         shelfRepositoryInterface.insert(localShelf)
     }
 
+    fun updateShelf(localShelf: LocalShelf) = viewModelScope.launch {
+        shelfRepositoryInterface.update(localShelf)
+    }
+
     fun deleteShelf(localShelf: LocalShelf) = viewModelScope.launch {
         shelfRepositoryInterface.delete(localShelf)
     }

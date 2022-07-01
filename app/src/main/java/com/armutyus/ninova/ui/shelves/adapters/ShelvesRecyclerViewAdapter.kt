@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Constants.currentShelf
 import com.armutyus.ninova.roomdb.entities.LocalShelf
-import com.armutyus.ninova.ui.books.BooksFragmentDirections
 import com.armutyus.ninova.ui.shelves.ShelvesFragmentDirections
 import com.bumptech.glide.RequestManager
 import javax.inject.Inject
@@ -64,6 +63,7 @@ class ShelvesRecyclerViewAdapter @Inject constructor(
         holder.itemView.apply {
             shelfTitle.text = shelf.shelfTitle
             shelfCreatedDate.text = shelf.createdAt
+            booksInShelf.text = shelf.booksInShelf.toString()
         }
 
     }

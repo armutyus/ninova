@@ -6,14 +6,18 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
 import com.armutyus.ninova.databinding.AddNewShelfBottomSheetBinding
 import com.armutyus.ninova.databinding.FragmentShelvesBinding
+import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.LocalShelf
 import com.armutyus.ninova.ui.shelves.adapters.ShelvesRecyclerViewAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -25,6 +29,27 @@ class ShelvesFragment @Inject constructor(
     private var fragmentBinding: FragmentShelvesBinding? = null
     private lateinit var shelvesViewModel: ShelvesViewModel
     private lateinit var bottomSheetBinding: AddNewShelfBottomSheetBinding
+    private val swipeCallBack = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            return true
+        }
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            val layoutPosition = viewHolder.layoutPosition
+            val swipedShelf = shelvesAdapter.mainShelfList[layoutPosition]
+            shelvesViewModel.deleteShelf(swipedShelf).invokeOnCompletion {
+                Snackbar.make(requireView(), "Shelf deleted from your library", Snackbar.LENGTH_LONG)
+                    .setAction("UNDO") {
+                        shelvesViewModel.insertShelf(swipedShelf)
+                    }.show()
+            }
+        }
+
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,6 +61,7 @@ class ShelvesFragment @Inject constructor(
         val recyclerView = binding.mainShelvesRecyclerView
         recyclerView.adapter = shelvesAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        ItemTouchHelper(swipeCallBack).attachToRecyclerView(recyclerView)
 
         val searchView = binding.shelvesSearch
         searchView.setOnQueryTextListener(this)
@@ -68,7 +94,9 @@ class ShelvesFragment @Inject constructor(
                     LocalShelf(
                         0,
                         shelfTitle,
-                        formattedDate
+                        formattedDate,
+                        "",
+                        0
                     )
                 )
                 dialog.hide()
@@ -83,9 +111,9 @@ class ShelvesFragment @Inject constructor(
     }
 
     private fun observeShelfList() {
-        shelvesViewModel.currentShelfList.observe(viewLifecycleOwner) {
-            shelvesAdapter.mainShelfList = it
-            setVisibilities(it)
+        shelvesViewModel.currentShelfList.observe(viewLifecycleOwner) { currentShelfList ->
+            shelvesAdapter.mainShelfList = currentShelfList
+            setVisibilities(currentShelfList)
         }
 
         shelvesViewModel.shelfList.observe(viewLifecycleOwner) {

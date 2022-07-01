@@ -9,10 +9,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
-import com.armutyus.ninova.constants.Constants.currentShelf
 import com.armutyus.ninova.databinding.FragmentShelfWithBooksBinding
 import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
-import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.books.adapters.BooksRecyclerViewAdapter
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
@@ -24,7 +22,7 @@ class ShelfWithBooksFragment @Inject constructor(
     private var fragmentBinding: FragmentShelfWithBooksBinding? = null
     private lateinit var shelvesViewModel: ShelvesViewModel
     private var currentShelfId = 0
-    val args: ShelfWithBooksFragmentArgs by navArgs()
+    private val args: ShelfWithBooksFragmentArgs by navArgs()
     private val swipeCallBack = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         override fun onMove(
             recyclerView: RecyclerView,
@@ -55,8 +53,6 @@ class ShelfWithBooksFragment @Inject constructor(
         fragmentBinding = binding
         shelvesViewModel = ViewModelProvider(requireActivity())[ShelvesViewModel::class.java]
 
-        requireActivity().actionBar?.title = currentShelf?.shelfTitle // change title with selected shelf
-
         val recyclerView = binding.shelfWithBooksRecyclerView
         recyclerView.adapter = booksAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -74,13 +70,14 @@ class ShelfWithBooksFragment @Inject constructor(
     }
 
     private fun observeBookList() {
-        shelvesViewModel.shelfWithBooksList.observe(viewLifecycleOwner) { bookWithShelfList ->
-            if (bookWithShelfList.isEmpty()) {
-                fragmentBinding?.linearLayoutShelfWithBooksError?.visibility = View.VISIBLE
-            } else {
-                fragmentBinding?.linearLayoutShelfWithBooksError?.visibility = View.GONE
-                fragmentBinding?.shelfWithBooksRecyclerView?.visibility = View.VISIBLE
-                bookWithShelfList.forEach {
+        shelvesViewModel.shelfWithBooksList.observe(viewLifecycleOwner) { booksOfShelfList ->
+            booksOfShelfList.forEach {
+                if (it.book.isEmpty()) {
+                    fragmentBinding?.shelfWithBooksRecyclerView?.visibility = View.GONE
+                    fragmentBinding?.linearLayoutShelfWithBooksError?.visibility = View.VISIBLE
+                } else {
+                    fragmentBinding?.linearLayoutShelfWithBooksError?.visibility = View.GONE
+                    fragmentBinding?.shelfWithBooksRecyclerView?.visibility = View.VISIBLE
                     booksAdapter.mainBooksList = it.book.toList()
                 }
             }

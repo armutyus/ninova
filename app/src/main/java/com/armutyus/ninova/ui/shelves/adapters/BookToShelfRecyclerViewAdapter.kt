@@ -56,6 +56,7 @@ class BookToShelfRecyclerViewAdapter @Inject constructor(
         holder.itemView.apply {
             shelfTitle.text = shelf.shelfTitle
             shelfCreatedDate.text = shelf.createdAt
+            booksInShelf.text = shelf.booksInShelf.toString()
         }
 
         holder.itemView.setOnClickListener {

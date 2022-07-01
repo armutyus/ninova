@@ -2,6 +2,7 @@ package com.armutyus.ninova.constants
 
 import com.armutyus.ninova.BuildConfig
 import com.armutyus.ninova.roomdb.entities.LocalShelf
+import com.armutyus.ninova.roomdb.entities.ShelfWithBooks
 
 object Constants {
 
