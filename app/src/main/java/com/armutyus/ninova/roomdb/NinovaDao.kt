@@ -23,7 +23,7 @@ interface NinovaDao {
     @Query("SELECT * FROM Book")
     fun getLocalBooks(): Flow<List<LocalBook>>
 
-    @Query("SELECT * FROM Book WHERE bookAuthor LIKE :searchString OR bookTitle LIKE :searchString")
+    @Query("SELECT * FROM Book WHERE bookAuthors LIKE :searchString OR bookTitle LIKE :searchString")
     fun searchLocalBooks(searchString: String): Flow<List<LocalBook>>
 
     //Shelf works

@@ -108,11 +108,6 @@ class BookToShelfFragment @Inject constructor(
 
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        fragmentBinding = null
-    }
-
     override fun onClick(localShelf: LocalShelf) {
         val args: BookToShelfFragmentArgs by navArgs()
         val bookId = args.currentBookId
@@ -157,6 +152,11 @@ class BookToShelfFragment @Inject constructor(
             fragmentBinding?.progressBar?.visibility = View.GONE
             fragmentBinding?.addShelvesRecyclerView?.visibility = View.VISIBLE
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        fragmentBinding = null
     }
 
 }

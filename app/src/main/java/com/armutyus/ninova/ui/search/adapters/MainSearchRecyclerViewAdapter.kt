@@ -62,11 +62,14 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
                 LocalBook(
                     0,
                     book.bookTitle,
-                    book.bookAuthor,
+                    "",
+                    listOf(book.bookAuthor),
                     book.bookPages,
                     "",
                     "",
-                    book.releaseDate
+                    book.releaseDate,
+                    listOf(),
+                    ""
                 )
             )
         }

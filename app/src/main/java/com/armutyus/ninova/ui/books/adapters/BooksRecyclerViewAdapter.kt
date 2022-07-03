@@ -61,9 +61,9 @@ class BooksRecyclerViewAdapter @Inject constructor(
 
         holder.itemView.apply {
             bookTitle.text = book.bookTitle
-            bookAuthor.text = book.bookAuthor
+            bookAuthor.text = book.bookAuthors.toString()
             bookPages.text = book.bookPages
-            bookReleaseDate.text = book.releaseDate
+            bookReleaseDate.text = book.bookPublishedDate
         }
 
     }
