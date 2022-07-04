@@ -14,5 +14,7 @@ class BookDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityBookDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
     }
+
 }

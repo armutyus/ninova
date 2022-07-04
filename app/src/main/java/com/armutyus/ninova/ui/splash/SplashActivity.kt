@@ -43,12 +43,12 @@ class SplashActivity : AppCompatActivity() {
 
         when (themePref) {
             LIGHT_THEME -> {
-                sharedPreferences?.edit()?.putString("theme", Constants.LIGHT_THEME)?.apply()
+                sharedPreferences?.edit()?.putString("theme", LIGHT_THEME)?.apply()
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             }
 
             DARK_THEME -> {
-                sharedPreferences?.edit()?.putString("theme", Constants.DARK_THEME)?.apply()
+                sharedPreferences?.edit()?.putString("theme", DARK_THEME)?.apply()
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }
 

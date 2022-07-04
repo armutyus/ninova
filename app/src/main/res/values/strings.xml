@@ -56,4 +56,6 @@
     <string name="search_shelves">Search your shelves</string>
     <string name="choose_shelf_to_add_your_book">Choose shelf to add your book</string>
     <string name="subtitle_of_the_book">subtitle of the book</string>
+    <string name="info">INFO</string>
+    <string name="notes">NOTES</string>
 </resources>
