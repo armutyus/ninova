@@ -1,5 +1,6 @@
 package com.armutyus.ninova.ui.search.adapters
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,15 +11,21 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Constants.BOOK_DETAILS_INTENT
 import com.armutyus.ninova.model.Book
 import com.armutyus.ninova.roomdb.entities.LocalBook
 import com.armutyus.ninova.ui.search.MainSearchFragment
 import com.bumptech.glide.RequestManager
 import javax.inject.Inject
+import javax.inject.Named
 
 class MainSearchRecyclerViewAdapter @Inject constructor(
     private val glide: RequestManager
 ) : RecyclerView.Adapter<MainSearchRecyclerViewAdapter.MainSearchViewHolder>() {
+
+    @Named(BOOK_DETAILS_INTENT)
+    @Inject
+    lateinit var bookDetailsIntent: Intent
 
     private lateinit var searchFragment: MainSearchFragment
 
@@ -63,20 +70,26 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
                     0,
                     book.bookTitle,
                     "",
-                    listOf(book.bookAuthor),
+                    book.bookAuthor,
                     book.bookPages,
                     "",
                     "",
                     book.releaseDate,
                     listOf(),
+                    "",
                     ""
                 )
             )
         }
 
+        holder.itemView.setOnClickListener {
+            //currentBook = book
+            holder.itemView.context.startActivity(bookDetailsIntent)
+        }
+
         holder.itemView.apply {
             bookTitle.text = book.bookTitle
-            bookAuthor.text = book.bookAuthor
+            bookAuthor.text = book.bookAuthor.joinToString(", ")
             bookPages.text = book.bookPages
             bookReleaseDate.text = book.releaseDate
         }

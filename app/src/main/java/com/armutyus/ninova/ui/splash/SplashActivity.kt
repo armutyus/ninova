@@ -7,7 +7,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
-import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.constants.Constants.DARK_THEME
 import com.armutyus.ninova.constants.Constants.LIGHT_THEME
 import com.armutyus.ninova.constants.Constants.LOGIN_INTENT

@@ -20,7 +20,8 @@
             android:layout_margin="2dp"
             android:layout_width="80dp"
             android:layout_height="120dp"
-            android:src="@drawable/example_book"/>
+            android:src="@drawable/example_book"
+            tools:ignore="ContentDescription" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,48 +74,235 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/bookDetailNotesTab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/notes" />
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/bookDetailInfoTab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/info" />
 
     </com.google.android.material.tabs.TabLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/mainSearchRecyclerView"
+    <LinearLayout
+        android:id="@+id/bookDetailNotesLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:visibility="gone"
-        tools:visibility="visible"/>
+        android:orientation="vertical"
+        android:visibility="visible">
 
-    <androidx.core.widget.ContentLoadingProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        style="?android:attr/progressBarStyleSmall"
-        android:visibility="gone" />
+        <LinearLayout
+            android:id="@+id/bookDetailShelvesTextViews"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/bookDetailShelvesTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_shelves"
+                android:textColor="@color/light_primary"
+                android:textSize="14sp"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"/>
+
+            <TextView
+                android:id="@+id/shelvesOfBooks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:hint="@string/add_this_book_to_a_shelf"
+                android:textColorHint="@color/light_primary_variant"
+                android:textColor="@color/light_primary_variant"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                app:drawableEndCompat="@drawable/ic_action_arrow"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bookDetailUserNotesLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/bookDetailUserNotesTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/your_notes"
+                android:textColor="@color/light_primary"
+                android:textSize="14sp"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"/>
+
+            <TextView
+                android:id="@+id/bookDetailUserNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:maxLines="4"
+                android:ellipsize="end"
+                android:textColor="@color/light_primary_variant"
+                android:textSize="16sp"
+                android:hint="@string/add_your_notes_here"
+                android:textColorHint="@color/light_primary_variant"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                app:drawableEndCompat="@drawable/ic_action_arrow" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/bookDetailInfoLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:id="@+id/bookDetailPagesTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pages"
+                android:textColor="@color/light_primary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"/>
+
+            <TextView
+                android:id="@+id/bookDetailPagesNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/page_number"
+                android:textColor="@color/light_primary_variant"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"/>
+
+            <TextView
+                android:id="@+id/bookDetailCategoriesTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/categories"
+                android:textColor="@color/light_primary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"/>
+
+            <TextView
+                android:id="@+id/bookDetailCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/action_comedy_horror"
+                android:textColor="@color/light_primary_variant"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"/>
+
+            <TextView
+                android:id="@+id/bookDetailPublisherTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/publisher"
+                android:textColor="@color/light_primary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"/>
+
+            <TextView
+                android:id="@+id/bookDetailPublisher"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/awesome_inc"
+                android:textColor="@color/light_primary_variant"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"/>
+
+            <TextView
+                android:id="@+id/bookDetailPublishDateTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/published_date"
+                android:textColor="@color/light_primary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"/>
+
+            <TextView
+                android:id="@+id/bookDetailPublishDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/_01_01_0001"
+                android:textColor="@color/light_primary_variant"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"/>
+
+            <TextView
+                android:id="@+id/bookDetailDescriptionTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/description"
+                android:textColor="@color/light_primary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"/>
+
+            <TextView
+                android:id="@+id/bookDetailDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/lorem_ipsum"
+                android:textColor="@color/light_primary_variant"
+                android:textSize="14sp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"/>
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <LinearLayout
-        android:id="@+id/linearLayoutSearchError"
+        android:id="@+id/linearLayoutDetailsError"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone"
-        tools:visibility="visible">
+        android:layout_marginTop="16dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/nothing_to_show_here"
+            android:text="@string/something_went_wrong"
             android:textColor="@color/light_primary"
             android:textSize="16sp" />
 

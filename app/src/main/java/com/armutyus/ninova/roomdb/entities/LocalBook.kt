@@ -14,5 +14,6 @@ data class LocalBook(
     val bookDescription: String?,
     val bookPublishedDate: String?,
     val bookCategories: List<String>?,
-    val bookPublisher: String?
+    val bookPublisher: String?,
+    val bookNotes: String?
 )

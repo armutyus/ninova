@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
 import com.armutyus.ninova.databinding.AddNewShelfBottomSheetBinding
 import com.armutyus.ninova.databinding.FragmentShelvesBinding
-import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.LocalShelf
 import com.armutyus.ninova.ui.shelves.adapters.ShelvesRecyclerViewAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -42,7 +41,11 @@ class ShelvesFragment @Inject constructor(
             val layoutPosition = viewHolder.layoutPosition
             val swipedShelf = shelvesAdapter.mainShelfList[layoutPosition]
             shelvesViewModel.deleteShelf(swipedShelf).invokeOnCompletion {
-                Snackbar.make(requireView(), "Shelf deleted from your library", Snackbar.LENGTH_LONG)
+                Snackbar.make(
+                    requireView(),
+                    "Shelf deleted from your library",
+                    Snackbar.LENGTH_LONG
+                )
                     .setAction("UNDO") {
                         shelvesViewModel.insertShelf(swipedShelf)
                     }.show()
