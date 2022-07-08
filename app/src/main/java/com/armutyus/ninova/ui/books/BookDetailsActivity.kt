@@ -6,15 +6,20 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.armutyus.ninova.constants.Constants.currentBook
 import com.armutyus.ninova.databinding.ActivityBookDetailsBinding
+import com.bumptech.glide.RequestManager
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class BookDetailsActivity : AppCompatActivity() {
+class BookDetailsActivity: AppCompatActivity() {
 
     private lateinit var binding: ActivityBookDetailsBinding
     private lateinit var tabLayout: TabLayout
     private val viewModel by viewModels<BooksViewModel>()
+
+    @Inject
+    lateinit var glide: RequestManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,11 +54,7 @@ class BookDetailsActivity : AppCompatActivity() {
         viewModel.bookWithShelvesList.observe(this) { shelvesOfBook ->
             shelvesOfBook.forEach { bookWithShelves ->
                 val shelfTitleList = bookWithShelves.shelf.map { it.shelfTitle }.toList()
-                var i = 0
-                while (i < shelfTitleList.size) {
-                    currentShelvesList.add(shelfTitleList[i])
-                    i += 1
-                }
+                currentShelvesList.addAll(shelfTitleList)
                 binding.shelvesOfBooks.text = currentShelvesList.joinToString(", ")
             }
         }
@@ -93,7 +94,7 @@ class BookDetailsActivity : AppCompatActivity() {
             binding.bookDetailInfoLinearLayout.visibility = View.GONE
         } else {
             val bookImage = binding.bookCoverImageView
-            //glide.load(currentBook!!.bookCoverUrl).centerCrop().into(bookImage!!)
+            glide.load(currentBook!!.bookCoverUrl).centerCrop().into(bookImage)
             binding.bookDetailTitleText.text = currentBook!!.bookTitle
             binding.bookDetailSubTitleText.text = currentBook!!.bookSubtitle
             binding.bookDetailAuthorsText.text = currentBook!!.bookAuthors!!.joinToString(", ")

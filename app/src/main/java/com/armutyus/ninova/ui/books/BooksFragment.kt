@@ -67,6 +67,7 @@ class BooksFragment @Inject constructor(
         booksViewModel.bookList.observe(viewLifecycleOwner) { localBookList ->
             if (localBookList.isEmpty()) {
                 fragmentBinding?.linearLayoutBooksError?.visibility = View.VISIBLE
+                fragmentBinding?.mainBooksRecyclerView?.visibility = View.GONE
             } else {
                 fragmentBinding?.linearLayoutBooksError?.visibility = View.GONE
                 fragmentBinding?.mainBooksRecyclerView?.visibility = View.VISIBLE
