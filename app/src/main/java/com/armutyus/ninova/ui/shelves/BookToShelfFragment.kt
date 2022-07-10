@@ -3,6 +3,8 @@ package com.armutyus.ninova.ui.shelves
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.addCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -39,6 +41,8 @@ class BookToShelfFragment @Inject constructor(
 
         shelvesViewModel = ViewModelProvider(requireActivity())[ShelvesViewModel::class.java]
 
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
         val searchView = binding.bookToShelfSearch
         searchView.setOnQueryTextListener(this)
         searchView.setIconifiedByDefault(false)
@@ -52,8 +56,15 @@ class BookToShelfFragment @Inject constructor(
             showAddShelfDialog()
         }
 
-        observeShelfList()
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
+            when (activity?.intent?.getStringExtra("detailsActivity")) {
+                "BookDetailsActivity" -> {
+                    activity?.finish()
+                }
+            }
+        }
 
+        observeShelfList()
     }
 
     override fun onResume() {
@@ -122,7 +133,12 @@ class BookToShelfFragment @Inject constructor(
                 }
             }
         }*/
-        findNavController().popBackStack()
+        if (activity?.intent?.getStringExtra("detailsActivity") == "BookDetailsActivity") {
+            activity?.finish()
+        } else {
+            findNavController().popBackStack()
+        }
+
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {

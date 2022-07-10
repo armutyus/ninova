@@ -64,7 +64,8 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
         val book = mainSearchBooksList[position]
 
         val addButton = holder.itemView.findViewById<ImageButton>(R.id.main_search_add_button)
-        val addedButton = holder.itemView.findViewById<ImageButton>(R.id.main_search_add_checked_button)
+        val addedButton =
+            holder.itemView.findViewById<ImageButton>(R.id.main_search_add_checked_button)
 
         addButton?.setOnClickListener {
             searchFragment.onClick(
@@ -87,7 +88,11 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
         }
 
         addedButton?.setOnClickListener {
-            Toast.makeText(holder.itemView.context,"Already added to your library", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                holder.itemView.context,
+                "Already added to your library",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         holder.itemView.setOnClickListener {

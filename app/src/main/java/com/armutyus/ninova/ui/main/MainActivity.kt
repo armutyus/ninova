@@ -11,14 +11,15 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.armutyus.ninova.MobileNavigationDirections
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Constants.currentBook
 import com.armutyus.ninova.constants.Constants.currentShelf
 import com.armutyus.ninova.databinding.ActivityMainBinding
 import com.armutyus.ninova.fragmentfactory.NinovaFragmentFactoryEntryPoint
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -45,6 +46,17 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         navController = navHostFragment.navController
+
+        if (currentBook?.bookId != null) {
+            when (intent.getIntExtra("fromDetails", -1)) {
+                currentBook!!.bookId -> {
+                    val action =
+                        MobileNavigationDirections.actionMainToBookToShelfFragment(currentBook!!.bookId)
+                    navController.navigate(action)
+                }
+                else -> {}
+            }
+        }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
 

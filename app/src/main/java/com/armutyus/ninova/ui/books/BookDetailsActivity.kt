@@ -1,18 +1,21 @@
 package com.armutyus.ninova.ui.books
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.armutyus.ninova.constants.Constants.MAIN_INTENT
 import com.armutyus.ninova.constants.Constants.currentBook
 import com.armutyus.ninova.databinding.ActivityBookDetailsBinding
 import com.bumptech.glide.RequestManager
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import javax.inject.Named
 
 @AndroidEntryPoint
-class BookDetailsActivity: AppCompatActivity() {
+class BookDetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBookDetailsBinding
     private lateinit var tabLayout: TabLayout
@@ -20,6 +23,10 @@ class BookDetailsActivity: AppCompatActivity() {
 
     @Inject
     lateinit var glide: RequestManager
+
+    @Named(MAIN_INTENT)
+    @Inject
+    lateinit var mainIntent: Intent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,27 +49,33 @@ class BookDetailsActivity: AppCompatActivity() {
             }
         })
 
-        observeShelvesOfBook()
+        binding.shelvesOfBooks.setOnClickListener {
+            goToBookToShelfFragment()
+        }
 
+        viewModel.getBookWithShelves(currentBook!!.bookId)
+        observeShelvesOfBook()
         setupBookInfo()
 
     }
 
-    private var currentShelvesList: ArrayList<String?> = arrayListOf()
+    private fun goToBookToShelfFragment() {
+        val currentBookId = currentBook!!.bookId
+        mainIntent.putExtra("fromDetails", currentBookId)
+        mainIntent.putExtra("detailsActivity", "BookDetailsActivity")
+        startActivity(mainIntent)
+    }
+
+    private var currentShelvesList = mutableSetOf<String?>()
 
     private fun observeShelvesOfBook() {
         viewModel.bookWithShelvesList.observe(this) { shelvesOfBook ->
             shelvesOfBook.forEach { bookWithShelves ->
                 val shelfTitleList = bookWithShelves.shelf.map { it.shelfTitle }.toList()
                 currentShelvesList.addAll(shelfTitleList)
-                binding.shelvesOfBooks.text = currentShelvesList.joinToString(", ")
             }
+            binding.shelvesOfBooks.text = currentShelvesList.joinToString(", ")
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.getBookWithShelves(currentBook!!.bookId)
     }
 
     private fun setVisibilities(tab: TabLayout.Tab?) {
