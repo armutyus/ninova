@@ -72,4 +72,7 @@
     <string name="something_went_wrong">Something went wrong..</string>
     <string name="add_your_notes_here">Add your notes here</string>
     <string name="add_this_book_to_a_shelf">Add this book to a shelf</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="enter_your_notes_here">Enter your notes here</string>
 </resources>

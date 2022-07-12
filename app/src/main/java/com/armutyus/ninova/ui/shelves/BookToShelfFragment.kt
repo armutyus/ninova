@@ -1,17 +1,25 @@
 package com.armutyus.ninova.ui.shelves
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Constants.DETAILS_STRING_EXTRA
+import com.armutyus.ninova.constants.Constants.FROM_DETAILS_ACTIVITY
 import com.armutyus.ninova.databinding.AddNewShelfBottomSheetBinding
 import com.armutyus.ninova.databinding.FragmentBookToShelfBinding
 import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
@@ -43,6 +51,17 @@ class BookToShelfFragment @Inject constructor(
 
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menu.clear()
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return false
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
         val searchView = binding.bookToShelfSearch
         searchView.setOnQueryTextListener(this)
         searchView.setIconifiedByDefault(false)
@@ -57,8 +76,8 @@ class BookToShelfFragment @Inject constructor(
         }
 
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
-            when (activity?.intent?.getStringExtra("detailsActivity")) {
-                "BookDetailsActivity" -> {
+            when (activity?.intent?.getStringExtra(DETAILS_STRING_EXTRA)) {
+                FROM_DETAILS_ACTIVITY -> {
                     activity?.finish()
                 }
             }

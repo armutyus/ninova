@@ -5,6 +5,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.armutyus.ninova.constants.Constants.DETAILS_INT_EXTRA
+import com.armutyus.ninova.constants.Constants.DETAILS_STRING_EXTRA
+import com.armutyus.ninova.constants.Constants.FROM_DETAILS_ACTIVITY
+import com.armutyus.ninova.constants.Constants.FROM_DETAILS_TO_NOTES_EXTRA
 import com.armutyus.ninova.constants.Constants.MAIN_INTENT
 import com.armutyus.ninova.constants.Constants.currentBook
 import com.armutyus.ninova.databinding.ActivityBookDetailsBinding
@@ -33,6 +37,8 @@ class BookDetailsActivity : AppCompatActivity() {
         binding = ActivityBookDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.title = currentBook?.bookTitle
+
         tabLayout = binding.bookDetailTabLayout
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
@@ -53,6 +59,10 @@ class BookDetailsActivity : AppCompatActivity() {
             goToBookToShelfFragment()
         }
 
+        binding.bookDetailUserNotes.setOnClickListener {
+            goToUserBookNotesFragment()
+        }
+
         viewModel.getBookWithShelves(currentBook!!.bookId)
         observeShelvesOfBook()
         setupBookInfo()
@@ -61,8 +71,14 @@ class BookDetailsActivity : AppCompatActivity() {
 
     private fun goToBookToShelfFragment() {
         val currentBookId = currentBook!!.bookId
-        mainIntent.putExtra("fromDetails", currentBookId)
-        mainIntent.putExtra("detailsActivity", "BookDetailsActivity")
+        mainIntent.putExtra(DETAILS_INT_EXTRA, currentBookId)
+        mainIntent.putExtra(DETAILS_STRING_EXTRA, FROM_DETAILS_ACTIVITY)
+        startActivity(mainIntent)
+    }
+
+    private fun goToUserBookNotesFragment() {
+        mainIntent.putExtra(DETAILS_INT_EXTRA, FROM_DETAILS_TO_NOTES_EXTRA)
+        mainIntent.putExtra(DETAILS_STRING_EXTRA, FROM_DETAILS_ACTIVITY)
         startActivity(mainIntent)
     }
 
