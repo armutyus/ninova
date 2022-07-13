@@ -86,18 +86,17 @@ class BookDetailsActivity : AppCompatActivity() {
         startActivity(mainIntent)
     }
 
-    private var currentShelvesList = mutableSetOf<String?>()
+    private var currentShelvesList = mutableListOf<String?>()
 
     private fun observeBookDetailsChanges() {
         viewModel.bookWithShelvesList.observe(this) { shelvesOfBook ->
             shelvesOfBook.forEach { bookWithShelves ->
                 val shelfTitleList = bookWithShelves.shelf.map { it.shelfTitle }.toList()
-                currentShelvesList.removeAll(shelfTitleList.toSet())
+                currentShelvesList.removeAll(shelfTitleList)
                 currentShelvesList.addAll(shelfTitleList)
             }
             binding.shelvesOfBooks.text = currentShelvesList.joinToString(", ")
         }
-
         binding.bookDetailUserNotes.text = currentBook!!.bookNotes
     }
 

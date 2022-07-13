@@ -64,6 +64,7 @@ class ShelvesFragment @Inject constructor(
         val recyclerView = binding.mainShelvesRecyclerView
         recyclerView.adapter = shelvesAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        shelvesAdapter.setViewModel(shelvesViewModel)
         ItemTouchHelper(swipeCallBack).attachToRecyclerView(recyclerView)
 
         val searchView = binding.shelvesSearch
@@ -99,7 +100,6 @@ class ShelvesFragment @Inject constructor(
                         shelfTitle,
                         formattedDate,
                         "",
-                        0
                     )
                 )
                 dialog.hide()
@@ -126,6 +126,7 @@ class ShelvesFragment @Inject constructor(
         shelvesViewModel.searchShelvesList.observe(viewLifecycleOwner) {
             shelvesViewModel.setCurrentList(it?.toList() ?: listOf())
         }
+
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {

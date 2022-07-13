@@ -112,7 +112,6 @@ class BookToShelfFragment @Inject constructor(
                         shelfTitle,
                         formattedDate,
                         "",
-                        0
                     )
                 )
                 dialog.hide()
@@ -150,17 +149,6 @@ class BookToShelfFragment @Inject constructor(
             findNavController().popBackStack()
         }
 
-    }
-
-    private fun observeBooksInShelf(localShelf: LocalShelf) {
-        shelvesViewModel.shelfWithBooksList.observe(viewLifecycleOwner) { booksOfShelfList ->
-            if (booksOfShelfList.isNotEmpty()) {
-                booksOfShelfList.find { it.shelf.shelfId == localShelf.shelfId }.apply {
-                    localShelf.booksInShelf = this?.book?.size
-                    shelvesViewModel.updateShelf(localShelf)
-                }
-            }
-        }
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
