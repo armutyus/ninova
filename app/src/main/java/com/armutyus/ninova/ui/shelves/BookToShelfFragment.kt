@@ -144,20 +144,23 @@ class BookToShelfFragment @Inject constructor(
         val shelfId = localShelf.shelfId
         val crossRef = BookShelfCrossRef(bookId, shelfId)
         shelvesViewModel.insertBookShelfCrossRef(crossRef)
-        /*shelvesViewModel.shelfWithBooksList.observe(viewLifecycleOwner) { booksOfShelfList ->
-            if (booksOfShelfList.isNotEmpty()) {
-                booksOfShelfList.forEach {
-                    localShelf.booksInShelf = it.book.size
-                    shelvesViewModel.updateShelf(localShelf)
-                }
-            }
-        }*/
-        if (activity?.intent?.getStringExtra("detailsActivity") == "BookDetailsActivity") {
+        if (activity?.intent?.getStringExtra(DETAILS_STRING_EXTRA) == FROM_DETAILS_ACTIVITY) {
             activity?.finish()
         } else {
             findNavController().popBackStack()
         }
 
+    }
+
+    private fun observeBooksInShelf(localShelf: LocalShelf) {
+        shelvesViewModel.shelfWithBooksList.observe(viewLifecycleOwner) { booksOfShelfList ->
+            if (booksOfShelfList.isNotEmpty()) {
+                booksOfShelfList.find { it.shelf.shelfId == localShelf.shelfId }.apply {
+                    localShelf.booksInShelf = this?.book?.size
+                    shelvesViewModel.updateShelf(localShelf)
+                }
+            }
+        }
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {

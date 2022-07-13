@@ -63,10 +63,14 @@ class BookDetailsActivity : AppCompatActivity() {
             goToUserBookNotesFragment()
         }
 
-        viewModel.getBookWithShelves(currentBook!!.bookId)
-        observeShelvesOfBook()
         setupBookInfo()
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getBookWithShelves(currentBook!!.bookId)
+        observeBookDetailsChanges()
     }
 
     private fun goToBookToShelfFragment() {
@@ -84,14 +88,17 @@ class BookDetailsActivity : AppCompatActivity() {
 
     private var currentShelvesList = mutableSetOf<String?>()
 
-    private fun observeShelvesOfBook() {
+    private fun observeBookDetailsChanges() {
         viewModel.bookWithShelvesList.observe(this) { shelvesOfBook ->
             shelvesOfBook.forEach { bookWithShelves ->
                 val shelfTitleList = bookWithShelves.shelf.map { it.shelfTitle }.toList()
+                currentShelvesList.removeAll(shelfTitleList.toSet())
                 currentShelvesList.addAll(shelfTitleList)
             }
             binding.shelvesOfBooks.text = currentShelvesList.joinToString(", ")
         }
+
+        binding.bookDetailUserNotes.text = currentBook!!.bookNotes
     }
 
     private fun setVisibilities(tab: TabLayout.Tab?) {
@@ -127,7 +134,6 @@ class BookDetailsActivity : AppCompatActivity() {
             binding.bookDetailTitleText.text = currentBook!!.bookTitle
             binding.bookDetailSubTitleText.text = currentBook!!.bookSubtitle
             binding.bookDetailAuthorsText.text = currentBook!!.bookAuthors!!.joinToString(", ")
-            binding.bookDetailUserNotes.text = currentBook!!.bookNotes
             binding.bookDetailPagesNumber.text = currentBook!!.bookPages
             binding.bookDetailCategories.text = currentBook!!.bookCategories!!.joinToString(", ")
             binding.bookDetailPublisher.text = currentBook!!.bookPublisher

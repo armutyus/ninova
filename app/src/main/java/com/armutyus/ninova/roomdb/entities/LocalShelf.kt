@@ -5,9 +5,9 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "Shelf")
 data class LocalShelf(
-    @PrimaryKey(autoGenerate = true) val shelfId: Int,
-    val shelfTitle: String?,
-    val createdAt: String?,
-    val shelfCover: String?,
+    @PrimaryKey(autoGenerate = true) var shelfId: Int,
+    var shelfTitle: String?,
+    var createdAt: String?,
+    var shelfCover: String?,
     var booksInShelf: Int?
 )
