@@ -15,6 +15,7 @@ import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Constants.BOOK_DETAILS_INTENT
 import com.armutyus.ninova.model.Book
 import com.armutyus.ninova.roomdb.entities.LocalBook
+import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.search.MainSearchFragment
 import com.bumptech.glide.RequestManager
 import javax.inject.Inject
@@ -29,6 +30,7 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
     lateinit var bookDetailsIntent: Intent
 
     private lateinit var searchFragment: MainSearchFragment
+    private lateinit var booksViewModel: BooksViewModel
 
     class MainSearchViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
@@ -66,6 +68,14 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
         val addButton = holder.itemView.findViewById<ImageButton>(R.id.main_search_add_button)
         val addedButton =
             holder.itemView.findViewById<ImageButton>(R.id.main_search_add_checked_button)
+
+        if (book.isBookAddedCheck(booksViewModel)) {
+            addButton.visibility = View.GONE
+            addedButton.visibility = View.VISIBLE
+        } else {
+            addButton.visibility = View.VISIBLE
+            addedButton.visibility = View.GONE
+        }
 
         addButton?.setOnClickListener {
             searchFragment.onClick(
@@ -115,6 +125,10 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
 
     fun setFragment(fragment: MainSearchFragment) {
         this.searchFragment = fragment
+    }
+
+    fun setViewModel(booksViewModel: BooksViewModel) {
+        this.booksViewModel = booksViewModel
     }
 
 }

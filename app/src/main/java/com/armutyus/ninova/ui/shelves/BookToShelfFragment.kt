@@ -46,7 +46,6 @@ class BookToShelfFragment @Inject constructor(
 
         val binding = FragmentBookToShelfBinding.bind(view)
         fragmentBinding = binding
-
         shelvesViewModel = ViewModelProvider(requireActivity())[ShelvesViewModel::class.java]
 
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
@@ -70,6 +69,7 @@ class BookToShelfFragment @Inject constructor(
         recyclerView.adapter = bookToShelfAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         bookToShelfAdapter.setFragment(this)
+        bookToShelfAdapter.setViewModel(shelvesViewModel)
 
         binding.addShelfButton.setOnClickListener {
             showAddShelfDialog()
@@ -83,6 +83,7 @@ class BookToShelfFragment @Inject constructor(
             }
         }
 
+        shelvesViewModel.getShelfWithBookList()
         observeShelfList()
     }
 
@@ -143,12 +144,12 @@ class BookToShelfFragment @Inject constructor(
         val shelfId = localShelf.shelfId
         val crossRef = BookShelfCrossRef(bookId, shelfId)
         shelvesViewModel.insertBookShelfCrossRef(crossRef)
+
         if (activity?.intent?.getStringExtra(DETAILS_STRING_EXTRA) == FROM_DETAILS_ACTIVITY) {
             activity?.finish()
         } else {
             findNavController().popBackStack()
         }
-
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {

@@ -77,16 +77,11 @@ class ShelfWithBooksFragment @Inject constructor(
                 if (it.isEmpty()) {
                     fragmentBinding?.shelfWithBooksRecyclerView?.visibility = View.GONE
                     fragmentBinding?.linearLayoutShelfWithBooksError?.visibility = View.VISIBLE
-                    println("Empty: $currentBookList")
-                    println("Empty: ${booksOfShelfList.first().shelf.shelfTitle}")
-                    println(currentShelf?.shelfTitle)
+
                 } else {
                     fragmentBinding?.linearLayoutShelfWithBooksError?.visibility = View.GONE
                     fragmentBinding?.shelfWithBooksRecyclerView?.visibility = View.VISIBLE
                     booksAdapter.mainBooksList = it
-                    println("Not empty: $currentBookList")
-                    println("Not empty: ${booksOfShelfList.first().shelf.shelfTitle}")
-                    println(currentShelf?.shelfTitle)
                 }
             }
         }

@@ -21,8 +21,7 @@ class BookToShelfRecyclerViewAdapter @Inject constructor(
 ) : RecyclerView.Adapter<BookToShelfRecyclerViewAdapter.BookToShelfViewHolder>() {
 
     private lateinit var bookToShelfFragment: BookToShelfFragment
-
-    lateinit var viewModel: ShelvesViewModel
+    private lateinit var viewModel: ShelvesViewModel
 
     class BookToShelfViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
@@ -73,7 +72,10 @@ class BookToShelfRecyclerViewAdapter @Inject constructor(
 
     fun setFragment(fragment: BookToShelfFragment) {
         this.bookToShelfFragment = fragment
-        this.viewModel = ViewModelProvider(fragment.requireActivity())[ShelvesViewModel::class.java]
+    }
+
+    fun setViewModel(shelvesViewModel: ShelvesViewModel) {
+        this.viewModel = shelvesViewModel
     }
 
 }

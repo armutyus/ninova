@@ -21,6 +21,7 @@ class BooksFragment @Inject constructor(
     private var fragmentBinding: FragmentBooksBinding? = null
     private lateinit var shelvesViewModel: ShelvesViewModel
     private lateinit var booksViewModel: BooksViewModel
+
     private val swipeCallBack = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         override fun onMove(
             recyclerView: RecyclerView,
@@ -65,7 +66,6 @@ class BooksFragment @Inject constructor(
         super.onResume()
         booksViewModel.getBookList()
         shelvesViewModel.getShelfWithBookList()
-
     }
 
     private fun observeBookList() {

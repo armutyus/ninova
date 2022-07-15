@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:paddingBottom="4dp"
+        android:paddingTop="4dp"
         android:text="@string/dusty_shelves"
         android:textColor="#009688"
         android:textSize="20sp"
