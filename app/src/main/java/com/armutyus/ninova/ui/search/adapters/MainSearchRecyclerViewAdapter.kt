@@ -13,10 +13,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Constants.BOOK_DETAILS_INTENT
-import com.armutyus.ninova.model.Book
+import com.armutyus.ninova.model.GoogleBookItem
+import com.armutyus.ninova.model.GoogleBookItemInfo
 import com.armutyus.ninova.roomdb.entities.LocalBook
 import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.search.MainSearchFragment
+import com.armutyus.ninova.ui.search.MainSearchViewModel
 import com.bumptech.glide.RequestManager
 import javax.inject.Inject
 import javax.inject.Named
@@ -34,19 +36,19 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
 
     class MainSearchViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
-    private val diffUtil = object : DiffUtil.ItemCallback<Book>() {
-        override fun areItemsTheSame(oldItem: Book, newItem: Book): Boolean {
+    private val diffUtil = object : DiffUtil.ItemCallback<GoogleBookItem>() {
+        override fun areItemsTheSame(oldItem: GoogleBookItem, newItem: GoogleBookItem): Boolean {
             return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: Book, newItem: Book): Boolean {
+        override fun areContentsTheSame(oldItem: GoogleBookItem, newItem: GoogleBookItem): Boolean {
             return oldItem == newItem
         }
     }
 
     private val recyclerListDiffer = AsyncListDiffer(this, diffUtil)
 
-    var mainSearchBooksList: List<Book>
+    var mainSearchBooksList: List<GoogleBookItem>
         get() = recyclerListDiffer.currentList
         set(value) = recyclerListDiffer.submitList(value)
 
@@ -80,16 +82,17 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
         addButton?.setOnClickListener {
             searchFragment.onClick(
                 LocalBook(
-                    0,
-                    book.bookTitle,
-                    "",
-                    book.bookAuthor,
-                    book.bookPages,
-                    "",
-                    "",
-                    book.releaseDate,
-                    listOf(),
-                    "",
+                    book.id,
+                    book.volumeInfo.title,
+                    book.volumeInfo.subtitle,
+                    book.volumeInfo.authors,
+                    book.volumeInfo.pageCount.toString(),
+                    book.volumeInfo.imageLinks.smallThumbnail,
+                    book.volumeInfo.imageLinks.thumbnail,
+                    book.volumeInfo.description,
+                    book.volumeInfo.publishedDate,
+                    book.volumeInfo.categories,
+                    book.volumeInfo.publisher,
                     ""
                 )
             )
@@ -111,10 +114,11 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
         }
 
         holder.itemView.apply {
-            bookTitle.text = book.bookTitle
-            bookAuthor.text = book.bookAuthor.joinToString(", ")
-            bookPages.text = book.bookPages
-            bookReleaseDate.text = book.releaseDate
+            glide.load(book.volumeInfo.imageLinks.smallThumbnail).centerCrop().into(bookCover)
+            bookTitle.text = book.volumeInfo.title
+            bookAuthor.text = book.volumeInfo.authors.joinToString(", ")
+            bookPages.text = book.volumeInfo.pageCount.toString()
+            bookReleaseDate.text = book.volumeInfo.publishedDate
         }
 
     }

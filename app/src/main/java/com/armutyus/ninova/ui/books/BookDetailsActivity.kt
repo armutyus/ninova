@@ -129,7 +129,7 @@ class BookDetailsActivity : AppCompatActivity() {
             binding.bookDetailInfoLinearLayout.visibility = View.GONE
         } else {
             val bookImage = binding.bookCoverImageView
-            glide.load(currentBook!!.bookCoverUrl).centerCrop().into(bookImage)
+            glide.load(currentBook!!.bookCoverSmallThumbnail).centerCrop().into(bookImage)
             binding.bookDetailTitleText.text = currentBook!!.bookTitle
             binding.bookDetailSubTitleText.text = currentBook!!.bookSubtitle
             binding.bookDetailAuthorsText.text = currentBook!!.bookAuthors!!.joinToString(", ")

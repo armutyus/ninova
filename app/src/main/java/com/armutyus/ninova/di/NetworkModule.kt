@@ -2,8 +2,10 @@ package com.armutyus.ninova.di
 
 import android.content.Context
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Constants.BASE_URL
 import com.armutyus.ninova.repository.*
 import com.armutyus.ninova.roomdb.NinovaDao
+import com.armutyus.ninova.service.GoogleBooksApiService
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.FirebaseAuth
@@ -13,22 +15,24 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    /*@Singleton
+    @Singleton
     @Provides
-    fun provideRetrofit(): googleBooksAPI {
+    fun provideRetrofit(): GoogleBooksApiService {
 
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(googleBooksAPI::class.java)
-    }*/
+            .create(GoogleBooksApiService::class.java)
+    }
 
     @Provides
     fun provideFirebaseAuthInstance() = FirebaseAuth.getInstance()

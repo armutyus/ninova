@@ -1,19 +1,21 @@
 package com.armutyus.ninova.repository
 
-import com.armutyus.ninova.model.Book
+import com.armutyus.ninova.constants.Response
+import com.armutyus.ninova.model.GoogleApiBooks
 import com.armutyus.ninova.roomdb.NinovaDao
 import com.armutyus.ninova.roomdb.entities.BookWithShelves
 import com.armutyus.ninova.roomdb.entities.LocalBook
+import com.armutyus.ninova.service.GoogleBooksApiService
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class BooksRepository @Inject constructor(
-    private val ninovaDao: NinovaDao
+    private val ninovaDao: NinovaDao,
+    private val googleBooksApiService: GoogleBooksApiService
 ) : BooksRepositoryInterface {
 
-    //change lists to flow when databases and services are ready
-
-    override fun getBookList(): List<Book> {
+    /*override fun getBookList(): List<Book> {
         val book1 = Book("Semerkand", listOf("Amin Maalouf", "ahmet mehmet"), "300", "01.02.1989")
         val book2 = Book(
             "Fedailerin Kalesi: Alamut",
@@ -77,6 +79,22 @@ class BooksRepository @Inject constructor(
         }
 
         return filteredBooks
+    }*/
+
+    override suspend fun searchBooksFromApi(searchQuery: String) = flow {
+        try {
+            emit(Response.Loading)
+            val response = googleBooksApiService.searchBooks(searchQuery)
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    return@let emit(Response.Success(it))
+                } ?: emit(Response.Failure("Something went wrong!"))
+            } else {
+                emit(Response.Failure("Something went wrong!"))
+            }
+        } catch (e: Exception) {
+            emit(Response.Failure("Error: ${e.localizedMessage}"))
+        }
     }
 
     override suspend fun insert(localBook: LocalBook) {

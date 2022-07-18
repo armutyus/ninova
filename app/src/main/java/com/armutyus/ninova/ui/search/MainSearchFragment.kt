@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.FragmentMainSearchBinding
 import com.armutyus.ninova.model.Book
 import com.armutyus.ninova.roomdb.entities.LocalBook
@@ -109,24 +110,37 @@ class MainSearchFragment @Inject constructor(
     private fun runObservers() {
         val toggleButtonGroup = binding?.searchButtonToggleGroup
 
-        mainSearchViewModel.currentList.observe(viewLifecycleOwner) {
-            searchFragmentAdapter.mainSearchBooksList = it
+        mainSearchViewModel.currentApiList.observe(viewLifecycleOwner) {
+            searchFragmentAdapter.mainSearchBooksList = it.toList()
             setVisibilities(it)
         }
 
         /*mainSearchViewModel.searchLocalBookList.observe(viewLifecycleOwner) {
             if (toggleButtonGroup?.checkedButtonId != R.id.localSearchButton) return@observe
-            mainSearchViewModel.setCurrentList(it?.toList() ?: listOf())
+            mainSearchViewModel.setCurrentLocalList(it?.toList() ?: listOf())
         }*/
 
-        mainSearchViewModel.fakeBooksApiList.observe(viewLifecycleOwner) {
+        mainSearchViewModel.searchBooksResponse.observe(viewLifecycleOwner) { response ->
             if (toggleButtonGroup?.checkedButtonId != R.id.apiSearchButton) return@observe
+            when (response) {
+                is Response.Loading -> {
+                    binding?.progressBar?.visibility = View.VISIBLE
+                }
+
+                is Response.Success -> {
+
+                    val bookItemsList = response.data.items.toList()
+
+                }
+
+                is Response.Failure -> {
+
+                }
+            }
+
             mainSearchViewModel.setCurrentList(it?.toList() ?: listOf())
         }
 
-        mainSearchViewModel.fakeBooksList.observe(viewLifecycleOwner) {
-            mainSearchViewModel.setCurrentList(it?.toList() ?: listOf())
-        }
     }
 
     private fun setVisibilities(bookList: List<Book>) {

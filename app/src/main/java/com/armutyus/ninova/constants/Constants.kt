@@ -36,6 +36,7 @@ object Constants {
     //References
     const val USERS_REF = "users"
     const val BOOKS_REF = "books"
+    const val BASE_URL = "https://www.googleapis.com/books/v1"
 
     //Fields
     const val NAME = "name"
