@@ -1,9 +1,12 @@
 package com.armutyus.ninova.ui.search
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import com.armutyus.ninova.constants.Response
-import com.armutyus.ninova.model.Book
 import com.armutyus.ninova.model.GoogleApiBooks
+import com.armutyus.ninova.model.GoogleBookItem
 import com.armutyus.ninova.repository.BooksRepositoryInterface
 import com.armutyus.ninova.roomdb.entities.LocalBook
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,6 +51,10 @@ class MainSearchViewModel @Inject constructor(
         _currentList.value = bookList
     }*/
 
+    private val _currentList = MutableLiveData<List<GoogleBookItem>>()
+    val currentList: LiveData<List<GoogleBookItem>>
+        get() = _currentList
+
     private val _searchLocalBookList = MutableLiveData<List<LocalBook>>()
     val searchLocalBookList: LiveData<List<LocalBook>>
         get() = _searchLocalBookList
@@ -64,13 +71,17 @@ class MainSearchViewModel @Inject constructor(
     val searchBooksResponse: LiveData<Response<GoogleApiBooks>>
         get() = _searchBooksResponse
 
-    fun searchBooksFromApi(searchQuery: String)= liveData(Dispatchers.IO) {
-        booksRepository.searchBooksFromApi(searchQuery).collect { response ->
-            emit(response)
+    fun searchBooksFromApi(searchQuery: String) = CoroutineScope(Dispatchers.IO).launch {
+        booksRepository.searchBooksFromApi(searchQuery).collectLatest { response ->
+            _searchBooksResponse.postValue(response)
         }
     }
 
     fun insertBook(localBook: LocalBook) = CoroutineScope(Dispatchers.IO).launch {
         booksRepository.insert(localBook)
+    }
+
+    fun setCurrentList(bookList: List<GoogleBookItem>) {
+        _currentList.value = bookList
     }
 }

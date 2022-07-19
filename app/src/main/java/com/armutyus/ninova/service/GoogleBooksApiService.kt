@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface GoogleBooksApiService {
 
-    @GET("/volumes")
+    @GET("volumes")
     suspend fun searchBooks(
         @Query("q") searchQuery: String,
         @Query("maxResults") maxResults: Int = 20

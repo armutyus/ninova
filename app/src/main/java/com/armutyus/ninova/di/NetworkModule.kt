@@ -49,8 +49,8 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideBooksRepository(ninovaDao: NinovaDao) =
-        BooksRepository(ninovaDao) as BooksRepositoryInterface
+    fun provideBooksRepository(ninovaDao: NinovaDao, googleBooksApiService: GoogleBooksApiService) =
+        BooksRepository(ninovaDao, googleBooksApiService) as BooksRepositoryInterface
 
     @Singleton
     @Provides

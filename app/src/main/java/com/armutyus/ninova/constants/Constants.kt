@@ -29,14 +29,14 @@ object Constants {
     const val DARK_THEME = "dark"
     const val SYSTEM_THEME = "system"
     const val FROM_DETAILS_ACTIVITY = "bookDetailsActivity"
-    const val DETAILS_INT_EXTRA = "fromDetails"
+    const val DETAILS_EXTRA = "fromDetails"
     const val DETAILS_STRING_EXTRA = "detailsActivity"
-    const val FROM_DETAILS_TO_NOTES_EXTRA = 99
+    const val FROM_DETAILS_TO_NOTES_EXTRA = "detailsToNotes"
 
     //References
     const val USERS_REF = "users"
     const val BOOKS_REF = "books"
-    const val BASE_URL = "https://www.googleapis.com/books/v1"
+    const val BASE_URL = "https://www.googleapis.com/books/v1/"
 
     //Fields
     const val NAME = "name"

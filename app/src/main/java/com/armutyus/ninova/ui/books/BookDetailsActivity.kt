@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.armutyus.ninova.constants.Constants.DETAILS_INT_EXTRA
+import com.armutyus.ninova.constants.Constants.DETAILS_EXTRA
 import com.armutyus.ninova.constants.Constants.DETAILS_STRING_EXTRA
 import com.armutyus.ninova.constants.Constants.FROM_DETAILS_ACTIVITY
 import com.armutyus.ninova.constants.Constants.FROM_DETAILS_TO_NOTES_EXTRA
@@ -69,19 +69,19 @@ class BookDetailsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.getBookWithShelves(currentBook!!.bookId)
+        currentBook?.bookId?.let { viewModel.getBookWithShelves(it) }
         observeBookDetailsChanges()
     }
 
     private fun goToBookToShelfFragment() {
         val currentBookId = currentBook!!.bookId
-        mainIntent.putExtra(DETAILS_INT_EXTRA, currentBookId)
+        mainIntent.putExtra(DETAILS_EXTRA, currentBookId)
         mainIntent.putExtra(DETAILS_STRING_EXTRA, FROM_DETAILS_ACTIVITY)
         startActivity(mainIntent)
     }
 
     private fun goToUserBookNotesFragment() {
-        mainIntent.putExtra(DETAILS_INT_EXTRA, FROM_DETAILS_TO_NOTES_EXTRA)
+        mainIntent.putExtra(DETAILS_EXTRA, FROM_DETAILS_TO_NOTES_EXTRA)
         mainIntent.putExtra(DETAILS_STRING_EXTRA, FROM_DETAILS_ACTIVITY)
         startActivity(mainIntent)
     }

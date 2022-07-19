@@ -1,6 +1,7 @@
 package com.armutyus.ninova.ui.search.adapters
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,11 +15,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Constants.BOOK_DETAILS_INTENT
 import com.armutyus.ninova.model.GoogleBookItem
-import com.armutyus.ninova.model.GoogleBookItemInfo
 import com.armutyus.ninova.roomdb.entities.LocalBook
 import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.search.MainSearchFragment
-import com.armutyus.ninova.ui.search.MainSearchViewModel
 import com.bumptech.glide.RequestManager
 import javax.inject.Inject
 import javax.inject.Named
@@ -33,6 +32,7 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
 
     private lateinit var searchFragment: MainSearchFragment
     private lateinit var booksViewModel: BooksViewModel
+    private lateinit var isListLocalBook: SharedPreferences
 
     class MainSearchViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
@@ -60,6 +60,7 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: MainSearchViewHolder, position: Int) {
+
         val bookCover = holder.itemView.findViewById<ImageView>(R.id.bookImage)
         val bookTitle = holder.itemView.findViewById<TextView>(R.id.bookTitleText)
         val bookAuthor = holder.itemView.findViewById<TextView>(R.id.bookAuthorText)
@@ -82,17 +83,17 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
         addButton?.setOnClickListener {
             searchFragment.onClick(
                 LocalBook(
-                    book.id,
-                    book.volumeInfo.title,
-                    book.volumeInfo.subtitle,
-                    book.volumeInfo.authors,
-                    book.volumeInfo.pageCount.toString(),
-                    book.volumeInfo.imageLinks.smallThumbnail,
-                    book.volumeInfo.imageLinks.thumbnail,
-                    book.volumeInfo.description,
-                    book.volumeInfo.publishedDate,
-                    book.volumeInfo.categories,
-                    book.volumeInfo.publisher,
+                    book.id!!,
+                    book.volumeInfo?.title,
+                    book.volumeInfo?.subtitle,
+                    book.volumeInfo?.authors,
+                    book.volumeInfo?.pageCount.toString(),
+                    book.volumeInfo?.imageLinks?.smallThumbnail,
+                    book.volumeInfo?.imageLinks?.thumbnail,
+                    book.volumeInfo?.description,
+                    book.volumeInfo?.publishedDate,
+                    book.volumeInfo?.categories,
+                    book.volumeInfo?.publisher,
                     ""
                 )
             )
@@ -114,11 +115,11 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
         }
 
         holder.itemView.apply {
-            glide.load(book.volumeInfo.imageLinks.smallThumbnail).centerCrop().into(bookCover)
-            bookTitle.text = book.volumeInfo.title
-            bookAuthor.text = book.volumeInfo.authors.joinToString(", ")
-            bookPages.text = book.volumeInfo.pageCount.toString()
-            bookReleaseDate.text = book.volumeInfo.publishedDate
+            glide.load(book.volumeInfo?.imageLinks?.smallThumbnail).centerCrop().into(bookCover)
+            bookTitle.text = book.volumeInfo?.title
+            bookAuthor.text = book.volumeInfo?.authors?.joinToString(", ")
+            bookPages.text = book.volumeInfo?.pageCount.toString()
+            bookReleaseDate.text = book.volumeInfo?.publishedDate
         }
 
     }

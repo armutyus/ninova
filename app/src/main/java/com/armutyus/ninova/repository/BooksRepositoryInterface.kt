@@ -1,7 +1,6 @@
 package com.armutyus.ninova.repository
 
 import com.armutyus.ninova.constants.Response
-import com.armutyus.ninova.model.Book
 import com.armutyus.ninova.model.GoogleApiBooks
 import com.armutyus.ninova.roomdb.entities.BookWithShelves
 import com.armutyus.ninova.roomdb.entities.LocalBook
@@ -27,6 +26,6 @@ interface BooksRepositoryInterface {
 
     fun searchLocalBooks(searchString: String): Flow<List<LocalBook>>
 
-    suspend fun getBookWithShelves(bookId: Int): Flow<List<BookWithShelves>>
+    suspend fun getBookWithShelves(bookId: String): Flow<List<BookWithShelves>>
 
 }

@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.armutyus.ninova.constants.Response
-import com.armutyus.ninova.model.GoogleApiBooks
 import com.armutyus.ninova.repository.BooksRepositoryInterface
 import com.armutyus.ninova.roomdb.entities.BookWithShelves
 import com.armutyus.ninova.roomdb.entities.LocalBook
@@ -49,7 +47,7 @@ class BooksViewModel @Inject constructor(
         booksRepositoryInterface.delete(localBook)
     }
 
-    fun getBookWithShelves(bookId: Int) {
+    fun getBookWithShelves(bookId: String) {
         CoroutineScope(Dispatchers.IO).launch {
             booksRepositoryInterface.getBookWithShelves(bookId).collectLatest {
                 _bookWithShelvesList.postValue(it)

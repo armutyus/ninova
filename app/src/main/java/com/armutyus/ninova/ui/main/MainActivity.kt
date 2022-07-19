@@ -15,7 +15,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.armutyus.ninova.MobileNavigationDirections
 import com.armutyus.ninova.R
-import com.armutyus.ninova.constants.Constants.DETAILS_INT_EXTRA
+import com.armutyus.ninova.constants.Constants.DETAILS_EXTRA
 import com.armutyus.ninova.constants.Constants.FROM_DETAILS_TO_NOTES_EXTRA
 import com.armutyus.ninova.constants.Constants.currentBook
 import com.armutyus.ninova.constants.Constants.currentShelf
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
 
         if (currentBook?.bookId != null) {
-            when (intent.getIntExtra(DETAILS_INT_EXTRA, -1)) {
+            when (intent.getStringExtra(DETAILS_EXTRA)) {
                 currentBook!!.bookId -> {
                     val action =
                         MobileNavigationDirections.actionMainToBookToShelfFragment(currentBook!!.bookId)

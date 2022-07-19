@@ -35,6 +35,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
                 android:text="@string/name_of_the_book"
+                android:maxLines="1"
+                android:ellipsize="marquee"
                 android:textColor="@color/light_primary"
                 android:textSize="14sp" />
 
@@ -44,6 +46,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
                 android:text="@string/author_of_the_book"
+                android:maxLines="1"
+                android:ellipsize="marquee"
                 android:textColor="@color/light_primary_variant"
                 android:textSize="12sp" />
 

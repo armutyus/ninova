@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NinovaDao {
     //Book works
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBook(localBook: LocalBook)
 
@@ -18,7 +17,7 @@ interface NinovaDao {
     suspend fun deleteBook(localBook: LocalBook)
 
     @Query("SELECT * FROM Book WHERE bookId = :id")
-    fun getLocalBooksById(id: Int): Flow<LocalBook>
+    fun getLocalBooksById(id: String): Flow<LocalBook>
 
     @Query("SELECT * FROM Book")
     fun getLocalBooks(): Flow<List<LocalBook>>
@@ -27,7 +26,6 @@ interface NinovaDao {
     fun searchLocalBooks(searchString: String): Flow<List<LocalBook>>
 
     //Shelf works
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertShelf(localShelf: LocalShelf)
 
@@ -44,7 +42,6 @@ interface NinovaDao {
     fun searchLocalShelf(searchString: String): Flow<List<LocalShelf>>
 
     //Cross works
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBookShelfCrossRef(crossRef: BookShelfCrossRef)
 
@@ -57,5 +54,5 @@ interface NinovaDao {
 
     @Transaction
     @Query("SELECT * FROM Book WHERE bookId = :bookId")
-    fun getShelvesOfBook(bookId: Int): Flow<List<BookWithShelves>>
+    fun getShelvesOfBook(bookId: String): Flow<List<BookWithShelves>>
 }

@@ -55,7 +55,7 @@
         tools:layout="@layout/fragment_book_to_shelf" >
         <argument
             android:name="currentBookId"
-            app:argType="integer" />
+            app:argType="string" />
     </fragment>
 
     <fragment
