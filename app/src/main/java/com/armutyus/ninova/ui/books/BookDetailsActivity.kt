@@ -11,6 +11,7 @@ import com.armutyus.ninova.constants.Constants.FROM_DETAILS_ACTIVITY
 import com.armutyus.ninova.constants.Constants.FROM_DETAILS_TO_NOTES_EXTRA
 import com.armutyus.ninova.constants.Constants.MAIN_INTENT
 import com.armutyus.ninova.constants.Constants.currentBook
+import com.armutyus.ninova.constants.Constants.currentLocalBook
 import com.armutyus.ninova.databinding.ActivityBookDetailsBinding
 import com.bumptech.glide.RequestManager
 import com.google.android.material.tabs.TabLayout
@@ -37,7 +38,7 @@ class BookDetailsActivity : AppCompatActivity() {
         binding = ActivityBookDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar?.title = currentBook?.bookTitle
+        supportActionBar?.title = currentBook?.volumeInfo?.title
 
         tabLayout = binding.bookDetailTabLayout
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -69,12 +70,12 @@ class BookDetailsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        currentBook?.bookId?.let { viewModel.getBookWithShelves(it) }
+        currentLocalBook?.bookId?.let { viewModel.getBookWithShelves(it) }
         observeBookDetailsChanges()
     }
 
     private fun goToBookToShelfFragment() {
-        val currentBookId = currentBook!!.bookId
+        val currentBookId = currentLocalBook?.bookId
         mainIntent.putExtra(DETAILS_EXTRA, currentBookId)
         mainIntent.putExtra(DETAILS_STRING_EXTRA, FROM_DETAILS_ACTIVITY)
         startActivity(mainIntent)
@@ -97,7 +98,7 @@ class BookDetailsActivity : AppCompatActivity() {
             }
             binding.shelvesOfBooks.text = currentShelvesList.joinToString(", ")
         }
-        binding.bookDetailUserNotes.text = currentBook!!.bookNotes
+        //binding.bookDetailUserNotes.text = currentLocalBook?.bookNotes
     }
 
     private fun setVisibilities(tab: TabLayout.Tab?) {
@@ -113,8 +114,8 @@ class BookDetailsActivity : AppCompatActivity() {
                 binding.linearLayoutDetailsError.visibility = View.GONE
             }
             else -> {
-                binding.bookDetailNotesLinearLayout.visibility = View.VISIBLE
-                binding.bookDetailInfoLinearLayout.visibility = View.GONE
+                binding.bookDetailNotesLinearLayout.visibility = View.GONE
+                binding.bookDetailInfoLinearLayout.visibility = View.VISIBLE
                 binding.linearLayoutDetailsError.visibility = View.GONE
             }
 
@@ -129,15 +130,17 @@ class BookDetailsActivity : AppCompatActivity() {
             binding.bookDetailInfoLinearLayout.visibility = View.GONE
         } else {
             val bookImage = binding.bookCoverImageView
-            glide.load(currentBook!!.bookCoverSmallThumbnail).centerCrop().into(bookImage)
-            binding.bookDetailTitleText.text = currentBook!!.bookTitle
-            binding.bookDetailSubTitleText.text = currentBook!!.bookSubtitle
-            binding.bookDetailAuthorsText.text = currentBook!!.bookAuthors!!.joinToString(", ")
-            binding.bookDetailPagesNumber.text = currentBook!!.bookPages
-            binding.bookDetailCategories.text = currentBook!!.bookCategories!!.joinToString(", ")
-            binding.bookDetailPublisher.text = currentBook!!.bookPublisher
-            binding.bookDetailPublishDate.text = currentBook!!.bookPublishedDate
-            binding.bookDetailDescription.text = currentBook!!.bookDescription
+            glide.load(currentBook?.volumeInfo?.imageLinks?.thumbnail).centerCrop().into(bookImage)
+            binding.bookDetailTitleText.text = currentBook?.volumeInfo?.title
+            binding.bookDetailSubTitleText.text = currentBook?.volumeInfo?.subtitle
+            binding.bookDetailAuthorsText.text =
+                currentBook?.volumeInfo?.authors?.joinToString(", ")
+            binding.bookDetailPagesNumber.text = currentBook?.volumeInfo?.pageCount?.toString()
+            binding.bookDetailCategories.text =
+                currentBook?.volumeInfo?.categories?.joinToString(", ")
+            binding.bookDetailPublisher.text = currentBook?.volumeInfo?.publisher
+            binding.bookDetailPublishDate.text = currentBook?.volumeInfo?.publishedDate
+            binding.bookDetailDescription.text = currentBook?.volumeInfo?.description
         }
     }
 

@@ -61,8 +61,8 @@ object NetworkModule {
     @Provides
     fun injectGlide(@ApplicationContext context: Context) = Glide
         .with(context).setDefaultRequestOptions(
-            RequestOptions().placeholder(R.drawable.placeholder_book_icon)
-                .error(R.drawable.ic_error)
+            RequestOptions().placeholder(R.id.progress_bar)
+                .error(R.drawable.placeholder_book_icon)
         )
 
 }

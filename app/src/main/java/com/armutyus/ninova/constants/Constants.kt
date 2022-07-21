@@ -1,6 +1,7 @@
 package com.armutyus.ninova.constants
 
 import com.armutyus.ninova.BuildConfig
+import com.armutyus.ninova.model.GoogleBookItem
 import com.armutyus.ninova.roomdb.entities.LocalBook
 import com.armutyus.ninova.roomdb.entities.LocalShelf
 
@@ -47,6 +48,6 @@ object Constants {
 
     //Items
     var currentShelf: LocalShelf? = null
-    var currentBook: LocalBook? = null
-    //var currentRemoteBook: RemoteBook? = null
+    var currentBook: GoogleBookItem? = null
+    var currentLocalBook: LocalBook? = null
 }

@@ -17,7 +17,7 @@ import com.armutyus.ninova.MobileNavigationDirections
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Constants.DETAILS_EXTRA
 import com.armutyus.ninova.constants.Constants.FROM_DETAILS_TO_NOTES_EXTRA
-import com.armutyus.ninova.constants.Constants.currentBook
+import com.armutyus.ninova.constants.Constants.currentLocalBook
 import com.armutyus.ninova.constants.Constants.currentShelf
 import com.armutyus.ninova.databinding.ActivityMainBinding
 import com.armutyus.ninova.fragmentfactory.NinovaFragmentFactoryEntryPoint
@@ -51,11 +51,11 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         navController = navHostFragment.navController
 
-        if (currentBook?.bookId != null) {
+        if (currentLocalBook?.bookId != null) {
             when (intent.getStringExtra(DETAILS_EXTRA)) {
-                currentBook!!.bookId -> {
+                currentLocalBook!!.bookId -> {
                     val action =
-                        MobileNavigationDirections.actionMainToBookToShelfFragment(currentBook!!.bookId)
+                        MobileNavigationDirections.actionMainToBookToShelfFragment(currentLocalBook!!.bookId)
                     navController.navigate(action)
                 }
 
@@ -142,13 +142,13 @@ class MainActivity : AppCompatActivity() {
                 R.id.bookUserNotesFragment -> {
                     supportActionBar?.show()
                     navView.visibility = View.GONE
-                    supportActionBar?.title = currentBook?.bookTitle
+                    supportActionBar?.title = currentLocalBook?.bookTitle
                 }
 
                 R.id.bookToShelfFragment -> {
                     supportActionBar?.show()
                     navView.visibility = View.GONE
-                    supportActionBar?.title = currentBook?.bookTitle
+                    supportActionBar?.title = currentLocalBook?.bookTitle
                 }
 
                 else -> {
@@ -160,31 +160,6 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
-
-    /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menu.clear()
-
-        menuInflater.inflate(R.menu.settings_menu, menu)
-
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-
-            R.id.menu_search -> {
-                navController.navigate(R.id.action_main_to_search)
-            }
-
-            R.id.settings -> {
-                navController.navigate(R.id.action_main_to_settings)
-            }
-
-        }
-
-        return super.onOptionsItemSelected(item)
-    }*/
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp()

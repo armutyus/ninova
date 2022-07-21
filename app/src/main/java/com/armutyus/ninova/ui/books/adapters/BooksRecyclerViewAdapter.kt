@@ -10,8 +10,9 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.constants.Constants.BOOK_DETAILS_INTENT
-import com.armutyus.ninova.constants.Constants.currentBook
+import com.armutyus.ninova.constants.Constants.currentLocalBook
 import com.armutyus.ninova.roomdb.entities.LocalBook
 import com.bumptech.glide.RequestManager
 import javax.inject.Inject
@@ -66,11 +67,12 @@ class BooksRecyclerViewAdapter @Inject constructor(
         }*/
 
         holder.itemView.setOnClickListener {
-            currentBook = book
+            currentLocalBook = book
             holder.itemView.context.startActivity(bookDetailsIntent)
         }
 
         holder.itemView.apply {
+            glide.load(book.bookCoverSmallThumbnail).centerCrop().into(bookCover)
             bookTitle.text = book.bookTitle
             bookAuthor.text = book.bookAuthors?.joinToString(", ")
             bookPages.text = book.bookPages

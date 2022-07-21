@@ -1,7 +1,6 @@
 package com.armutyus.ninova.ui.search.adapters
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Constants.BOOK_DETAILS_INTENT
+import com.armutyus.ninova.constants.Constants.currentBook
 import com.armutyus.ninova.model.GoogleBookItem
 import com.armutyus.ninova.roomdb.entities.LocalBook
 import com.armutyus.ninova.ui.books.BooksViewModel
@@ -32,7 +32,6 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
 
     private lateinit var searchFragment: MainSearchFragment
     private lateinit var booksViewModel: BooksViewModel
-    private lateinit var isListLocalBook: SharedPreferences
 
     class MainSearchViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
@@ -110,7 +109,7 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
         }
 
         holder.itemView.setOnClickListener {
-            //currentBook = book
+            currentBook = book
             holder.itemView.context.startActivity(bookDetailsIntent)
         }
 
@@ -122,6 +121,10 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
             bookReleaseDate.text = book.volumeInfo?.publishedDate
         }
 
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return super.getItemViewType(position)
     }
 
     override fun getItemCount(): Int {

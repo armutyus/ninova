@@ -14,7 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Constants
-import com.armutyus.ninova.constants.Constants.currentBook
+import com.armutyus.ninova.constants.Constants.currentLocalBook
 import com.armutyus.ninova.databinding.FragmentBookUserNotesBinding
 import javax.inject.Inject
 
@@ -52,13 +52,13 @@ class BookUserNotesFragment @Inject constructor(
             }
         }
 
-        if (currentBook!!.bookNotes != null) {
-            binding.userBookNotesEditText.setText(currentBook!!.bookNotes)
+        if (currentLocalBook!!.bookNotes != null) {
+            binding.userBookNotesEditText.setText(currentLocalBook!!.bookNotes)
         }
 
         binding.saveUserNotes.setOnClickListener {
-            currentBook!!.bookNotes = binding.userBookNotesEditText.text.toString()
-            booksViewModel.updateBook(currentBook!!)
+            currentLocalBook!!.bookNotes = binding.userBookNotesEditText.text.toString()
+            booksViewModel.updateBook(currentLocalBook!!)
             activity?.finish()
         }
 

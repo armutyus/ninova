@@ -3,7 +3,6 @@ package com.armutyus.ninova.ui.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.model.GoogleApiBooks
 import com.armutyus.ninova.model.GoogleBookItem
@@ -12,6 +11,7 @@ import com.armutyus.ninova.roomdb.entities.LocalBook
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -71,9 +71,19 @@ class MainSearchViewModel @Inject constructor(
     val searchBooksResponse: LiveData<Response<GoogleApiBooks>>
         get() = _searchBooksResponse
 
+    private val _randomBooksResponse = MutableLiveData<Response<GoogleApiBooks>>()
+    val randomBooksResponse: LiveData<Response<GoogleApiBooks>>
+        get() = _randomBooksResponse
+
     fun searchBooksFromApi(searchQuery: String) = CoroutineScope(Dispatchers.IO).launch {
         booksRepository.searchBooksFromApi(searchQuery).collectLatest { response ->
             _searchBooksResponse.postValue(response)
+        }
+    }
+
+    fun randomBooksFromApi() = CoroutineScope(Dispatchers.IO).launch {
+        booksRepository.searchBooksFromApi("Witcher").collectLatest { response ->
+            _randomBooksResponse.postValue(response)
         }
     }
 
@@ -82,6 +92,6 @@ class MainSearchViewModel @Inject constructor(
     }
 
     fun setCurrentList(bookList: List<GoogleBookItem>) {
-        _currentList.value = bookList
+        _currentList.postValue(bookList)
     }
 }

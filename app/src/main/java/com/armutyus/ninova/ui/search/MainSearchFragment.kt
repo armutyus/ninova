@@ -18,6 +18,7 @@ import com.armutyus.ninova.roomdb.entities.LocalBook
 import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.search.adapters.MainSearchRecyclerViewAdapter
 import com.armutyus.ninova.ui.search.listeners.OnBookAddButtonClickListener
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class MainSearchFragment @Inject constructor(
@@ -70,9 +71,8 @@ class MainSearchFragment @Inject constructor(
             }
         }
 
-        mainSearchViewModel.searchBooksFromApi("John")
+        mainSearchViewModel.randomBooksFromApi()
         runObservers()
-
 
         return binding?.root
     }
@@ -89,18 +89,18 @@ class MainSearchFragment @Inject constructor(
 
     override fun onQueryTextChange(searchQuery: String?): Boolean {
         if (searchQuery?.length!! > 0) {
-            /*binding?.progressBar?.visibility = View.VISIBLE
+            binding?.progressBar?.visibility = View.VISIBLE
             binding?.mainSearchRecyclerView?.visibility = View.GONE
-            binding?.mainSearchBooksTitle?.visibility = View.GONE*/
+            binding?.mainSearchBooksTitle?.visibility = View.GONE
 
-            mainSearchViewModel.searchBooksFromApi(searchQuery)
             mainSearchViewModel.searchLocalBooks("%$searchQuery%")
+            mainSearchViewModel.searchBooksFromApi(searchQuery)
 
             val toggleButtonGroup = binding?.searchButtonToggleGroup
             toggleButtonGroup?.visibility = View.VISIBLE
 
         } else if (searchQuery.isNullOrBlank()) {
-            mainSearchViewModel.searchBooksFromApi("Gösteri")
+            mainSearchViewModel.randomBooksFromApi()
             setVisibilitiesForSearchQueryNull()
         }
 
@@ -110,15 +110,26 @@ class MainSearchFragment @Inject constructor(
     private fun runObservers() {
         val toggleButtonGroup = binding?.searchButtonToggleGroup
 
-        mainSearchViewModel.currentList.observe(viewLifecycleOwner) {
-            searchFragmentAdapter.mainSearchBooksList = it.toList()
-            setVisibilities(it)
-        }
-
         mainSearchViewModel.searchLocalBookList.observe(viewLifecycleOwner) {
             if (toggleButtonGroup?.checkedButtonId != R.id.localSearchButton) return@observe
             val localBookList = it.toList()
+        }
 
+        mainSearchViewModel.randomBooksResponse.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is Response.Loading -> {
+                    binding?.progressBar?.visibility = View.VISIBLE
+                }
+
+                is Response.Success -> {
+                    val bookItemsList = response.data.items?.toList() ?: listOf()
+                    mainSearchViewModel.setCurrentList(bookItemsList)
+                }
+
+                is Response.Failure -> {
+                    setVisibilitiesForFailure()
+                }
+            }
         }
 
         mainSearchViewModel.searchBooksResponse.observe(viewLifecycleOwner) { response ->
@@ -134,13 +145,15 @@ class MainSearchFragment @Inject constructor(
                 }
 
                 is Response.Failure -> {
-                    binding?.linearLayoutSearchError?.visibility = View.VISIBLE
-                    binding?.progressBar?.visibility = View.GONE
-                    binding?.mainSearchRecyclerView?.visibility = View.GONE
-                    binding?.mainSearchBooksTitle?.visibility = View.GONE
+                    setVisibilitiesForFailure()
                 }
             }
 
+        }
+
+        mainSearchViewModel.currentList.observe(viewLifecycleOwner) {
+            searchFragmentAdapter.mainSearchBooksList = it.toList()
+            setVisibilities(it)
         }
 
     }
@@ -164,6 +177,13 @@ class MainSearchFragment @Inject constructor(
         binding?.mainSearchBooksTitle?.visibility = View.VISIBLE
         binding?.searchButtonToggleGroup?.visibility = View.GONE
         binding?.linearLayoutSearchError?.visibility = View.GONE
+    }
+
+    private fun setVisibilitiesForFailure() {
+        binding?.linearLayoutSearchError?.visibility = View.VISIBLE
+        binding?.progressBar?.visibility = View.GONE
+        binding?.mainSearchRecyclerView?.visibility = View.GONE
+        binding?.mainSearchBooksTitle?.visibility = View.GONE
     }
 
     override fun onDestroyView() {
