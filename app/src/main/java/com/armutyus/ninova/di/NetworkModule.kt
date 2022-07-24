@@ -3,6 +3,7 @@ package com.armutyus.ninova.di
 import android.content.Context
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Constants.BASE_URL
+import com.armutyus.ninova.constants.Util
 import com.armutyus.ninova.repository.*
 import com.armutyus.ninova.roomdb.NinovaDao
 import com.armutyus.ninova.service.GoogleBooksApiService
@@ -61,7 +62,7 @@ object NetworkModule {
     @Provides
     fun injectGlide(@ApplicationContext context: Context) = Glide
         .with(context).setDefaultRequestOptions(
-            RequestOptions().placeholder(R.id.progress_bar)
+            RequestOptions().placeholder(Util.progressDrawable(context))
                 .error(R.drawable.placeholder_book_icon)
         )
 

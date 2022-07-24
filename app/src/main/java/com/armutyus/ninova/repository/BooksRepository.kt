@@ -1,9 +1,9 @@
 package com.armutyus.ninova.repository
 
 import com.armutyus.ninova.constants.Response
+import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.roomdb.NinovaDao
 import com.armutyus.ninova.roomdb.entities.BookWithShelves
-import com.armutyus.ninova.roomdb.entities.LocalBook
 import com.armutyus.ninova.service.GoogleBooksApiService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -96,23 +96,23 @@ class BooksRepository @Inject constructor(
         }
     }
 
-    override suspend fun insert(localBook: LocalBook) {
+    override suspend fun insert(localBook: DataModel.LocalBook) {
         ninovaDao.insertBook(localBook)
     }
 
-    override suspend fun update(localBook: LocalBook) {
+    override suspend fun update(localBook: DataModel.LocalBook) {
         ninovaDao.updateBook(localBook)
     }
 
-    override suspend fun delete(localBook: LocalBook) {
+    override suspend fun delete(localBook: DataModel.LocalBook) {
         ninovaDao.deleteBook(localBook)
     }
 
-    override fun getLocalBooks(): Flow<List<LocalBook>> {
+    override fun getLocalBooks(): Flow<List<DataModel.LocalBook>> {
         return ninovaDao.getLocalBooks()
     }
 
-    override fun searchLocalBooks(searchString: String): Flow<List<LocalBook>> {
+    override fun searchLocalBooks(searchString: String): Flow<List<DataModel.LocalBook>> {
         return ninovaDao.searchLocalBooks(searchString)
     }
 

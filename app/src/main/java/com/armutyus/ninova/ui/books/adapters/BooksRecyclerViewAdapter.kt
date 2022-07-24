@@ -10,10 +10,9 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
-import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.constants.Constants.BOOK_DETAILS_INTENT
 import com.armutyus.ninova.constants.Constants.currentLocalBook
-import com.armutyus.ninova.roomdb.entities.LocalBook
+import com.armutyus.ninova.model.DataModel
 import com.bumptech.glide.RequestManager
 import javax.inject.Inject
 import javax.inject.Named
@@ -28,19 +27,25 @@ class BooksRecyclerViewAdapter @Inject constructor(
 
     class MainBooksViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
-    private val diffUtil = object : DiffUtil.ItemCallback<LocalBook>() {
-        override fun areItemsTheSame(oldItem: LocalBook, newItem: LocalBook): Boolean {
+    private val diffUtil = object : DiffUtil.ItemCallback<DataModel.LocalBook>() {
+        override fun areItemsTheSame(
+            oldItem: DataModel.LocalBook,
+            newItem: DataModel.LocalBook
+        ): Boolean {
             return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: LocalBook, newItem: LocalBook): Boolean {
+        override fun areContentsTheSame(
+            oldItem: DataModel.LocalBook,
+            newItem: DataModel.LocalBook
+        ): Boolean {
             return oldItem == newItem
         }
     }
 
     private val recyclerListDiffer = AsyncListDiffer(this, diffUtil)
 
-    var mainBooksList: List<LocalBook>
+    var mainBooksList: List<DataModel.LocalBook>
         get() = recyclerListDiffer.currentList
         set(value) = recyclerListDiffer.submitList(value)
 

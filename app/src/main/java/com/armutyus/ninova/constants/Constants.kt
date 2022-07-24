@@ -1,8 +1,7 @@
 package com.armutyus.ninova.constants
 
 import com.armutyus.ninova.BuildConfig
-import com.armutyus.ninova.model.GoogleBookItem
-import com.armutyus.ninova.roomdb.entities.LocalBook
+import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.roomdb.entities.LocalShelf
 
 object Constants {
@@ -48,6 +47,11 @@ object Constants {
 
     //Items
     var currentShelf: LocalShelf? = null
-    var currentBook: GoogleBookItem? = null
-    var currentLocalBook: LocalBook? = null
+    var currentBook: DataModel.GoogleBookItem? = null
+    var currentLocalBook: DataModel.LocalBook? = null
+
+    //BookViewType
+    const val LOCAL_BOOK_TYPE = 0
+    const val GOOGLE_BOOK_TYPE = 1
+
 }

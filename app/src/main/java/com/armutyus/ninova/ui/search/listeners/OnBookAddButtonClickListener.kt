@@ -1,7 +1,7 @@
 package com.armutyus.ninova.ui.search.listeners
 
-import com.armutyus.ninova.roomdb.entities.LocalBook
+import com.armutyus.ninova.model.DataModel
 
 interface OnBookAddButtonClickListener {
-    fun onClick(localBook: LocalBook)
+    fun onClick(localBook: DataModel.LocalBook)
 }

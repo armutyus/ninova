@@ -1,7 +1,7 @@
 package com.armutyus.ninova.model
 
 data class GoogleApiBooks(
-    val items: List<GoogleBookItem>?,
+    val items: List<DataModel.GoogleBookItem>?,
     val kind: String,
     val totalItems: Int
 )

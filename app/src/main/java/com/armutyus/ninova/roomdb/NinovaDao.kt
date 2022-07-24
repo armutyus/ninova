@@ -1,29 +1,33 @@
 package com.armutyus.ninova.roomdb
 
 import androidx.room.*
-import com.armutyus.ninova.roomdb.entities.*
+import com.armutyus.ninova.model.DataModel
+import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
+import com.armutyus.ninova.roomdb.entities.BookWithShelves
+import com.armutyus.ninova.roomdb.entities.LocalShelf
+import com.armutyus.ninova.roomdb.entities.ShelfWithBooks
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NinovaDao {
     //Book works
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertBook(localBook: LocalBook)
+    suspend fun insertBook(localBook: DataModel.LocalBook)
 
     @Update
-    suspend fun updateBook(localBook: LocalBook)
+    suspend fun updateBook(localBook: DataModel.LocalBook)
 
     @Delete
-    suspend fun deleteBook(localBook: LocalBook)
+    suspend fun deleteBook(localBook: DataModel.LocalBook)
 
     @Query("SELECT * FROM Book WHERE bookId = :id")
-    fun getLocalBooksById(id: String): Flow<LocalBook>
+    fun getLocalBooksById(id: String): Flow<DataModel.LocalBook>
 
     @Query("SELECT * FROM Book")
-    fun getLocalBooks(): Flow<List<LocalBook>>
+    fun getLocalBooks(): Flow<List<DataModel.LocalBook>>
 
     @Query("SELECT * FROM Book WHERE bookAuthors LIKE :searchString OR bookTitle LIKE :searchString")
-    fun searchLocalBooks(searchString: String): Flow<List<LocalBook>>
+    fun searchLocalBooks(searchString: String): Flow<List<DataModel.LocalBook>>
 
     //Shelf works
     @Insert(onConflict = OnConflictStrategy.REPLACE)

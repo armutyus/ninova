@@ -13,12 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.FragmentMainSearchBinding
-import com.armutyus.ninova.model.GoogleBookItem
-import com.armutyus.ninova.roomdb.entities.LocalBook
+import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.search.adapters.MainSearchRecyclerViewAdapter
 import com.armutyus.ninova.ui.search.listeners.OnBookAddButtonClickListener
-import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class MainSearchFragment @Inject constructor(
@@ -61,7 +59,8 @@ class MainSearchFragment @Inject constructor(
             if (isChecked) {
                 when (checkedId) {
                     R.id.localSearchButton -> {
-
+                        val list = mainSearchViewModel.currentLocalBookList.value ?: listOf()
+                        mainSearchViewModel.setCurrentLocalBookList(list)
                     }
                     R.id.apiSearchButton -> {
                         val list = mainSearchViewModel.currentList.value ?: listOf()
@@ -112,7 +111,7 @@ class MainSearchFragment @Inject constructor(
 
         mainSearchViewModel.searchLocalBookList.observe(viewLifecycleOwner) {
             if (toggleButtonGroup?.checkedButtonId != R.id.localSearchButton) return@observe
-            val localBookList = it.toList()
+            mainSearchViewModel.setCurrentLocalBookList(it.toList())
         }
 
         mainSearchViewModel.randomBooksResponse.observe(viewLifecycleOwner) { response ->
@@ -153,12 +152,19 @@ class MainSearchFragment @Inject constructor(
 
         mainSearchViewModel.currentList.observe(viewLifecycleOwner) {
             searchFragmentAdapter.mainSearchBooksList = it.toList()
+            searchFragmentAdapter.setDataType(it)
+            setVisibilities(it)
+        }
+
+        mainSearchViewModel.currentLocalBookList.observe(viewLifecycleOwner) {
+            searchFragmentAdapter.mainSearchLocalBooksList = it.toList()
+            searchFragmentAdapter.setDataType(it)
             setVisibilities(it)
         }
 
     }
 
-    private fun setVisibilities(bookList: List<GoogleBookItem>) {
+    private fun setVisibilities(bookList: List<DataModel>) {
         if (bookList.isEmpty()) {
             binding?.linearLayoutSearchError?.visibility = View.VISIBLE
             binding?.progressBar?.visibility = View.GONE
@@ -191,7 +197,7 @@ class MainSearchFragment @Inject constructor(
         fragmentBinding = null
     }
 
-    override fun onClick(localBook: LocalBook) {
+    override fun onClick(localBook: DataModel.LocalBook) {
         mainSearchViewModel.insertBook(localBook)
     }
 

@@ -51,6 +51,7 @@
         <entry key="app/src/main/res/layout/register_user_bottom_sheet.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/search_api_row.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/search_archive_row.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/layout/search_local_book_row.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/search_main_row.xml" value="0.28125" />
         <entry key="app/src/main/res/layout/shelves_main_row.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
