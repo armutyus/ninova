@@ -19,17 +19,17 @@ sealed class DataModel {
     @Entity(tableName = "Book")
     data class LocalBook(
         @PrimaryKey(autoGenerate = false) var bookId: String,
-        var bookTitle: String?,
-        var bookSubtitle: String?,
         var bookAuthors: List<String>?,
-        var bookPages: String?,
+        var bookCategories: List<String>?,
         var bookCoverSmallThumbnail: String?,
         var bookCoverThumbnail: String?,
         var bookDescription: String?,
+        var bookNotes: String?,
+        var bookPages: String?,
         var bookPublishedDate: String?,
-        var bookCategories: List<String>?,
         var bookPublisher: String?,
-        var bookNotes: String?
+        var bookSubtitle: String?,
+        var bookTitle: String?
     ) : DataModel()
 
 }

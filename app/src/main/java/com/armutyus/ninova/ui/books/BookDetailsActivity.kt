@@ -98,7 +98,8 @@ class BookDetailsActivity : AppCompatActivity() {
             }
             binding.shelvesOfBooks.text = currentShelvesList.joinToString(", ")
         }
-        //binding.bookDetailUserNotes.text = currentLocalBook?.bookNotes
+
+        binding.bookDetailUserNotes.text = currentLocalBook?.bookNotes
     }
 
     private fun setVisibilities(tab: TabLayout.Tab?) {

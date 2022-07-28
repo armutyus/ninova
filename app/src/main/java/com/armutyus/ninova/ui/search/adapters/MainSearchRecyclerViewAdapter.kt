@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Constants.BOOK_DETAILS_INTENT
+import com.armutyus.ninova.constants.Constants.BOOK_TYPE_FOR_DETAILS
 import com.armutyus.ninova.constants.Constants.GOOGLE_BOOK_TYPE
 import com.armutyus.ninova.constants.Constants.LOCAL_BOOK_TYPE
 import com.armutyus.ninova.constants.Constants.currentBook
@@ -105,17 +106,17 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
                 searchFragment.onClick(
                     DataModel.LocalBook(
                         book.id!!,
-                        book.volumeInfo?.title,
-                        book.volumeInfo?.subtitle,
                         book.volumeInfo?.authors ?: listOf(),
-                        book.volumeInfo?.pageCount.toString(),
+                        book.volumeInfo?.categories ?: listOf(),
                         book.volumeInfo?.imageLinks?.smallThumbnail,
                         book.volumeInfo?.imageLinks?.thumbnail,
                         book.volumeInfo?.description,
+                        "",
+                        book.volumeInfo?.pageCount.toString(),
                         book.volumeInfo?.publishedDate,
-                        book.volumeInfo?.categories ?: listOf(),
                         book.volumeInfo?.publisher,
-                        ""
+                        book.volumeInfo?.subtitle,
+                        book.volumeInfo?.title
                     )
                 )
                 addButton.visibility = View.GONE
@@ -131,6 +132,7 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
             }
 
             itemView.setOnClickListener {
+                bookDetailsIntent.putExtra(BOOK_TYPE_FOR_DETAILS, GOOGLE_BOOK_TYPE)
                 currentBook = book
                 itemView.context.startActivity(bookDetailsIntent)
             }
@@ -154,6 +156,7 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
             val book = mainSearchLocalBooksList[position]
 
             itemView.setOnClickListener {
+                bookDetailsIntent.putExtra(BOOK_TYPE_FOR_DETAILS, LOCAL_BOOK_TYPE)
                 currentLocalBook = book
                 itemView.context.startActivity(bookDetailsIntent)
             }

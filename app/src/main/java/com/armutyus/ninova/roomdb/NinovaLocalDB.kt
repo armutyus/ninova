@@ -12,7 +12,7 @@ import com.armutyus.ninova.roomdb.entities.LocalShelf
         DataModel.LocalBook::class,
         LocalShelf::class,
         BookShelfCrossRef::class
-    ], version = 1, exportSchema = false
+    ], version = 1, exportSchema = true
 )
 @TypeConverters(DataConverter::class)
 abstract class NinovaLocalDB : RoomDatabase() {
