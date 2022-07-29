@@ -90,7 +90,6 @@ class MainSearchFragment @Inject constructor(
         if (searchQuery?.length!! > 0) {
             binding?.progressBar?.visibility = View.VISIBLE
             binding?.mainSearchRecyclerView?.visibility = View.GONE
-            binding?.mainSearchBooksTitle?.visibility = View.GONE
 
             mainSearchViewModel.searchLocalBooks("%$searchQuery%")
             mainSearchViewModel.searchBooksFromApi(searchQuery)
@@ -169,18 +168,15 @@ class MainSearchFragment @Inject constructor(
             binding?.linearLayoutSearchError?.visibility = View.VISIBLE
             binding?.progressBar?.visibility = View.GONE
             binding?.mainSearchRecyclerView?.visibility = View.GONE
-            binding?.mainSearchBooksTitle?.visibility = View.GONE
         } else {
             binding?.linearLayoutSearchError?.visibility = View.GONE
             binding?.progressBar?.visibility = View.GONE
-            binding?.mainSearchBooksTitle?.visibility = View.GONE
             binding?.mainSearchRecyclerView?.visibility = View.VISIBLE
         }
     }
 
     private fun setVisibilitiesForSearchQueryNull() {
         binding?.mainSearchRecyclerView?.visibility = View.VISIBLE
-        binding?.mainSearchBooksTitle?.visibility = View.VISIBLE
         binding?.searchButtonToggleGroup?.visibility = View.GONE
         binding?.linearLayoutSearchError?.visibility = View.GONE
     }
@@ -189,7 +185,6 @@ class MainSearchFragment @Inject constructor(
         binding?.linearLayoutSearchError?.visibility = View.VISIBLE
         binding?.progressBar?.visibility = View.GONE
         binding?.mainSearchRecyclerView?.visibility = View.GONE
-        binding?.mainSearchBooksTitle?.visibility = View.GONE
     }
 
     override fun onDestroyView() {

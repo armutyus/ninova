@@ -9,7 +9,7 @@
     tools:context=".ui.books.BookDetailsActivity">
 
     <LinearLayout
-        android:layout_margin="16dp"
+        android:layout_margin="12dp"
         android:id="@+id/bookDetailGeneralLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -68,20 +68,30 @@
 
     </LinearLayout>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/saveUserNotes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:text="@string/add_this_book_to_your_library">
+    </com.google.android.material.button.MaterialButton>
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/bookDetailTabLayout"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/notes" />
+            android:text="@string/info" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/info" />
+            android:text="@string/notes" />
 
     </com.google.android.material.tabs.TabLayout>
 
@@ -90,7 +100,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/bookDetailShelvesTextViews"
@@ -163,7 +173,7 @@
         android:id="@+id/bookDetailInfoLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"

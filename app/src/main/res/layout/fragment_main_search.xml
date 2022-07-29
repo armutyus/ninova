@@ -53,19 +53,6 @@
             app:strokeColor="@color/light_primary"/>
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
-    <TextView
-        android:id="@+id/mainSearchBooksTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="4dp"
-        android:text="@string/dusty_shelves"
-        android:textColor="#009688"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:visibility="gone"/>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/mainSearchRecyclerView"
         android:layout_width="match_parent"

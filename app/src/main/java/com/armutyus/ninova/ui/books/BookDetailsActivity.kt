@@ -3,6 +3,7 @@ package com.armutyus.ninova.ui.books
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.armutyus.ninova.constants.Constants.DETAILS_EXTRA
@@ -12,7 +13,9 @@ import com.armutyus.ninova.constants.Constants.FROM_DETAILS_TO_NOTES_EXTRA
 import com.armutyus.ninova.constants.Constants.MAIN_INTENT
 import com.armutyus.ninova.constants.Constants.currentBook
 import com.armutyus.ninova.constants.Constants.currentLocalBook
+import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.ActivityBookDetailsBinding
+import com.armutyus.ninova.model.BookDetailsInfo
 import com.bumptech.glide.RequestManager
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,7 +42,6 @@ class BookDetailsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         supportActionBar?.title = currentBook?.volumeInfo?.title
-
         tabLayout = binding.bookDetailTabLayout
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
@@ -71,7 +73,7 @@ class BookDetailsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         currentLocalBook?.bookId?.let { viewModel.getBookWithShelves(it) }
-        observeBookDetailsChanges()
+        observeBookDetailNotesChanges()
     }
 
     private fun goToBookToShelfFragment() {
@@ -89,7 +91,7 @@ class BookDetailsActivity : AppCompatActivity() {
 
     private var currentShelvesList = mutableListOf<String?>()
 
-    private fun observeBookDetailsChanges() {
+    private fun observeBookDetailNotesChanges() {
         viewModel.bookWithShelvesList.observe(this) { shelvesOfBook ->
             shelvesOfBook.forEach { bookWithShelves ->
                 val shelfTitleList = bookWithShelves.shelf.map { it.shelfTitle }.toList()
@@ -98,7 +100,6 @@ class BookDetailsActivity : AppCompatActivity() {
             }
             binding.shelvesOfBooks.text = currentShelvesList.joinToString(", ")
         }
-
         binding.bookDetailUserNotes.text = currentLocalBook?.bookNotes
     }
 
@@ -130,19 +131,47 @@ class BookDetailsActivity : AppCompatActivity() {
             binding.bookDetailNotesLinearLayout.visibility = View.GONE
             binding.bookDetailInfoLinearLayout.visibility = View.GONE
         } else {
-            val bookImage = binding.bookCoverImageView
-            glide.load(currentBook?.volumeInfo?.imageLinks?.thumbnail).centerCrop().into(bookImage)
-            binding.bookDetailTitleText.text = currentBook?.volumeInfo?.title
-            binding.bookDetailSubTitleText.text = currentBook?.volumeInfo?.subtitle
-            binding.bookDetailAuthorsText.text =
-                currentBook?.volumeInfo?.authors?.joinToString(", ")
-            binding.bookDetailPagesNumber.text = currentBook?.volumeInfo?.pageCount?.toString()
-            binding.bookDetailCategories.text =
-                currentBook?.volumeInfo?.categories?.joinToString(", ")
-            binding.bookDetailPublisher.text = currentBook?.volumeInfo?.publisher
-            binding.bookDetailPublishDate.text = currentBook?.volumeInfo?.publishedDate
-            binding.bookDetailDescription.text = currentBook?.volumeInfo?.description
+            viewModel.bookDetailsResponse(currentBook?.id!!).also {
+                observeBookDetailsResponse()
+            }
         }
     }
 
+    private fun observeBookDetailsResponse() {
+        viewModel.bookDetailsResponse.observe(this) {
+                response ->
+            when (response) {
+                is Response.Loading -> {
+                    Toast.makeText(this,"Loading..",Toast.LENGTH_SHORT).show()
+                }
+
+                is Response.Success -> {
+                    val bookDetails = response.data.volumeInfo
+                    applyBookDetailChanges(bookDetails)
+                }
+
+                is Response.Failure -> {
+                    Toast.makeText(this,"Something went wrong!",Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun applyBookDetailChanges(bookDetails: BookDetailsInfo) {
+        glide
+            .load(currentBook?.volumeInfo?.imageLinks?.thumbnail ?: bookDetails.imageLinks?.smallThumbnail)
+            .centerCrop()
+            .into(binding.bookCoverImageView)
+        binding.bookDetailTitleText.text = currentBook?.volumeInfo?.title ?: bookDetails.title
+        binding.bookDetailSubTitleText.text = currentBook?.volumeInfo?.subtitle ?: bookDetails.subtitle
+        binding.bookDetailAuthorsText.text =
+            currentBook?.volumeInfo?.authors?.joinToString(", ") ?: bookDetails.authors?.joinToString(", ")
+        binding.bookDetailPagesNumber.text =
+            currentBook?.volumeInfo?.pageCount?.toString() ?: bookDetails.pageCount?.toString()
+        binding.bookDetailCategories.text =
+            currentBook?.volumeInfo?.categories?.joinToString(", ") ?: bookDetails.categories?.joinToString(", ")
+        binding.bookDetailPublisher.text = currentBook?.volumeInfo?.publisher ?: bookDetails.publisher
+        binding.bookDetailPublishDate.text = currentBook?.volumeInfo?.publishedDate ?: bookDetails.publishedDate
+        binding.bookDetailDescription.text = currentBook?.volumeInfo?.description ?: bookDetails.description
+    }
 }

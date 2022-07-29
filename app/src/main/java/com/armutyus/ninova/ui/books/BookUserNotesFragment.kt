@@ -13,11 +13,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import com.armutyus.ninova.R
-import com.armutyus.ninova.constants.Constants
+import com.armutyus.ninova.constants.Constants.DETAILS_STRING_EXTRA
+import com.armutyus.ninova.constants.Constants.FROM_DETAILS_ACTIVITY
 import com.armutyus.ninova.constants.Constants.currentLocalBook
 import com.armutyus.ninova.databinding.FragmentBookUserNotesBinding
 import javax.inject.Inject
-
 
 class BookUserNotesFragment @Inject constructor(
 ) : Fragment(R.layout.fragment_book_user_notes) {
@@ -45,8 +45,8 @@ class BookUserNotesFragment @Inject constructor(
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
-            when (activity?.intent?.getStringExtra(Constants.DETAILS_STRING_EXTRA)) {
-                Constants.FROM_DETAILS_ACTIVITY -> {
+            when (activity?.intent?.getStringExtra(DETAILS_STRING_EXTRA)) {
+                FROM_DETAILS_ACTIVITY -> {
                     activity?.finish()
                 }
             }

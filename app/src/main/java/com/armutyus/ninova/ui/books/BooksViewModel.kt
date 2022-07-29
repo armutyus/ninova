@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.armutyus.ninova.constants.Response
+import com.armutyus.ninova.model.BookDetails
 import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.repository.BooksRepositoryInterface
 import com.armutyus.ninova.roomdb.entities.BookWithShelves
@@ -19,20 +21,26 @@ class BooksViewModel @Inject constructor(
     private val booksRepositoryInterface: BooksRepositoryInterface
 ) : ViewModel() {
 
-    private val _localBookList = MutableLiveData<List<DataModel.LocalBook>>()
-    val localBookList: LiveData<List<DataModel.LocalBook>>
-        get() = _localBookList
+    private val _bookDetailsResponse = MutableLiveData<Response<BookDetails>>()
+    val bookDetailsResponse: LiveData<Response<BookDetails>>
+        get() = _bookDetailsResponse
 
     private val _bookWithShelvesList = MutableLiveData<List<BookWithShelves>>()
     val bookWithShelvesList: LiveData<List<BookWithShelves>>
         get() = _bookWithShelvesList
 
-    fun getBookList() {
-        CoroutineScope(Dispatchers.IO).launch {
-            booksRepositoryInterface.getLocalBooks().collectLatest {
-                _localBookList.postValue(it)
-            }
+    private val _localBookList = MutableLiveData<List<DataModel.LocalBook>>()
+    val localBookList: LiveData<List<DataModel.LocalBook>>
+        get() = _localBookList
+
+    fun bookDetailsResponse(id: String) = CoroutineScope(Dispatchers.IO).launch {
+        booksRepositoryInterface.getBookDetails(id).collectLatest { response ->
+            _bookDetailsResponse.postValue(response)
         }
+    }
+
+    fun deleteBook(localBook: DataModel.LocalBook) = viewModelScope.launch {
+        booksRepositoryInterface.delete(localBook)
     }
 
     fun insertBook(localBook: DataModel.LocalBook) = CoroutineScope(Dispatchers.IO).launch {
@@ -43,8 +51,12 @@ class BooksViewModel @Inject constructor(
         booksRepositoryInterface.update(localBook)
     }
 
-    fun deleteBook(localBook: DataModel.LocalBook) = viewModelScope.launch {
-        booksRepositoryInterface.delete(localBook)
+    fun getBookList() {
+        CoroutineScope(Dispatchers.IO).launch {
+            booksRepositoryInterface.getLocalBooks().collectLatest {
+                _localBookList.postValue(it)
+            }
+        }
     }
 
     fun getBookWithShelves(bookId: String) {

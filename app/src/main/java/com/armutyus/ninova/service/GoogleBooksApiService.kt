@@ -17,7 +17,7 @@ interface GoogleBooksApiService {
 
     @GET("volumes/{id}")
     suspend fun getBookDetails(
-        @Path("id") id: Int,
+        @Path("id") id: String,
     ): Response<BookDetails>
 
 }
