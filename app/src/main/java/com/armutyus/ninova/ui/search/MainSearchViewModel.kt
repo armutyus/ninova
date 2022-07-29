@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.armutyus.ninova.constants.Response
-import com.armutyus.ninova.model.BookDetails
 import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.model.GoogleApiBooks
 import com.armutyus.ninova.repository.BooksRepositoryInterface

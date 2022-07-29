@@ -6,10 +6,13 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.armutyus.ninova.constants.Constants.BOOK_TYPE_FOR_DETAILS
 import com.armutyus.ninova.constants.Constants.DETAILS_EXTRA
 import com.armutyus.ninova.constants.Constants.DETAILS_STRING_EXTRA
 import com.armutyus.ninova.constants.Constants.FROM_DETAILS_ACTIVITY
 import com.armutyus.ninova.constants.Constants.FROM_DETAILS_TO_NOTES_EXTRA
+import com.armutyus.ninova.constants.Constants.GOOGLE_BOOK_TYPE
+import com.armutyus.ninova.constants.Constants.LOCAL_BOOK_TYPE
 import com.armutyus.ninova.constants.Constants.MAIN_INTENT
 import com.armutyus.ninova.constants.Constants.currentBook
 import com.armutyus.ninova.constants.Constants.currentLocalBook
@@ -41,7 +44,6 @@ class BookDetailsActivity : AppCompatActivity() {
         binding = ActivityBookDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar?.title = currentBook?.volumeInfo?.title
         tabLayout = binding.bookDetailTabLayout
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
@@ -58,15 +60,27 @@ class BookDetailsActivity : AppCompatActivity() {
             }
         })
 
-        binding.shelvesOfBooks.setOnClickListener {
-            goToBookToShelfFragment()
-        }
+        when (intent.getIntExtra(BOOK_TYPE_FOR_DETAILS, -1)) {
+            LOCAL_BOOK_TYPE -> {
+                supportActionBar?.title = currentLocalBook?.bookTitle
+                binding.addBookToLibraryButton.visibility = View.GONE
+                binding.shelvesOfBooks.setOnClickListener {
+                    goToBookToShelfFragment()
+                }
 
-        binding.bookDetailUserNotes.setOnClickListener {
-            goToUserBookNotesFragment()
-        }
+                binding.bookDetailUserNotes.setOnClickListener {
+                    goToUserBookNotesFragment()
+                }
+                setupLocalBookInfo()
+            }
 
-        setupBookInfo()
+            GOOGLE_BOOK_TYPE -> {
+                supportActionBar?.title = currentBook?.volumeInfo?.title
+                setupBookInfo()
+            }
+
+            else -> {}
+        }
 
     }
 
@@ -137,21 +151,40 @@ class BookDetailsActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupLocalBookInfo() {
+        if (currentLocalBook == null) {
+            binding.linearLayoutDetailsError.visibility = View.VISIBLE
+            binding.bookDetailNotesLinearLayout.visibility = View.GONE
+            binding.bookDetailInfoLinearLayout.visibility = View.GONE
+        } else {
+            viewModel.bookDetailsResponse(currentLocalBook?.bookId!!).also {
+                observeBookDetailsResponse()
+            }
+        }
+    }
+
+
     private fun observeBookDetailsResponse() {
-        viewModel.bookDetailsResponse.observe(this) {
-                response ->
+        viewModel.bookDetailsResponse.observe(this) { response ->
             when (response) {
                 is Response.Loading -> {
-                    Toast.makeText(this,"Loading..",Toast.LENGTH_SHORT).show()
+                    binding.progressBar.visibility = View.VISIBLE
                 }
 
                 is Response.Success -> {
+                    binding.progressBar.visibility = View.GONE
                     val bookDetails = response.data.volumeInfo
-                    applyBookDetailChanges(bookDetails)
+
+                    if (intent.getIntExtra(BOOK_TYPE_FOR_DETAILS,-1) == LOCAL_BOOK_TYPE) {
+                        applyLocalBookDetailChanges(bookDetails)
+                    } else {
+                        applyBookDetailChanges(bookDetails)
+                    }
+
                 }
 
                 is Response.Failure -> {
-                    Toast.makeText(this,"Something went wrong!",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Something went wrong!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -159,19 +192,71 @@ class BookDetailsActivity : AppCompatActivity() {
 
     private fun applyBookDetailChanges(bookDetails: BookDetailsInfo) {
         glide
-            .load(currentBook?.volumeInfo?.imageLinks?.thumbnail ?: bookDetails.imageLinks?.smallThumbnail)
+            .load(
+                currentBook?.volumeInfo?.imageLinks?.thumbnail
+                    ?: bookDetails.imageLinks?.smallThumbnail
+            )
             .centerCrop()
             .into(binding.bookCoverImageView)
         binding.bookDetailTitleText.text = currentBook?.volumeInfo?.title ?: bookDetails.title
-        binding.bookDetailSubTitleText.text = currentBook?.volumeInfo?.subtitle ?: bookDetails.subtitle
+        binding.bookDetailSubTitleText.text =
+            currentBook?.volumeInfo?.subtitle ?: bookDetails.subtitle
         binding.bookDetailAuthorsText.text =
-            currentBook?.volumeInfo?.authors?.joinToString(", ") ?: bookDetails.authors?.joinToString(", ")
+            currentBook?.volumeInfo?.authors?.joinToString(", ")
+                ?: bookDetails.authors?.joinToString(", ")
         binding.bookDetailPagesNumber.text =
             currentBook?.volumeInfo?.pageCount?.toString() ?: bookDetails.pageCount?.toString()
         binding.bookDetailCategories.text =
-            currentBook?.volumeInfo?.categories?.joinToString(", ") ?: bookDetails.categories?.joinToString(", ")
-        binding.bookDetailPublisher.text = currentBook?.volumeInfo?.publisher ?: bookDetails.publisher
-        binding.bookDetailPublishDate.text = currentBook?.volumeInfo?.publishedDate ?: bookDetails.publishedDate
-        binding.bookDetailDescription.text = currentBook?.volumeInfo?.description ?: bookDetails.description
+            currentBook?.volumeInfo?.categories?.joinToString(", ")
+                ?: bookDetails.categories?.joinToString(", ")
+        binding.bookDetailPublisher.text =
+            currentBook?.volumeInfo?.publisher ?: bookDetails.publisher
+        binding.bookDetailPublishDate.text =
+            currentBook?.volumeInfo?.publishedDate ?: bookDetails.publishedDate
+        binding.bookDetailDescription.text =
+            currentBook?.volumeInfo?.description ?: bookDetails.description
+    }
+
+    private fun applyLocalBookDetailChanges(bookDetails: BookDetailsInfo) {
+        glide
+            .load(
+                bookDetails.imageLinks?.smallThumbnail
+                    ?: currentLocalBook?.bookCoverSmallThumbnail
+            )
+            .centerCrop()
+            .into(binding.bookCoverImageView)
+        binding.bookDetailTitleText.text = bookDetails.title ?:  currentLocalBook?.bookTitle
+        binding.bookDetailSubTitleText.text =
+            bookDetails.subtitle ?: currentLocalBook?.bookSubtitle
+        binding.bookDetailAuthorsText.text =
+            bookDetails.authors?.joinToString(", ")
+                ?: currentLocalBook?.bookAuthors?.joinToString(", ")
+        binding.bookDetailPagesNumber.text =
+            bookDetails.pageCount?.toString() ?: currentLocalBook?.bookPages
+        binding.bookDetailCategories.text =
+            bookDetails.categories?.joinToString(", ")
+                ?: currentLocalBook?.bookCategories?.joinToString(", ")
+        binding.bookDetailPublisher.text =
+            bookDetails.publisher ?: currentLocalBook?.bookPublisher
+        binding.bookDetailPublishDate.text =
+            bookDetails.publishedDate ?: currentLocalBook?.bookPublishedDate
+        binding.bookDetailDescription.text =
+            bookDetails.description ?: currentLocalBook?.bookDescription
+
+        updateLocalBook(bookDetails)
+    }
+
+    private fun updateLocalBook(bookDetails: BookDetailsInfo) {
+        currentLocalBook?.bookCoverSmallThumbnail = bookDetails.imageLinks?.smallThumbnail
+        currentLocalBook?.bookTitle = binding.bookDetailTitleText.text.toString()
+        currentLocalBook?.bookSubtitle = binding.bookDetailSubTitleText.text.toString()
+        currentLocalBook?.bookAuthors = bookDetails.authors
+        currentLocalBook?.bookPages = binding.bookDetailPagesNumber.text.toString()
+        currentLocalBook?.bookCategories = bookDetails.categories
+        currentLocalBook?.bookPublisher = binding.bookDetailPublisher.text.toString()
+        currentLocalBook?.bookPublishedDate = binding.bookDetailPublishDate.text.toString()
+        currentLocalBook?.bookDescription = binding.bookDetailDescription.text.toString()
+
+        viewModel.updateBook(currentLocalBook!!)
     }
 }

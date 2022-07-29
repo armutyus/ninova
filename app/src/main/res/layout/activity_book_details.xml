@@ -9,6 +9,19 @@
     tools:context=".ui.books.BookDetailsActivity">
 
     <LinearLayout
+        android:id="@+id/progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <androidx.core.widget.ContentLoadingProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/progressBarStyle" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_margin="12dp"
         android:id="@+id/bookDetailGeneralLayout"
         android:layout_width="match_parent"
@@ -69,7 +82,7 @@
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/saveUserNotes"
+        android:id="@+id/addBookToLibraryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
