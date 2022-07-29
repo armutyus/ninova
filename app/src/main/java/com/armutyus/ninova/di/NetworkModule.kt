@@ -8,6 +8,7 @@ import com.armutyus.ninova.repository.*
 import com.armutyus.ninova.roomdb.NinovaDao
 import com.armutyus.ninova.service.GoogleBooksApiService
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -61,9 +62,12 @@ object NetworkModule {
     @Singleton
     @Provides
     fun injectGlide(@ApplicationContext context: Context) = Glide
-        .with(context).setDefaultRequestOptions(
-            RequestOptions().placeholder(Util.progressDrawable(context))
+        .with(context)
+        .setDefaultRequestOptions(
+            RequestOptions()
+                .placeholder(Util.progressDrawable(context))
                 .error(R.drawable.placeholder_book_icon)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
         )
 
 }

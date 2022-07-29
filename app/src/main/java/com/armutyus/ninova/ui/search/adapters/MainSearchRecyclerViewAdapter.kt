@@ -1,6 +1,8 @@
 package com.armutyus.ninova.ui.search.adapters
 
 import android.content.Intent
+import android.os.Build
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -110,7 +112,15 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
                         book.volumeInfo?.categories ?: listOf(),
                         book.volumeInfo?.imageLinks?.smallThumbnail,
                         book.volumeInfo?.imageLinks?.thumbnail,
-                        book.volumeInfo?.description,
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            Html.fromHtml(
+                                book.volumeInfo?.description,
+                                Html.FROM_HTML_OPTION_USE_CSS_COLORS
+                            ).toString()
+                        } else {
+                            Html.fromHtml(book.volumeInfo?.description)
+                                .toString()
+                        },
                         "",
                         book.volumeInfo?.pageCount.toString(),
                         book.volumeInfo?.publishedDate,
