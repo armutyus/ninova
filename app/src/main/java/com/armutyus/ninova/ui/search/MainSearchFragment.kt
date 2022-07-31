@@ -27,8 +27,9 @@ class MainSearchFragment @Inject constructor(
     private var fragmentBinding: FragmentMainSearchBinding? = null
     private val binding get() = fragmentBinding
     private lateinit var isListLocalBook: SharedPreferences
-    private lateinit var mainSearchViewModel: MainSearchViewModel
     private lateinit var booksViewModel: BooksViewModel
+    private lateinit var mainSearchViewModel: MainSearchViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -151,14 +152,14 @@ class MainSearchFragment @Inject constructor(
         }
 
         mainSearchViewModel.currentList.observe(viewLifecycleOwner) {
-            searchFragmentAdapter.mainSearchBooksList = it.toList()
             searchFragmentAdapter.setDataType(it)
+            searchFragmentAdapter.mainSearchBooksList = it.toList()
             setVisibilities(it)
         }
 
         mainSearchViewModel.currentLocalBookList.observe(viewLifecycleOwner) {
-            searchFragmentAdapter.mainSearchLocalBooksList = it.toList()
             searchFragmentAdapter.setDataType(it)
+            searchFragmentAdapter.mainSearchLocalBooksList = it.toList()
             setVisibilities(it)
         }
 

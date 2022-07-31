@@ -39,7 +39,7 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
     private lateinit var booksViewModel: BooksViewModel
     private val adapterData = mutableListOf<DataModel>()
 
-    private val diffUtil = object : DiffUtil.ItemCallback<DataModel.GoogleBookItem>() {
+    private val diffUtilGoogleBook = object : DiffUtil.ItemCallback<DataModel.GoogleBookItem>() {
         override fun areItemsTheSame(
             oldItem: DataModel.GoogleBookItem,
             newItem: DataModel.GoogleBookItem
@@ -55,7 +55,7 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
         }
     }
 
-    private val recyclerListDiffer = AsyncListDiffer(this, diffUtil)
+    private val recyclerListDiffer = AsyncListDiffer(this, diffUtilGoogleBook)
 
     var mainSearchBooksList: List<DataModel.GoogleBookItem>
         get() = recyclerListDiffer.currentList
@@ -83,14 +83,45 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
         get() = recyclerLocalBookListDiffer.currentList
         set(value) = recyclerLocalBookListDiffer.submitList(value)
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainSearchViewHolder {
+
+        val layout = when (viewType) {
+            GOOGLE_BOOK_TYPE -> R.layout.search_main_row
+            LOCAL_BOOK_TYPE -> R.layout.search_local_book_row
+            else -> throw IllegalArgumentException("Invalid view type")
+        }
+
+        val view =
+            LayoutInflater.from(parent.context).inflate(layout, parent, false)
+
+        return MainSearchViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: MainSearchViewHolder, position: Int) {
+        holder.bind(adapterData[position])
+    }
+
+    override fun getItemViewType(position: Int) = when (adapterData[position]) {
+        is DataModel.GoogleBookItem -> GOOGLE_BOOK_TYPE
+        is DataModel.LocalBook -> LOCAL_BOOK_TYPE
+    }
+
+    override fun getItemCount(): Int {
+        return if (adapterData.size == adapterData.lastIndex || adapterData.isEmpty()) {
+            mainSearchLocalBooksList.size
+        } else {
+            adapterData.size
+        }
+    }
+
     inner class MainSearchViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bindApiBook(position: Int) {
+        fun bindApiBook() {
             val bookCover = itemView.findViewById<ImageView>(R.id.bookImage)
             val bookTitle = itemView.findViewById<TextView>(R.id.bookTitleText)
             val bookAuthor = itemView.findViewById<TextView>(R.id.bookAuthorText)
             val bookPages = itemView.findViewById<TextView>(R.id.bookPageText)
             val bookReleaseDate = itemView.findViewById<TextView>(R.id.bookReleaseDateText)
-            val book = mainSearchBooksList[position]
+            val book = mainSearchBooksList[layoutPosition]
 
             val addButton = itemView.findViewById<ImageButton>(R.id.main_search_add_button)
             val addedButton =
@@ -114,11 +145,11 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
                         book.volumeInfo?.imageLinks?.thumbnail,
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                             Html.fromHtml(
-                                book.volumeInfo?.description,
+                                book.volumeInfo?.description ?: "",
                                 Html.FROM_HTML_OPTION_USE_CSS_COLORS
                             ).toString()
                         } else {
-                            Html.fromHtml(book.volumeInfo?.description)
+                            Html.fromHtml(book.volumeInfo?.description ?: "")
                                 .toString()
                         },
                         "",
@@ -156,14 +187,13 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
             }
         }
 
-        fun bindLocalBook(position: Int) {
-
+        fun bindLocalBook() {
             val bookCover = itemView.findViewById<ImageView>(R.id.bookImage)
             val bookTitle = itemView.findViewById<TextView>(R.id.bookTitleText)
             val bookAuthor = itemView.findViewById<TextView>(R.id.bookAuthorText)
             val bookPages = itemView.findViewById<TextView>(R.id.bookPageText)
             val bookReleaseDate = itemView.findViewById<TextView>(R.id.bookReleaseDateText)
-            val book = mainSearchLocalBooksList[position]
+            val book = mainSearchLocalBooksList[layoutPosition]
 
             itemView.setOnClickListener {
                 bookDetailsIntent.putExtra(BOOK_TYPE_FOR_DETAILS, LOCAL_BOOK_TYPE)
@@ -180,40 +210,13 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
             }
         }
 
-        fun bind(dataModel: DataModel, position: Int) {
+        fun bind(dataModel: DataModel) {
             when (dataModel) {
-                is DataModel.GoogleBookItem -> bindApiBook(position)
-                is DataModel.LocalBook -> bindLocalBook(position)
+                is DataModel.GoogleBookItem -> bindApiBook()
+                is DataModel.LocalBook -> bindLocalBook()
             }
         }
 
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainSearchViewHolder {
-
-        val layout = when (viewType) {
-            GOOGLE_BOOK_TYPE -> R.layout.search_main_row
-            LOCAL_BOOK_TYPE -> R.layout.search_local_book_row
-            else -> throw IllegalArgumentException("Invalid view type")
-        }
-
-        val view =
-            LayoutInflater.from(parent.context).inflate(layout, parent, false)
-
-        return MainSearchViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: MainSearchViewHolder, position: Int) {
-        holder.bind(adapterData[position], position)
-    }
-
-    override fun getItemViewType(position: Int) = when (adapterData[position]) {
-        is DataModel.GoogleBookItem -> GOOGLE_BOOK_TYPE
-        is DataModel.LocalBook -> LOCAL_BOOK_TYPE
-    }
-
-    override fun getItemCount(): Int {
-        return adapterData.size
     }
 
     fun setFragment(fragment: MainSearchFragment) {

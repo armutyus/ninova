@@ -1,14 +1,22 @@
 package com.armutyus.ninova.ui.books
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Html
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.armutyus.ninova.constants.Constants.BOOK_TYPE_FOR_DETAILS
 import com.armutyus.ninova.constants.Constants.DETAILS_EXTRA
 import com.armutyus.ninova.constants.Constants.DETAILS_STRING_EXTRA
@@ -24,6 +32,7 @@ import com.armutyus.ninova.databinding.ActivityBookDetailsBinding
 import com.armutyus.ninova.model.BookDetailsInfo
 import com.armutyus.ninova.model.DataModel
 import com.bumptech.glide.RequestManager
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception
@@ -33,9 +42,12 @@ import javax.inject.Named
 @AndroidEntryPoint
 class BookDetailsActivity : AppCompatActivity() {
 
+    var selectedPicture : Uri? = null
     private lateinit var binding: ActivityBookDetailsBinding
     private lateinit var bookDetails: BookDetailsInfo
     private lateinit var tabLayout: TabLayout
+    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var permissionLauncher: ActivityResultLauncher<String>
     private val viewModel by viewModels<BooksViewModel>()
 
     @Inject
@@ -69,8 +81,25 @@ class BookDetailsActivity : AppCompatActivity() {
         when (intent.getIntExtra(BOOK_TYPE_FOR_DETAILS, -1)) {
             LOCAL_BOOK_TYPE -> {
                 supportActionBar?.title = currentLocalBook?.bookTitle
-
                 binding.addBookToLibraryButton.visibility = View.GONE
+                registerLauncher()
+                setupLocalBookInfo()
+
+                binding.bookCoverImageView.setOnClickListener {
+                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                            Snackbar.make(it, "Permission needed for gallery", Snackbar.LENGTH_INDEFINITE).setAction("Give Permission") {
+                                    permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                                }.show()
+                        } else {
+                            permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        }
+                    } else {
+                        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                        activityResultLauncher.launch(galleryIntent)
+                    }
+                }
+
                 binding.shelvesOfBooks.setOnClickListener {
                     goToBookToShelfFragment()
                 }
@@ -78,7 +107,7 @@ class BookDetailsActivity : AppCompatActivity() {
                 binding.bookDetailUserNotes.setOnClickListener {
                     goToUserBookNotesFragment()
                 }
-                setupLocalBookInfo()
+
             }
 
             GOOGLE_BOOK_TYPE -> {
@@ -375,4 +404,30 @@ class BookDetailsActivity : AppCompatActivity() {
 
         viewModel.updateBook(currentLocalBook!!)
     }
+
+    private fun registerLauncher() {
+        activityResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val intentFromResult = result.data?.data
+                if (intentFromResult != null) {
+                    glide.load(intentFromResult).centerCrop().into(binding.bookCoverImageView)
+                    currentLocalBook?.bookCoverSmallThumbnail = intentFromResult.toString()
+                    viewModel.updateBook(currentLocalBook!!)
+                }
+            }
+        }
+        permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { result ->
+            if (result) {
+                val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                activityResultLauncher.launch(galleryIntent)
+            } else {
+                Toast.makeText(this, "Permission needed!", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
 }
