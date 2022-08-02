@@ -8,7 +8,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Html
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -56,6 +55,9 @@ class BookDetailsActivity : AppCompatActivity() {
     @Inject
     lateinit var mainIntent: Intent
 
+    private val type: Int
+        get() = intent?.getIntExtra(BOOK_TYPE_FOR_DETAILS, -1) ?: -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBookDetailsBinding.inflate(layoutInflater)
@@ -77,7 +79,7 @@ class BookDetailsActivity : AppCompatActivity() {
             }
         })
 
-        when (intent.getIntExtra(BOOK_TYPE_FOR_DETAILS, -1)) {
+        when (type) {
             LOCAL_BOOK_TYPE -> {
                 supportActionBar?.title = currentLocalBook?.bookTitle
                 binding.addBookToLibraryButton.visibility = View.GONE
@@ -97,58 +99,51 @@ class BookDetailsActivity : AppCompatActivity() {
                 }
 
             }
-
             GOOGLE_BOOK_TYPE -> {
                 supportActionBar?.title = currentBook?.volumeInfo?.title
                 setupBookInfo()
-
                 binding.addBookToLibraryButton.setOnClickListener {
-                    try {
-                        viewModel.insertBook(
-                            DataModel.LocalBook(
-                                currentBook?.id!!,
-                                bookDetails.authors ?: listOf(),
-                                bookDetails.categories ?: listOf(),
-                                bookDetails.imageLinks?.smallThumbnail,
-                                bookDetails.imageLinks?.thumbnail,
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                    Html.fromHtml(
-                                        bookDetails.description,
-                                        Html.FROM_HTML_OPTION_USE_CSS_COLORS
-                                    ).toString()
-                                } else {
-                                    Html.fromHtml(bookDetails.description)
-                                        .toString()
-                                },
-                                "",
-                                bookDetails.pageCount.toString(),
-                                bookDetails.publishedDate,
-                                bookDetails.publisher,
-                                bookDetails.subtitle,
-                                bookDetails.title
-                            )
-                        ).also {
-                            Toast.makeText(this, "Saved to your library", Toast.LENGTH_SHORT).show()
-                        }
-                    } catch (e: Exception) {
-                        Toast.makeText(this, "Failed to save!", Toast.LENGTH_LONG).show()
-                        Log.e(
-                            "BookDetailsActivity",
-                            e.localizedMessage ?: "Book not added to local db"
+                    viewModel.insertBook(
+                        DataModel.LocalBook(
+                            currentBook?.id!!,
+                            bookDetails.authors ?: listOf(),
+                            bookDetails.categories ?: listOf(),
+                            bookDetails.imageLinks?.smallThumbnail,
+                            bookDetails.imageLinks?.thumbnail,
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                Html.fromHtml(
+                                    bookDetails.description,
+                                    Html.FROM_HTML_OPTION_USE_CSS_COLORS
+                                ).toString()
+                            } else {
+                                Html.fromHtml(bookDetails.description)
+                                    .toString()
+                            },
+                            "",
+                            bookDetails.pageCount.toString(),
+                            bookDetails.publishedDate,
+                            bookDetails.publisher,
+                            bookDetails.subtitle,
+                            bookDetails.title
                         )
+                    ).invokeOnCompletion {
+                        Toast.makeText(this, "Saved to your library", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
-
             else -> {}
         }
 
+        observeBookDetailNotesChanges()
+        observeBookDetailsResponse()
     }
 
     override fun onResume() {
         super.onResume()
-        currentLocalBook?.bookId?.let { viewModel.getBookWithShelves(it) }
-        observeBookDetailNotesChanges()
+        currentLocalBook?.let {
+            viewModel.getBookWithShelves(it.bookId)
+            binding.bookDetailUserNotes.text = it.bookNotes
+        }
     }
 
     private fun goToBookToShelfFragment() {
@@ -175,7 +170,6 @@ class BookDetailsActivity : AppCompatActivity() {
             }
             binding.shelvesOfBooks.text = currentShelvesList.joinToString(", ")
         }
-        binding.bookDetailUserNotes.text = currentLocalBook?.bookNotes
     }
 
     private fun setVisibilities(tab: TabLayout.Tab?) {
@@ -206,9 +200,7 @@ class BookDetailsActivity : AppCompatActivity() {
             binding.bookDetailNotesLinearLayout.visibility = View.GONE
             binding.bookDetailInfoLinearLayout.visibility = View.GONE
         } else {
-            viewModel.bookDetailsResponse(currentBook?.id!!).also {
-                observeBookDetailsResponse()
-            }
+            viewModel.getBookDetailsById(currentBook?.id!!)
         }
     }
 
@@ -218,24 +210,20 @@ class BookDetailsActivity : AppCompatActivity() {
             binding.bookDetailNotesLinearLayout.visibility = View.GONE
             binding.bookDetailInfoLinearLayout.visibility = View.GONE
         } else {
-            viewModel.bookDetailsResponse(currentLocalBook?.bookId!!).also {
-                observeBookDetailsResponse()
-            }
+            viewModel.getBookDetailsById(currentLocalBook?.bookId!!)
         }
     }
 
-
     private fun observeBookDetailsResponse() {
-        viewModel.bookDetailsResponse.observe(this) { response ->
+        viewModel.bookDetails.observe(this) { response ->
             when (response) {
                 is Response.Loading -> {
                     binding.progressBar.visibility = View.VISIBLE
                 }
-
                 is Response.Success -> {
                     binding.progressBar.visibility = View.GONE
                     bookDetails = response.data.volumeInfo
-                    if (intent.getIntExtra(BOOK_TYPE_FOR_DETAILS, -1) == LOCAL_BOOK_TYPE) {
+                    if (type == LOCAL_BOOK_TYPE) {
                         applyLocalBookDetailChanges(bookDetails)
                     } else {
                         applyBookDetailChanges(bookDetails)
@@ -243,7 +231,7 @@ class BookDetailsActivity : AppCompatActivity() {
 
                 }
                 is Response.Failure -> {
-                    if (intent.getIntExtra(BOOK_TYPE_FOR_DETAILS, -1) == LOCAL_BOOK_TYPE) {
+                    if (type == LOCAL_BOOK_TYPE) {
                         showLocalBookDetails()
                     } else {
                         Toast.makeText(this, "Something went wrong!", Toast.LENGTH_SHORT).show()
@@ -351,8 +339,11 @@ class BookDetailsActivity : AppCompatActivity() {
 
     private fun updateLocalBook(bookDetails: BookDetailsInfo) {
         currentLocalBook?.bookCoverSmallThumbnail.apply {
-            if (this!!.startsWith("http://") && bookDetails.imageLinks?.smallThumbnail != null) {
-                currentLocalBook?.bookCoverSmallThumbnail = bookDetails.imageLinks.smallThumbnail
+            if (this != null) {
+                if (this.startsWith("http://") && bookDetails.imageLinks?.smallThumbnail != null) {
+                    currentLocalBook?.bookCoverSmallThumbnail =
+                        bookDetails.imageLinks.smallThumbnail
+                }
             }
         }
         currentLocalBook?.bookTitle.apply {
@@ -370,9 +361,9 @@ class BookDetailsActivity : AppCompatActivity() {
                 currentLocalBook?.bookAuthors = bookDetails.authors
             }
         }
-        currentLocalBook?.bookPages.apply {
-            if (this != bookDetails.pageCount?.toString() && bookDetails.pageCount != null) {
-                currentLocalBook?.bookPages = binding.bookDetailPagesNumber.text.toString()
+        currentLocalBook?.let {
+            if (bookDetails.pageCount != null && it.bookPages != bookDetails.pageCount.toString()) {
+                it.bookPages = binding.bookDetailPagesNumber.text.toString()
             }
         }
         currentLocalBook?.bookCategories.apply {

@@ -18,12 +18,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BooksViewModel @Inject constructor(
-    private val booksRepositoryInterface: BooksRepositoryInterface
+    private val booksRepository: BooksRepositoryInterface
 ) : ViewModel() {
 
-    private val _bookDetailsResponse = MutableLiveData<Response<BookDetails>>()
-    val bookDetailsResponse: LiveData<Response<BookDetails>>
-        get() = _bookDetailsResponse
+    private val _bookDetails = MutableLiveData<Response<BookDetails>>()
+    val bookDetails: LiveData<Response<BookDetails>>
+        get() = _bookDetails
 
     private val _bookWithShelvesList = MutableLiveData<List<BookWithShelves>>()
     val bookWithShelvesList: LiveData<List<BookWithShelves>>
@@ -33,27 +33,35 @@ class BooksViewModel @Inject constructor(
     val localBookList: LiveData<List<DataModel.LocalBook>>
         get() = _localBookList
 
-    fun bookDetailsResponse(id: String) = CoroutineScope(Dispatchers.IO).launch {
-        booksRepositoryInterface.getBookDetails(id).collectLatest { response ->
-            _bookDetailsResponse.postValue(response)
+    private var _currentGoogleBook: DataModel.GoogleBookItem? = null
+    val currentGoogleBook: DataModel.GoogleBookItem?
+        get() = _currentGoogleBook
+
+    private var _currentLocalBook: DataModel.LocalBook? = null
+    val currentLocalBook: DataModel.LocalBook?
+        get() = _currentLocalBook
+
+    fun getBookDetailsById(id: String) = CoroutineScope(Dispatchers.IO).launch {
+        booksRepository.getBookDetails(id).collectLatest { response ->
+            _bookDetails.postValue(response)
         }
     }
 
     fun deleteBook(localBook: DataModel.LocalBook) = viewModelScope.launch {
-        booksRepositoryInterface.delete(localBook)
+        booksRepository.delete(localBook)
     }
 
     fun insertBook(localBook: DataModel.LocalBook) = CoroutineScope(Dispatchers.IO).launch {
-        booksRepositoryInterface.insert(localBook)
+        booksRepository.insert(localBook)
     }
 
     fun updateBook(localBook: DataModel.LocalBook) = CoroutineScope(Dispatchers.IO).launch {
-        booksRepositoryInterface.update(localBook)
+        booksRepository.update(localBook)
     }
 
     fun getBookList() {
         CoroutineScope(Dispatchers.IO).launch {
-            booksRepositoryInterface.getLocalBooks().collectLatest {
+            booksRepository.getLocalBooks().collectLatest {
                 _localBookList.postValue(it)
             }
         }
@@ -61,10 +69,19 @@ class BooksViewModel @Inject constructor(
 
     fun getBookWithShelves(bookId: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            booksRepositoryInterface.getBookWithShelves(bookId).collectLatest {
+            booksRepository.getBookWithShelves(bookId).collectLatest {
                 _bookWithShelvesList.postValue(it)
             }
         }
     }
 
+    fun setCurrentGoogleBook(googleBook: DataModel.GoogleBookItem?) {
+        _currentLocalBook = null
+        _currentGoogleBook = googleBook
+    }
+
+    fun setCurrentLocalBook(localBook: DataModel.LocalBook?) {
+        _currentGoogleBook = null
+        _currentLocalBook = localBook
+    }
 }

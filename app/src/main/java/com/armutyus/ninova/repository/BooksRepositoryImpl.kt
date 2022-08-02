@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class BooksRepository @Inject constructor(
+class BooksRepositoryImpl @Inject constructor(
     private val ninovaDao: NinovaDao,
     private val googleBooksApiService: GoogleBooksApiService
 ) : BooksRepositoryInterface {

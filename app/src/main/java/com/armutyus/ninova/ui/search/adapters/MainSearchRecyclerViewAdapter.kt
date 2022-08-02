@@ -175,6 +175,7 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
             itemView.setOnClickListener {
                 bookDetailsIntent.putExtra(BOOK_TYPE_FOR_DETAILS, GOOGLE_BOOK_TYPE)
                 currentBook = book
+                currentLocalBook = null
                 itemView.context.startActivity(bookDetailsIntent)
             }
 
@@ -198,6 +199,7 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
             itemView.setOnClickListener {
                 bookDetailsIntent.putExtra(BOOK_TYPE_FOR_DETAILS, LOCAL_BOOK_TYPE)
                 currentLocalBook = book
+                currentBook = null
                 itemView.context.startActivity(bookDetailsIntent)
             }
 

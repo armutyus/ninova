@@ -80,8 +80,6 @@ class MainSearchFragment @Inject constructor(
     override fun onResume() {
         super.onResume()
         booksViewModel.getBookList()
-        mainSearchViewModel.randomBooksFromApi()
-        setVisibilitiesForSearchQueryNull()
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
