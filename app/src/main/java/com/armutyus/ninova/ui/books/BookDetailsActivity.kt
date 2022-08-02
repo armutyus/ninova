@@ -35,14 +35,13 @@ import com.bumptech.glide.RequestManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
-import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Named
 
 @AndroidEntryPoint
 class BookDetailsActivity : AppCompatActivity() {
 
-    var selectedPicture : Uri? = null
+    var selectedPicture: Uri? = null
     private lateinit var binding: ActivityBookDetailsBinding
     private lateinit var bookDetails: BookDetailsInfo
     private lateinit var tabLayout: TabLayout
@@ -86,18 +85,7 @@ class BookDetailsActivity : AppCompatActivity() {
                 setupLocalBookInfo()
 
                 binding.bookCoverImageView.setOnClickListener {
-                    if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                            Snackbar.make(it, "Permission needed for gallery", Snackbar.LENGTH_INDEFINITE).setAction("Give Permission") {
-                                    permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-                                }.show()
-                        } else {
-                            permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
-                        }
-                    } else {
-                        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                        activityResultLauncher.launch(galleryIntent)
-                    }
+                    onBookCoverClicked(it)
                 }
 
                 binding.shelvesOfBooks.setOnClickListener {
@@ -116,33 +104,38 @@ class BookDetailsActivity : AppCompatActivity() {
 
                 binding.addBookToLibraryButton.setOnClickListener {
                     try {
-                        viewModel.insertBook(DataModel.LocalBook(
-                            currentBook?.id!!,
-                            bookDetails.authors ?: listOf(),
-                            bookDetails.categories ?: listOf(),
-                            bookDetails.imageLinks?.smallThumbnail,
-                            bookDetails.imageLinks?.thumbnail,
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                Html.fromHtml(
-                                    bookDetails.description,
-                                    Html.FROM_HTML_OPTION_USE_CSS_COLORS
-                                ).toString()
-                            } else {
-                                Html.fromHtml(bookDetails.description)
-                                    .toString()
-                            },
-                            "",
-                            bookDetails.pageCount.toString(),
-                            bookDetails.publishedDate,
-                            bookDetails.publisher,
-                            bookDetails.subtitle,
-                            bookDetails.title
-                        )).also {
-                            Toast.makeText(this,"Saved to your library", Toast.LENGTH_SHORT).show()
+                        viewModel.insertBook(
+                            DataModel.LocalBook(
+                                currentBook?.id!!,
+                                bookDetails.authors ?: listOf(),
+                                bookDetails.categories ?: listOf(),
+                                bookDetails.imageLinks?.smallThumbnail,
+                                bookDetails.imageLinks?.thumbnail,
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                    Html.fromHtml(
+                                        bookDetails.description,
+                                        Html.FROM_HTML_OPTION_USE_CSS_COLORS
+                                    ).toString()
+                                } else {
+                                    Html.fromHtml(bookDetails.description)
+                                        .toString()
+                                },
+                                "",
+                                bookDetails.pageCount.toString(),
+                                bookDetails.publishedDate,
+                                bookDetails.publisher,
+                                bookDetails.subtitle,
+                                bookDetails.title
+                            )
+                        ).also {
+                            Toast.makeText(this, "Saved to your library", Toast.LENGTH_SHORT).show()
                         }
                     } catch (e: Exception) {
-                        Toast.makeText(this,"Failed to save!",Toast.LENGTH_LONG).show()
-                        Log.e("BookDetailsActivity", e.localizedMessage ?: "Book not added to local db")
+                        Toast.makeText(this, "Failed to save!", Toast.LENGTH_LONG).show()
+                        Log.e(
+                            "BookDetailsActivity",
+                            e.localizedMessage ?: "Book not added to local db"
+                        )
                     }
                 }
             }
@@ -242,7 +235,7 @@ class BookDetailsActivity : AppCompatActivity() {
                 is Response.Success -> {
                     binding.progressBar.visibility = View.GONE
                     bookDetails = response.data.volumeInfo
-                    if (intent.getIntExtra(BOOK_TYPE_FOR_DETAILS,-1) == LOCAL_BOOK_TYPE) {
+                    if (intent.getIntExtra(BOOK_TYPE_FOR_DETAILS, -1) == LOCAL_BOOK_TYPE) {
                         applyLocalBookDetailChanges(bookDetails)
                     } else {
                         applyBookDetailChanges(bookDetails)
@@ -250,7 +243,7 @@ class BookDetailsActivity : AppCompatActivity() {
 
                 }
                 is Response.Failure -> {
-                    if (intent.getIntExtra(BOOK_TYPE_FOR_DETAILS,-1) == LOCAL_BOOK_TYPE) {
+                    if (intent.getIntExtra(BOOK_TYPE_FOR_DETAILS, -1) == LOCAL_BOOK_TYPE) {
                         showLocalBookDetails()
                     } else {
                         Toast.makeText(this, "Something went wrong!", Toast.LENGTH_SHORT).show()
@@ -304,12 +297,12 @@ class BookDetailsActivity : AppCompatActivity() {
     private fun applyLocalBookDetailChanges(bookDetails: BookDetailsInfo) {
         glide
             .load(
-                bookDetails.imageLinks?.smallThumbnail
-                    ?: currentLocalBook?.bookCoverSmallThumbnail
+                currentLocalBook?.bookCoverSmallThumbnail
+                    ?: bookDetails.imageLinks?.smallThumbnail
             )
             .centerCrop()
             .into(binding.bookCoverImageView)
-        binding.bookDetailTitleText.text = bookDetails.title ?:  currentLocalBook?.bookTitle
+        binding.bookDetailTitleText.text = bookDetails.title ?: currentLocalBook?.bookTitle
         binding.bookDetailSubTitleText.text =
             bookDetails.subtitle ?: currentLocalBook?.bookSubtitle
         binding.bookDetailAuthorsText.text =
@@ -344,7 +337,8 @@ class BookDetailsActivity : AppCompatActivity() {
     }
 
     private fun showLocalBookDetails() {
-        glide.load(currentLocalBook?.bookCoverSmallThumbnail).centerCrop().into(binding.bookCoverImageView)
+        glide.load(currentLocalBook?.bookCoverSmallThumbnail).centerCrop()
+            .into(binding.bookCoverImageView)
         binding.bookDetailTitleText.text = currentLocalBook?.bookTitle
         binding.bookDetailSubTitleText.text = currentLocalBook?.bookSubtitle
         binding.bookDetailAuthorsText.text = currentLocalBook?.bookAuthors?.joinToString(", ")
@@ -357,7 +351,7 @@ class BookDetailsActivity : AppCompatActivity() {
 
     private fun updateLocalBook(bookDetails: BookDetailsInfo) {
         currentLocalBook?.bookCoverSmallThumbnail.apply {
-            if (this != bookDetails.imageLinks?.smallThumbnail && bookDetails.imageLinks?.smallThumbnail != null) {
+            if (this!!.startsWith("http://") && bookDetails.imageLinks?.smallThumbnail != null) {
                 currentLocalBook?.bookCoverSmallThumbnail = bookDetails.imageLinks.smallThumbnail
             }
         }
@@ -382,7 +376,7 @@ class BookDetailsActivity : AppCompatActivity() {
             }
         }
         currentLocalBook?.bookCategories.apply {
-            if (this != bookDetails.categories && bookDetails.categories!= null) {
+            if (this != bookDetails.categories && bookDetails.categories != null) {
                 currentLocalBook?.bookCategories = bookDetails.categories
             }
         }
@@ -405,6 +399,31 @@ class BookDetailsActivity : AppCompatActivity() {
         viewModel.updateBook(currentLocalBook!!)
     }
 
+    private fun onBookCoverClicked(view: View) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+            ) {
+                Snackbar.make(view, "Permission needed for gallery", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Give Permission") {
+                        permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    }.show()
+            } else {
+                permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
+        } else {
+            val galleryIntent =
+                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            activityResultLauncher.launch(galleryIntent)
+        }
+    }
+
     private fun registerLauncher() {
         activityResultLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -422,7 +441,8 @@ class BookDetailsActivity : AppCompatActivity() {
             ActivityResultContracts.RequestPermission()
         ) { result ->
             if (result) {
-                val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                val galleryIntent =
+                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                 activityResultLauncher.launch(galleryIntent)
             } else {
                 Toast.makeText(this, "Permission needed!", Toast.LENGTH_LONG).show()
