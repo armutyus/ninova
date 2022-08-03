@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.navigation.NavController
@@ -17,8 +16,8 @@ import com.armutyus.ninova.MobileNavigationDirections
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Constants.DETAILS_EXTRA
 import com.armutyus.ninova.constants.Constants.FROM_DETAILS_TO_NOTES_EXTRA
-import com.armutyus.ninova.constants.Constants.currentLocalBook
-import com.armutyus.ninova.constants.Constants.currentShelf
+import com.armutyus.ninova.constants.Cache.currentLocalBook
+import com.armutyus.ninova.constants.Cache.currentShelf
 import com.armutyus.ninova.databinding.ActivityMainBinding
 import com.armutyus.ninova.fragmentfactory.NinovaFragmentFactoryEntryPoint
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -30,7 +29,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    private val viewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 

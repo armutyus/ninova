@@ -3,6 +3,7 @@ package com.armutyus.ninova.ui.shelves
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.armutyus.ninova.repository.ShelfRepositoryInterface
 import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.LocalShelf
@@ -47,30 +48,30 @@ class ShelvesViewModel @Inject constructor(
         _currentShelfList.value = shelfList
     }
 
-    fun insertShelf(localShelf: LocalShelf) = CoroutineScope(Dispatchers.IO).launch {
+    fun insertShelf(localShelf: LocalShelf) = viewModelScope.launch {
         shelfRepositoryInterface.insert(localShelf)
     }
 
-    fun updateShelf(localShelf: LocalShelf) = CoroutineScope(Dispatchers.IO).launch {
+    fun updateShelf(localShelf: LocalShelf) = viewModelScope.launch {
         shelfRepositoryInterface.update(localShelf)
     }
 
-    fun deleteShelf(localShelf: LocalShelf) = CoroutineScope(Dispatchers.IO).launch {
+    fun deleteShelf(localShelf: LocalShelf) = viewModelScope.launch {
         shelfRepositoryInterface.delete(localShelf)
     }
 
     fun insertBookShelfCrossRef(crossRef: BookShelfCrossRef) =
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             shelfRepositoryInterface.insertBookShelfCrossRef(crossRef)
         }
 
     fun deleteBookShelfCrossRef(crossRef: BookShelfCrossRef) =
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             shelfRepositoryInterface.deleteBookShelfCrossRef(crossRef)
         }
 
     fun searchShelves(searchString: String) {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             shelfRepositoryInterface.searchLocalShelves(searchString).collectLatest {
                 _searchShelvesList.postValue(it)
             }
@@ -78,7 +79,7 @@ class ShelvesViewModel @Inject constructor(
     }
 
     fun getShelfWithBookList() {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             shelfRepositoryInterface.getShelfWithBooks().collectLatest {
                 _shelfWithBooksList.postValue(it)
             }

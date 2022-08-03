@@ -18,8 +18,8 @@ import com.armutyus.ninova.constants.Constants.BOOK_DETAILS_INTENT
 import com.armutyus.ninova.constants.Constants.BOOK_TYPE_FOR_DETAILS
 import com.armutyus.ninova.constants.Constants.GOOGLE_BOOK_TYPE
 import com.armutyus.ninova.constants.Constants.LOCAL_BOOK_TYPE
-import com.armutyus.ninova.constants.Constants.currentBook
-import com.armutyus.ninova.constants.Constants.currentLocalBook
+import com.armutyus.ninova.constants.Cache.currentBook
+import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.search.MainSearchFragment

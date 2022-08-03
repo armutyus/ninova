@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
-import com.armutyus.ninova.constants.Constants.currentShelf
+import com.armutyus.ninova.constants.Cache.currentShelf
 import com.armutyus.ninova.roomdb.entities.LocalShelf
 import com.armutyus.ninova.ui.shelves.ShelvesFragmentDirections
 import com.armutyus.ninova.ui.shelves.ShelvesViewModel

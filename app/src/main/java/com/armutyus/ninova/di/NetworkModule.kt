@@ -47,7 +47,7 @@ object NetworkModule {
     fun provideAuthRepository(
         auth: FirebaseAuth,
         db: FirebaseFirestore
-    ) = AuthRepository(auth, db) as AuthRepositoryInterface
+    ) = AuthRepositoryImpl(auth, db) as AuthRepositoryInterface
 
     @Singleton
     @Provides
@@ -57,7 +57,7 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideShelfRepository(ninovaDao: NinovaDao) =
-        ShelfRepository(ninovaDao) as ShelfRepositoryInterface
+        ShelfRepositoryImpl(ninovaDao) as ShelfRepositoryInterface
 
     @Singleton
     @Provides

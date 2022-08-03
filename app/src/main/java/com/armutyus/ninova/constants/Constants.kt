@@ -46,11 +46,6 @@ object Constants {
     const val PHOTO_URL = "photoUrl"
     const val USER_TYPE = "userType"
 
-    //Items
-    var currentBook: DataModel.GoogleBookItem? = null
-    var currentLocalBook: DataModel.LocalBook? = null
-    var currentShelf: LocalShelf? = null
-
     //BookViewType
     const val BOOK_TYPE_FOR_DETAILS = "bookTypeForDetails"
     const val GOOGLE_BOOK_TYPE = 0

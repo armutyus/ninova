@@ -2,6 +2,7 @@ package com.armutyus.ninova.ui.shelves
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
@@ -52,6 +53,8 @@ class ShelfWithBooksFragment @Inject constructor(
         val binding = FragmentShelfWithBooksBinding.bind(view)
         fragmentBinding = binding
         shelvesViewModel = ViewModelProvider(requireActivity())[ShelvesViewModel::class.java]
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
         val recyclerView = binding.shelfWithBooksRecyclerView
         recyclerView.adapter = booksAdapter
