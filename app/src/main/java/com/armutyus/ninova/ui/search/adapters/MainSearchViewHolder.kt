@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Cache
 import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.ui.books.BooksViewModel
@@ -91,8 +92,8 @@ class MainSearchViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             bookReleaseDate.text = book.volumeInfo?.publishedDate
             setOnClickListener {
                 bookDetailsIntent.putExtra(Constants.BOOK_TYPE_FOR_DETAILS, Constants.GOOGLE_BOOK_TYPE)
-                Constants.currentBook = book
-                Constants.currentLocalBook = null
+                Cache.currentBook = book
+                Cache.currentLocalBook = null
                 itemView.context.startActivity(bookDetailsIntent)
             }
         }
@@ -113,8 +114,8 @@ class MainSearchViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             bookReleaseDate.text = book.bookPublishedDate
             setOnClickListener {
                 bookDetailsIntent.putExtra(Constants.BOOK_TYPE_FOR_DETAILS, Constants.LOCAL_BOOK_TYPE)
-                Constants.currentLocalBook = book
-                Constants.currentBook = null
+                Cache.currentLocalBook = book
+                Cache.currentBook = null
                 itemView.context.startActivity(bookDetailsIntent)
             }
         }
