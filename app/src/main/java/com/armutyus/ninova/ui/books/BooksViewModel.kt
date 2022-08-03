@@ -33,14 +33,6 @@ class BooksViewModel @Inject constructor(
     val localBookList: LiveData<List<DataModel.LocalBook>>
         get() = _localBookList
 
-    private var _currentGoogleBook: DataModel.GoogleBookItem? = null
-    val currentGoogleBook: DataModel.GoogleBookItem?
-        get() = _currentGoogleBook
-
-    private var _currentLocalBook: DataModel.LocalBook? = null
-    val currentLocalBook: DataModel.LocalBook?
-        get() = _currentLocalBook
-
     fun getBookDetailsById(id: String) = CoroutineScope(Dispatchers.IO).launch {
         booksRepository.getBookDetails(id).collectLatest { response ->
             _bookDetails.postValue(response)
@@ -75,13 +67,4 @@ class BooksViewModel @Inject constructor(
         }
     }
 
-    fun setCurrentGoogleBook(googleBook: DataModel.GoogleBookItem?) {
-        _currentLocalBook = null
-        _currentGoogleBook = googleBook
-    }
-
-    fun setCurrentLocalBook(localBook: DataModel.LocalBook?) {
-        _currentGoogleBook = null
-        _currentLocalBook = localBook
-    }
 }

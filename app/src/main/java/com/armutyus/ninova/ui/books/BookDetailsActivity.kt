@@ -143,6 +143,7 @@ class BookDetailsActivity : AppCompatActivity() {
         currentLocalBook?.let {
             viewModel.getBookWithShelves(it.bookId)
             binding.bookDetailUserNotes.text = it.bookNotes
+            binding.shelvesOfBooks.text = currentShelvesList.joinToString(", ")
         }
     }
 
@@ -168,7 +169,6 @@ class BookDetailsActivity : AppCompatActivity() {
                 currentShelvesList.removeAll(shelfTitleList)
                 currentShelvesList.addAll(shelfTitleList)
             }
-            binding.shelvesOfBooks.text = currentShelvesList.joinToString(", ")
         }
     }
 
@@ -338,56 +338,50 @@ class BookDetailsActivity : AppCompatActivity() {
     }
 
     private fun updateLocalBook(bookDetails: BookDetailsInfo) {
-        currentLocalBook?.bookCoverSmallThumbnail.apply {
-            if (this != null) {
-                if (this.startsWith("http://") && bookDetails.imageLinks?.smallThumbnail != null) {
-                    currentLocalBook?.bookCoverSmallThumbnail =
+
+        currentLocalBook?.let {
+            if (it.bookCoverSmallThumbnail != null) {
+                if (bookDetails.imageLinks?.smallThumbnail != null && it.bookCoverSmallThumbnail!!.startsWith("http://")) {
+                    it.bookCoverSmallThumbnail =
                         bookDetails.imageLinks.smallThumbnail
                 }
             }
-        }
-        currentLocalBook?.bookTitle.apply {
-            if (this != bookDetails.title && bookDetails.title != null) {
-                currentLocalBook?.bookTitle = binding.bookDetailTitleText.text.toString()
+
+            if (bookDetails.title != null && it.bookTitle != bookDetails.title) {
+                it.bookTitle = binding.bookDetailTitleText.text.toString()
             }
-        }
-        currentLocalBook?.bookSubtitle.apply {
-            if (this != bookDetails.subtitle && bookDetails.subtitle != null) {
-                currentLocalBook?.bookSubtitle = binding.bookDetailSubTitleText.text.toString()
+
+            if (bookDetails.subtitle != null && it.bookSubtitle != bookDetails.subtitle) {
+                it.bookSubtitle = binding.bookDetailSubTitleText.text.toString()
             }
-        }
-        currentLocalBook?.bookAuthors.apply {
-            if (this != bookDetails.authors && bookDetails.authors != null) {
-                currentLocalBook?.bookAuthors = bookDetails.authors
+
+            if (bookDetails.authors != null && it.bookAuthors != bookDetails.authors) {
+                it.bookAuthors = bookDetails.authors
             }
-        }
-        currentLocalBook?.let {
+
             if (bookDetails.pageCount != null && it.bookPages != bookDetails.pageCount.toString()) {
                 it.bookPages = binding.bookDetailPagesNumber.text.toString()
             }
-        }
-        currentLocalBook?.bookCategories.apply {
-            if (this != bookDetails.categories && bookDetails.categories != null) {
-                currentLocalBook?.bookCategories = bookDetails.categories
+
+            if (bookDetails.categories != null && it.bookCategories != bookDetails.categories) {
+                it.bookCategories = bookDetails.categories
             }
-        }
-        currentLocalBook?.bookPublisher.apply {
-            if (this != bookDetails.publisher && bookDetails.publisher != null) {
-                currentLocalBook?.bookPublisher = binding.bookDetailPublisher.text.toString()
+
+            if (bookDetails.publisher != null && it.bookPublisher != bookDetails.publisher) {
+                it.bookPublisher = binding.bookDetailPublisher.text.toString()
             }
-        }
-        currentLocalBook?.bookPublishedDate.apply {
-            if (this != bookDetails.publishedDate && bookDetails.publishedDate != null) {
+
+            if (bookDetails.publishedDate != null && it.bookPublishedDate != bookDetails.publishedDate) {
                 currentLocalBook?.bookPublishedDate = binding.bookDetailPublishDate.text.toString()
             }
-        }
-        currentLocalBook?.bookDescription.apply {
-            if (this != bookDetails.description && bookDetails.description != null) {
-                currentLocalBook?.bookDescription = binding.bookDetailDescription.text.toString()
+
+            if (bookDetails.description != null && it.bookDescription != bookDetails.description) {
+                it.bookDescription = binding.bookDetailDescription.text.toString()
             }
         }
 
         viewModel.updateBook(currentLocalBook!!)
+
     }
 
     private fun onBookCoverClicked(view: View) {

@@ -80,6 +80,7 @@ class MainSearchFragment @Inject constructor(
     override fun onResume() {
         super.onResume()
         booksViewModel.getBookList()
+        setVisibilitiesForSearchQueryNull()
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
