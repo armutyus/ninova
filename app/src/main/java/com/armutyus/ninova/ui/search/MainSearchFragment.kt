@@ -152,13 +152,11 @@ class MainSearchFragment @Inject constructor(
 
         mainSearchViewModel.currentList.observe(viewLifecycleOwner) {
             searchFragmentAdapter.setDataType(it)
-            searchFragmentAdapter.mainSearchBooksList = it.toList()
             setVisibilities(it)
         }
 
         mainSearchViewModel.currentLocalBookList.observe(viewLifecycleOwner) {
             searchFragmentAdapter.setDataType(it)
-            searchFragmentAdapter.mainSearchLocalBooksList = it.toList()
             setVisibilities(it)
         }
 
