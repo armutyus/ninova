@@ -3,6 +3,7 @@ package com.armutyus.ninova.ui.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.model.GoogleApiBooks
@@ -30,7 +31,7 @@ class MainSearchViewModel @Inject constructor(
         get() = _searchLocalBookList
 
     fun searchLocalBooks(searchString: String) {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             booksRepository.searchLocalBooks(searchString).collectLatest {
                 _searchLocalBookList.postValue(it)
             }
@@ -41,7 +42,7 @@ class MainSearchViewModel @Inject constructor(
         _currentLocalBookList.postValue(bookList)
     }
 
-    fun insertBook(localBook: DataModel.LocalBook) = CoroutineScope(Dispatchers.IO).launch {
+    fun insertBook(localBook: DataModel.LocalBook) = viewModelScope.launch {
         booksRepository.insert(localBook)
     }
 
@@ -59,13 +60,13 @@ class MainSearchViewModel @Inject constructor(
     val randomBooksResponse: LiveData<Response<GoogleApiBooks>>
         get() = _randomBooksResponse
 
-    fun searchBooksFromApi(searchQuery: String) = CoroutineScope(Dispatchers.IO).launch {
+    fun searchBooksFromApi(searchQuery: String) = viewModelScope.launch {
         booksRepository.searchBooksFromApi(searchQuery).collectLatest { response ->
             _searchBooksResponse.postValue(response)
         }
     }
 
-    fun randomBooksFromApi() = CoroutineScope(Dispatchers.IO).launch {
+    fun randomBooksFromApi() = viewModelScope.launch {
         booksRepository.searchBooksFromApi("Witcher").collectLatest { response ->
             _randomBooksResponse.postValue(response)
         }

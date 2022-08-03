@@ -143,12 +143,12 @@ class BookToShelfFragment @Inject constructor(
         val bookId = args.currentBookId
         val shelfId = localShelf.shelfId
         val crossRef = BookShelfCrossRef(bookId, shelfId)
-        shelvesViewModel.insertBookShelfCrossRef(crossRef)
-
-        if (activity?.intent?.getStringExtra(DETAILS_STRING_EXTRA) == FROM_DETAILS_ACTIVITY) {
-            activity?.finish()
-        } else {
-            findNavController().popBackStack()
+        shelvesViewModel.insertBookShelfCrossRef(crossRef).invokeOnCompletion {
+            if (activity?.intent?.getStringExtra(DETAILS_STRING_EXTRA) == FROM_DETAILS_ACTIVITY) {
+                activity?.finish()
+            } else {
+                findNavController().popBackStack()
+            }
         }
     }
 

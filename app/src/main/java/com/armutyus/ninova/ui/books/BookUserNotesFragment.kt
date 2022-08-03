@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Constants.DETAILS_STRING_EXTRA
 import com.armutyus.ninova.constants.Constants.FROM_DETAILS_ACTIVITY
-import com.armutyus.ninova.constants.Constants.currentLocalBook
+import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.databinding.FragmentBookUserNotesBinding
 import javax.inject.Inject
 

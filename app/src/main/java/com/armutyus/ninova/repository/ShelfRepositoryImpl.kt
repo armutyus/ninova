@@ -7,7 +7,7 @@ import com.armutyus.ninova.roomdb.entities.ShelfWithBooks
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class ShelfRepository @Inject constructor(
+class ShelfRepositoryImpl @Inject constructor(
     private val ninovaDao: NinovaDao
 ) : ShelfRepositoryInterface {
     override suspend fun insert(localShelf: LocalShelf) {

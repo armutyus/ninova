@@ -24,8 +24,8 @@ import com.armutyus.ninova.constants.Constants.FROM_DETAILS_TO_NOTES_EXTRA
 import com.armutyus.ninova.constants.Constants.GOOGLE_BOOK_TYPE
 import com.armutyus.ninova.constants.Constants.LOCAL_BOOK_TYPE
 import com.armutyus.ninova.constants.Constants.MAIN_INTENT
-import com.armutyus.ninova.constants.Constants.currentBook
-import com.armutyus.ninova.constants.Constants.currentLocalBook
+import com.armutyus.ninova.constants.Cache.currentBook
+import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.ActivityBookDetailsBinding
 import com.armutyus.ninova.model.BookDetailsInfo
@@ -194,11 +194,18 @@ class BookDetailsActivity : AppCompatActivity() {
 
     }
 
+    private fun setVisibilitiesForBookNull() {
+        binding.linearLayoutDetailsError.visibility = View.VISIBLE
+        binding.bookDetailGeneralLayout.visibility = View.GONE
+        binding.progressBar.visibility = View.GONE
+        binding.addBookToLibraryButton.visibility = View.GONE
+        binding.bookDetailNotesLinearLayout.visibility = View.GONE
+        binding.bookDetailInfoLinearLayout.visibility = View.GONE
+    }
+
     private fun setupBookInfo() {
         if (currentBook == null) {
-            binding.linearLayoutDetailsError.visibility = View.VISIBLE
-            binding.bookDetailNotesLinearLayout.visibility = View.GONE
-            binding.bookDetailInfoLinearLayout.visibility = View.GONE
+            setVisibilitiesForBookNull()
         } else {
             viewModel.getBookDetailsById(currentBook?.id!!)
         }
@@ -206,9 +213,7 @@ class BookDetailsActivity : AppCompatActivity() {
 
     private fun setupLocalBookInfo() {
         if (currentLocalBook == null) {
-            binding.linearLayoutDetailsError.visibility = View.VISIBLE
-            binding.bookDetailNotesLinearLayout.visibility = View.GONE
-            binding.bookDetailInfoLinearLayout.visibility = View.GONE
+            setVisibilitiesForBookNull()
         } else {
             viewModel.getBookDetailsById(currentLocalBook?.bookId!!)
         }
@@ -341,7 +346,10 @@ class BookDetailsActivity : AppCompatActivity() {
 
         currentLocalBook?.let {
             if (it.bookCoverSmallThumbnail != null) {
-                if (bookDetails.imageLinks?.smallThumbnail != null && it.bookCoverSmallThumbnail!!.startsWith("http://")) {
+                if (bookDetails.imageLinks?.smallThumbnail != null && it.bookCoverSmallThumbnail!!.startsWith(
+                        "http://"
+                    )
+                ) {
                     it.bookCoverSmallThumbnail =
                         bookDetails.imageLinks.smallThumbnail
                 }

@@ -10,8 +10,6 @@ import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.repository.BooksRepositoryInterface
 import com.armutyus.ninova.roomdb.entities.BookWithShelves
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,7 +31,7 @@ class BooksViewModel @Inject constructor(
     val localBookList: LiveData<List<DataModel.LocalBook>>
         get() = _localBookList
 
-    fun getBookDetailsById(id: String) = CoroutineScope(Dispatchers.IO).launch {
+    fun getBookDetailsById(id: String) = viewModelScope.launch {
         booksRepository.getBookDetails(id).collectLatest { response ->
             _bookDetails.postValue(response)
         }
@@ -43,16 +41,16 @@ class BooksViewModel @Inject constructor(
         booksRepository.delete(localBook)
     }
 
-    fun insertBook(localBook: DataModel.LocalBook) = CoroutineScope(Dispatchers.IO).launch {
+    fun insertBook(localBook: DataModel.LocalBook) = viewModelScope.launch {
         booksRepository.insert(localBook)
     }
 
-    fun updateBook(localBook: DataModel.LocalBook) = CoroutineScope(Dispatchers.IO).launch {
+    fun updateBook(localBook: DataModel.LocalBook) = viewModelScope.launch {
         booksRepository.update(localBook)
     }
 
     fun getBookList() {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             booksRepository.getLocalBooks().collectLatest {
                 _localBookList.postValue(it)
             }
@@ -60,7 +58,7 @@ class BooksViewModel @Inject constructor(
     }
 
     fun getBookWithShelves(bookId: String) {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             booksRepository.getBookWithShelves(bookId).collectLatest {
                 _bookWithShelvesList.postValue(it)
             }
