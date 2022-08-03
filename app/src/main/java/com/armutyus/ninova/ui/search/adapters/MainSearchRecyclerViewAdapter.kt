@@ -1,9 +1,11 @@
 package com.armutyus.ninova.ui.search.adapters
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.constants.Constants.GOOGLE_BOOK_TYPE
 import com.armutyus.ninova.constants.Constants.LOCAL_BOOK_TYPE
 import com.armutyus.ninova.model.DataModel
@@ -11,10 +13,15 @@ import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.search.MainSearchFragment
 import com.bumptech.glide.RequestManager
 import javax.inject.Inject
+import javax.inject.Named
 
 class MainSearchRecyclerViewAdapter @Inject constructor(
     private val glide: RequestManager
 ) : RecyclerView.Adapter<MainSearchViewHolder>() {
+
+    @Named(Constants.BOOK_DETAILS_INTENT)
+    @Inject
+    lateinit var bookDetailsIntent: Intent
 
     private lateinit var searchFragment: MainSearchFragment
     private lateinit var booksViewModel: BooksViewModel
@@ -40,7 +47,7 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
     }
 
     override fun onBindViewHolder(holder: MainSearchViewHolder, position: Int) {
-        holder.bind(adapterData[position], glide, searchFragment, booksViewModel)
+        holder.bind(adapterData[position], glide, searchFragment, booksViewModel, bookDetailsIntent)
     }
 
     override fun getItemViewType(position: Int) = when (adapterData[position]) {

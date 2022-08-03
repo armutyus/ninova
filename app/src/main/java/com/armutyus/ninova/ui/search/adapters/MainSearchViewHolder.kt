@@ -21,15 +21,12 @@ import javax.inject.Named
 
 class MainSearchViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-    @Named(Constants.BOOK_DETAILS_INTENT)
-    @Inject
-    lateinit var bookDetailsIntent: Intent
-
     fun bindApiBook(
         book: DataModel.GoogleBookItem,
         glide: RequestManager,
         searchFragment: MainSearchFragment,
-        booksViewModel: BooksViewModel
+        booksViewModel: BooksViewModel,
+        bookDetailsIntent: Intent
     ) {
         val bookCover = itemView.findViewById<ImageView>(R.id.bookImage)
         val bookTitle = itemView.findViewById<TextView>(R.id.bookTitleText)
@@ -99,7 +96,7 @@ class MainSearchViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
     }
 
-    fun bindLocalBook(book: DataModel.LocalBook, glide: RequestManager) {
+    fun bindLocalBook(book: DataModel.LocalBook, glide: RequestManager, bookDetailsIntent: Intent) {
         val bookCover = itemView.findViewById<ImageView>(R.id.bookImage)
         val bookTitle = itemView.findViewById<TextView>(R.id.bookTitleText)
         val bookAuthor = itemView.findViewById<TextView>(R.id.bookAuthorText)
@@ -125,16 +122,18 @@ class MainSearchViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         dataModel: DataModel,
         glide: RequestManager,
         searchFragment: MainSearchFragment,
-        booksViewModel: BooksViewModel
+        booksViewModel: BooksViewModel,
+        bookDetailsIntent: Intent
     ) {
         when (dataModel) {
             is DataModel.GoogleBookItem -> bindApiBook(
                 dataModel,
                 glide,
                 searchFragment,
-                booksViewModel
+                booksViewModel,
+                bookDetailsIntent
             )
-            is DataModel.LocalBook -> bindLocalBook(dataModel, glide)
+            is DataModel.LocalBook -> bindLocalBook(dataModel, glide, bookDetailsIntent)
         }
     }
 }
