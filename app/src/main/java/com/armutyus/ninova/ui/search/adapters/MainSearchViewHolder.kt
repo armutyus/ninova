@@ -16,8 +16,6 @@ import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.search.MainSearchFragment
 import com.bumptech.glide.RequestManager
-import javax.inject.Inject
-import javax.inject.Named
 
 class MainSearchViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -88,7 +86,10 @@ class MainSearchViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             bookPages.text = book.volumeInfo?.pageCount.toString()
             bookReleaseDate.text = book.volumeInfo?.publishedDate
             setOnClickListener {
-                bookDetailsIntent.putExtra(Constants.BOOK_TYPE_FOR_DETAILS, Constants.GOOGLE_BOOK_TYPE)
+                bookDetailsIntent.putExtra(
+                    Constants.BOOK_TYPE_FOR_DETAILS,
+                    Constants.GOOGLE_BOOK_TYPE
+                )
                 Cache.currentBook = book
                 Cache.currentLocalBook = null
                 itemView.context.startActivity(bookDetailsIntent)
@@ -110,7 +111,10 @@ class MainSearchViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             bookPages.text = book.bookPages
             bookReleaseDate.text = book.bookPublishedDate
             setOnClickListener {
-                bookDetailsIntent.putExtra(Constants.BOOK_TYPE_FOR_DETAILS, Constants.LOCAL_BOOK_TYPE)
+                bookDetailsIntent.putExtra(
+                    Constants.BOOK_TYPE_FOR_DETAILS,
+                    Constants.LOCAL_BOOK_TYPE
+                )
                 Cache.currentLocalBook = book
                 Cache.currentBook = null
                 itemView.context.startActivity(bookDetailsIntent)

@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Cache.currentBook
+import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.constants.Constants.BOOK_DETAILS_INTENT
 import com.armutyus.ninova.constants.Constants.BOOK_TYPE_FOR_DETAILS
 import com.armutyus.ninova.constants.Constants.LOCAL_BOOK_TYPE
-import com.armutyus.ninova.constants.Cache.currentBook
-import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.model.DataModel
 import com.bumptech.glide.RequestManager
 import javax.inject.Inject

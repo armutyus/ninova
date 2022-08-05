@@ -57,6 +57,7 @@
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.1" />
         <entry key="app/src/main/res/menu/settings_menu.xml" value="0.28125" />
         <entry key="app/src/main/res/xml/anonymous_preferences.xml" value="0.28229166666666666" />
+        <entry key="app/src/main/res/xml/provider_paths.xml" value="0.28125" />
         <entry key="app/src/main/res/xml/root_preferences.xml" value="0.335" />
       </map>
     </option>

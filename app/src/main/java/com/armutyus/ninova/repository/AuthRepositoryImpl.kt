@@ -1,5 +1,7 @@
 package com.armutyus.ninova.repository
 
+import android.net.Uri
+import android.os.Environment
 import com.armutyus.ninova.constants.Constants.CREATED_AT
 import com.armutyus.ninova.constants.Constants.EMAIL
 import com.armutyus.ninova.constants.Constants.ERROR_MESSAGE
@@ -12,13 +14,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
+import java.io.File
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
-    private val db: FirebaseFirestore
+    private val db: FirebaseFirestore,
+    private val storage: FirebaseStorage
 ) : AuthRepositoryInterface {
 
     override suspend fun signInWithEmailPassword(email: String, password: String) = flow {
@@ -77,6 +82,19 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun exportUserDbToStorage(dbFileUri: Uri) = flow {
+        try {
+            emit(Response.Loading)
+            auth.currentUser?.apply {
+                storage.reference.child(uid).putFile(dbFileUri).await().also {
+                    emit(Response.Success(it))
+                }
+            }
+        } catch (e: Exception) {
+            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+        }
+    }
+
     override suspend fun signUpWithEmailPassword(email: String, password: String) = flow {
         try {
             emit(Response.Loading)
@@ -92,8 +110,8 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun signOut() = flow {
         try {
             emit(Response.Loading)
-            auth.signOut().also {
-                emit(Response.Success(it))
+            auth.signOut().apply {
+                emit(Response.Success(this))
             }
         } catch (e: Exception) {
             emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))

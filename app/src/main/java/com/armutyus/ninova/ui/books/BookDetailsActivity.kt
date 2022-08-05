@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Html
@@ -16,6 +15,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.armutyus.ninova.constants.Cache.currentBook
+import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.constants.Constants.BOOK_TYPE_FOR_DETAILS
 import com.armutyus.ninova.constants.Constants.DETAILS_EXTRA
 import com.armutyus.ninova.constants.Constants.DETAILS_STRING_EXTRA
@@ -24,8 +25,6 @@ import com.armutyus.ninova.constants.Constants.FROM_DETAILS_TO_NOTES_EXTRA
 import com.armutyus.ninova.constants.Constants.GOOGLE_BOOK_TYPE
 import com.armutyus.ninova.constants.Constants.LOCAL_BOOK_TYPE
 import com.armutyus.ninova.constants.Constants.MAIN_INTENT
-import com.armutyus.ninova.constants.Cache.currentBook
-import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.ActivityBookDetailsBinding
 import com.armutyus.ninova.model.BookDetailsInfo
@@ -110,15 +109,10 @@ class BookDetailsActivity : AppCompatActivity() {
                             bookDetails.categories ?: listOf(),
                             bookDetails.imageLinks?.smallThumbnail,
                             bookDetails.imageLinks?.thumbnail,
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                Html.fromHtml(
-                                    bookDetails.description,
-                                    Html.FROM_HTML_OPTION_USE_CSS_COLORS
-                                ).toString()
-                            } else {
-                                Html.fromHtml(bookDetails.description)
-                                    .toString()
-                            },
+                            Html.fromHtml(
+                                bookDetails.description,
+                                Html.FROM_HTML_OPTION_USE_CSS_COLORS
+                            ).toString(),
                             "",
                             bookDetails.pageCount.toString(),
                             bookDetails.publishedDate,
@@ -273,15 +267,10 @@ class BookDetailsActivity : AppCompatActivity() {
         val formattedBookDescription = if (bookDetails.description == null) {
             currentBook?.volumeInfo?.description
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                Html.fromHtml(
-                    bookDetails.description,
-                    Html.FROM_HTML_OPTION_USE_CSS_COLORS
-                ).toString()
-            } else {
-                Html.fromHtml(bookDetails.description)
-                    .toString()
-            }
+            Html.fromHtml(
+                bookDetails.description,
+                Html.FROM_HTML_OPTION_USE_CSS_COLORS
+            ).toString()
         }
         binding.bookDetailDescription.text = formattedBookDescription
 
@@ -314,15 +303,10 @@ class BookDetailsActivity : AppCompatActivity() {
         val formattedBookDescription = if (bookDetails.description == null) {
             currentLocalBook?.bookDescription
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                Html.fromHtml(
-                    bookDetails.description,
-                    Html.FROM_HTML_OPTION_USE_CSS_COLORS
-                ).toString()
-            } else {
-                Html.fromHtml(bookDetails.description)
-                    .toString()
-            }
+            Html.fromHtml(
+                bookDetails.description,
+                Html.FROM_HTML_OPTION_USE_CSS_COLORS
+            ).toString()
         }
         binding.bookDetailDescription.text = formattedBookDescription
 
@@ -403,7 +387,7 @@ class BookDetailsActivity : AppCompatActivity() {
                     Manifest.permission.READ_EXTERNAL_STORAGE
                 )
             ) {
-                Snackbar.make(view, "Permission needed for gallery", Snackbar.LENGTH_INDEFINITE)
+                Snackbar.make(view, "Permission needed!", Snackbar.LENGTH_INDEFINITE)
                     .setAction("Give Permission") {
                         permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
                     }.show()

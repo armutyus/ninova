@@ -9,8 +9,6 @@ import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.model.GoogleApiBooks
 import com.armutyus.ninova.repository.BooksRepositoryInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject

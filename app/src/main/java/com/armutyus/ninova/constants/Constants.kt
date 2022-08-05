@@ -1,8 +1,6 @@
 package com.armutyus.ninova.constants
 
 import com.armutyus.ninova.BuildConfig
-import com.armutyus.ninova.model.DataModel
-import com.armutyus.ninova.roomdb.entities.LocalShelf
 
 object Constants {
 
@@ -36,7 +34,8 @@ object Constants {
 
     //References
     const val BASE_URL = "https://www.googleapis.com/books/v1/"
-    const val BOOKS_REF = "books"
+    const val DB_REF = "userLibraryCollection"
+    const val DOCUMENT_REF = "userLibraryDocument"
     const val USERS_REF = "users"
 
     //UserFields
