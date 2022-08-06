@@ -3,6 +3,7 @@ package com.armutyus.ninova.di
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.room.Room
 import com.armutyus.ninova.constants.Constants.ABOUT_INTENT
 import com.armutyus.ninova.constants.Constants.BOOK_DETAILS_INTENT
@@ -74,7 +75,9 @@ object AppModule {
     @Provides
     fun injectLocalBooksDatabase(@ApplicationContext context: Context) = Room.databaseBuilder(
         context, NinovaLocalDB::class.java, "NinovaLocalDB"
-    ).build()
+    ).build().also {
+        Log.d("DB",it.openHelper.writableDatabase.path)
+    }
 
     @Singleton
     @Provides

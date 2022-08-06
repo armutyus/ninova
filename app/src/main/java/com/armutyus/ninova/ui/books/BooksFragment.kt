@@ -58,6 +58,7 @@ class BooksFragment @Inject constructor(
         ItemTouchHelper(swipeCallBack).attachToRecyclerView(recyclerView)
 
         booksViewModel.getBookList()
+        shelvesViewModel.getShelfWithBookList()
         observeBookList()
 
     }
@@ -65,7 +66,6 @@ class BooksFragment @Inject constructor(
     override fun onResume() {
         super.onResume()
         booksViewModel.getBookList()
-        shelvesViewModel.getShelfWithBookList()
     }
 
     private fun observeBookList() {

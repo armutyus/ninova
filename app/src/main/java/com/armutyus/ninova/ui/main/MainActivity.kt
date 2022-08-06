@@ -33,6 +33,7 @@ import com.armutyus.ninova.constants.Constants.FROM_DETAILS_TO_NOTES_EXTRA
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.ActivityMainBinding
 import com.armutyus.ninova.fragmentfactory.NinovaFragmentFactoryEntryPoint
+import com.armutyus.ninova.ui.shelves.ShelvesViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,6 +48,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
     private val viewModel by viewModels<MainViewModel>()
+    private val shelvesViewModel by viewModels<ShelvesViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -61,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        registerLauncher()
+        //registerLauncher()
 
         val navView: BottomNavigationView = binding.navView
 
@@ -104,7 +106,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     R.id.export_db -> {
-                        exportDbClicked()
+                        //exportDbClicked()
                     }
 
                 }
@@ -223,10 +225,11 @@ class MainActivity : AppCompatActivity() {
                 permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
             }
         } else {
-            val data: File = Environment.getExternalStorageDirectory()
-            val currentDBPath = "//data//$packageName//databases//"
-            val destDir = File(data, currentDBPath)
-            val dbFileUri = FileProvider.getUriForFile(this, this.packageName + ".provider", destDir)
+            val data: File = filesDir
+            val currentDBPath = getDatabasePath("NinovaLocalDB.db").absolutePath
+            println("exportClicked: $currentDBPath")
+            val destDir = File(currentDBPath)
+            val dbFileUri = FileProvider.getUriForFile(this, "${this.packageName}.provider", destDir)
             val exportDbIntent =
                 Intent(Intent.ACTION_SEND, dbFileUri)
             exportDbIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -241,6 +244,7 @@ class MainActivity : AppCompatActivity() {
             if (result.resultCode == RESULT_OK) {
 
                 val resultUri = result.data!!.data
+                println("resultUri: $resultUri")
 
                 if (resultUri != null) {
                     exportDbToStorage(resultUri)
@@ -251,10 +255,11 @@ class MainActivity : AppCompatActivity() {
             ActivityResultContracts.RequestPermission()
         ) { result ->
             if (result) {
-                val data: File = Environment.getExternalStorageDirectory()
-                val currentDBPath = "//data//$packageName//databases//"
-                val destDir = File(data, currentDBPath)
-                val dbFileUri = FileProvider.getUriForFile(this, this.packageName + ".provider", destDir)
+                val data: File = filesDir
+                val currentDBPath = getDatabasePath("NinovaLocalDB.db").absolutePath
+                println("registerLauncher: $currentDBPath")
+                val destDir = File(currentDBPath)
+                val dbFileUri = FileProvider.getUriForFile(this, "${this.packageName}.provider", destDir)
                 val exportDbIntent =
                     Intent(Intent.ACTION_SEND, dbFileUri)
                 exportDbIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)

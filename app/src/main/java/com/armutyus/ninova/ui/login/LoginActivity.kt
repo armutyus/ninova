@@ -169,6 +169,7 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
         }
+
     }
 
     private fun goToMainActivity() {

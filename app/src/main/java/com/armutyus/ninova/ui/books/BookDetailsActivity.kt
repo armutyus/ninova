@@ -137,7 +137,6 @@ class BookDetailsActivity : AppCompatActivity() {
         currentLocalBook?.let {
             viewModel.getBookWithShelves(it.bookId)
             binding.bookDetailUserNotes.text = it.bookNotes
-            binding.shelvesOfBooks.text = currentShelvesList.joinToString(", ")
         }
     }
 
@@ -163,6 +162,7 @@ class BookDetailsActivity : AppCompatActivity() {
                 currentShelvesList.removeAll(shelfTitleList)
                 currentShelvesList.addAll(shelfTitleList)
             }
+            binding.shelvesOfBooks.text = currentShelvesList.joinToString(", ")
         }
     }
 

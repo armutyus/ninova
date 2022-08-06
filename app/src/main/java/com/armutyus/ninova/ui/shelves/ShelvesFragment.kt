@@ -1,19 +1,30 @@
 package com.armutyus.ninova.ui.shelves
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Cache.currentShelf
 import com.armutyus.ninova.databinding.AddNewShelfBottomSheetBinding
 import com.armutyus.ninova.databinding.FragmentShelvesBinding
 import com.armutyus.ninova.roomdb.entities.LocalShelf
 import com.armutyus.ninova.ui.shelves.adapters.ShelvesRecyclerViewAdapter
+import com.armutyus.ninova.ui.shelves.listeners.OnShelfCoverClickListener
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
@@ -23,11 +34,13 @@ import javax.inject.Inject
 
 class ShelvesFragment @Inject constructor(
     private val shelvesAdapter: ShelvesRecyclerViewAdapter
-) : Fragment(R.layout.fragment_shelves), SearchView.OnQueryTextListener {
+) : Fragment(R.layout.fragment_shelves), SearchView.OnQueryTextListener, OnShelfCoverClickListener {
 
     private var fragmentBinding: FragmentShelvesBinding? = null
     private lateinit var shelvesViewModel: ShelvesViewModel
     private lateinit var bottomSheetBinding: AddNewShelfBottomSheetBinding
+    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var permissionLauncher: ActivityResultLauncher<String>
     private val swipeCallBack = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         override fun onMove(
             recyclerView: RecyclerView,
@@ -54,6 +67,11 @@ class ShelvesFragment @Inject constructor(
 
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        registerLauncher()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -65,6 +83,7 @@ class ShelvesFragment @Inject constructor(
         recyclerView.adapter = shelvesAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         shelvesAdapter.setViewModel(shelvesViewModel)
+        shelvesAdapter.setFragment(this)
         ItemTouchHelper(swipeCallBack).attachToRecyclerView(recyclerView)
 
         val searchView = binding.shelvesSearch
@@ -93,7 +112,7 @@ class ShelvesFragment @Inject constructor(
                 Toast.makeText(requireContext(), "Title cannot be empty!", Toast.LENGTH_LONG).show()
             } else {
                 val timeStamp = Date().time
-                val formattedDate = SimpleDateFormat("dd-MM-yyyy").format(timeStamp)
+                val formattedDate = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(timeStamp)
                 shelvesViewModel.insertShelf(
                     LocalShelf(
                         0,
@@ -106,6 +125,8 @@ class ShelvesFragment @Inject constructor(
             }
 
         }
+
+        registerLauncher()
     }
 
     override fun onResume() {
@@ -160,6 +181,61 @@ class ShelvesFragment @Inject constructor(
             fragmentBinding?.linearLayoutShelvesError?.visibility = View.GONE
             fragmentBinding?.progressBar?.visibility = View.GONE
             fragmentBinding?.mainShelvesRecyclerView?.visibility = View.VISIBLE
+        }
+    }
+
+    override fun onClick() {
+        onBookCoverClicked()
+    }
+
+    private fun onBookCoverClicked() {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    requireActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+            ) {
+                Snackbar.make(requireView(), "Permission needed!", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Give Permission") {
+                        permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    }.show()
+            } else {
+                permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
+        } else {
+            val galleryIntent =
+                Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            activityResultLauncher.launch(galleryIntent)
+        }
+    }
+
+    private fun registerLauncher() {
+        activityResultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                val intentFromResult = result.data?.data
+                if (intentFromResult != null) {
+                    currentShelf?.shelfCover = intentFromResult.toString()
+                    shelvesViewModel.updateShelf(currentShelf!!)
+                    shelvesAdapter.notifyDataSetChanged()
+                }
+            }
+        }
+        permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { result ->
+            if (result) {
+                val galleryIntent =
+                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                activityResultLauncher.launch(galleryIntent)
+            } else {
+                Toast.makeText(requireContext(), "Permission needed!", Toast.LENGTH_LONG).show()
+            }
         }
     }
 }
