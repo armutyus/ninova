@@ -36,7 +36,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var bottomSheetBinding: RegisterUserBottomSheetBinding
     private val checkFirstTime: SharedPreferences
-        get() = this.getSharedPreferences(Constants.FIRST_TIME,Context.MODE_PRIVATE)
+        get() = this.getSharedPreferences(Constants.FIRST_TIME, Context.MODE_PRIVATE)
 
     private val viewModel by viewModels<LoginViewModel>()
     private val settingsViewModel by viewModels<SettingsViewModel>()

@@ -7,5 +7,5 @@ data class BookShelfCrossRef(
     val bookId: String,
     val shelfId: Int
 ) {
-    constructor(): this("",0)
+    constructor() : this("", 0)
 }

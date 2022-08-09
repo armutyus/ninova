@@ -3,7 +3,6 @@ package com.armutyus.ninova.di
 import android.app.Application
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.room.Room
 import com.armutyus.ninova.constants.Constants.ABOUT_INTENT
 import com.armutyus.ninova.constants.Constants.BOOK_DETAILS_INTENT

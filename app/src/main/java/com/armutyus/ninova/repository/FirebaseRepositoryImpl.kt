@@ -90,7 +90,7 @@ class FirebaseRepositoryImpl @Inject constructor(
                     .get().await().toObjects(DataModel.LocalBook::class.java).also {
                         emit(Response.Success(it))
                     }
-                }
+            }
         } catch (e: Exception) {
             emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
         }
@@ -104,7 +104,7 @@ class FirebaseRepositoryImpl @Inject constructor(
                     .get().await().toObjects(LocalShelf::class.java).also {
                         emit(Response.Success(it))
                     }
-                }
+            }
         } catch (e: Exception) {
             emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
         }
@@ -118,7 +118,7 @@ class FirebaseRepositoryImpl @Inject constructor(
                     .get().await().toObjects(BookShelfCrossRef::class.java).also {
                         emit(Response.Success(it))
                     }
-                }
+            }
         } catch (e: Exception) {
             emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
         }

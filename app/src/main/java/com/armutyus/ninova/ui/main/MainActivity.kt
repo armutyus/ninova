@@ -27,16 +27,12 @@ import com.armutyus.ninova.constants.Constants.FROM_DETAILS_TO_NOTES_EXTRA
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.ActivityMainBinding
 import com.armutyus.ninova.fragmentfactory.NinovaFragmentFactoryEntryPoint
-import com.armutyus.ninova.model.DataModel
-import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
-import com.armutyus.ninova.roomdb.entities.LocalShelf
 import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.shelves.ShelvesViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -46,7 +42,7 @@ class MainActivity : AppCompatActivity() {
     private val shelvesViewModel by viewModels<ShelvesViewModel>()
     private val booksViewModel by viewModels<BooksViewModel>()
     private val checkFirstTime: SharedPreferences
-        get() = this.getSharedPreferences(FIRST_TIME,Context.MODE_PRIVATE)
+        get() = this.getSharedPreferences(FIRST_TIME, Context.MODE_PRIVATE)
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -191,9 +187,12 @@ class MainActivity : AppCompatActivity() {
         booksViewModel.collectBooksFromFirestore().observe(this) { response ->
             when (response) {
                 is Response.Loading -> {
-                    Toast.makeText(this,
-                        "Checking user library, please wait..", Toast.LENGTH_SHORT).show()
-                    Log.i("booksDownload", "Books downloading")                }
+                    Toast.makeText(
+                        this,
+                        "Checking user library, please wait..", Toast.LENGTH_SHORT
+                    ).show()
+                    Log.i("booksDownload", "Books downloading")
+                }
                 is Response.Success -> {
                     val firebaseBookList = response.data
                     var i = 0

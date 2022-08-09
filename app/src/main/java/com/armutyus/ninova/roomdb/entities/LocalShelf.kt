@@ -11,7 +11,7 @@ data class LocalShelf(
     var createdAt: String?,
     var shelfCover: String?,
 ) {
-    constructor(): this(0,"","","")
+    constructor() : this(0, "", "", "")
 
     fun getBookCount(shelvesViewModel: ShelvesViewModel): Int {
         return shelvesViewModel.shelfWithBooksList.value?.firstOrNull {

@@ -179,7 +179,11 @@ class SettingsFragment @Inject constructor(
                     .observe(viewLifecycleOwner) { response ->
                         when (response) {
                             is Response.Loading -> {
-                                Toast.makeText(requireContext(), "Uploading library..", Toast.LENGTH_SHORT)
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Uploading library..",
+                                    Toast.LENGTH_SHORT
+                                )
                                     .show()
                                 Log.i("booksUpload", "Books uploading")
                             }

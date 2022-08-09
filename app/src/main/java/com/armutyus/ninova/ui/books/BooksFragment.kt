@@ -91,13 +91,14 @@ class BooksFragment @Inject constructor(
     }
 
 
-
     private fun fetchBooks() {
         booksViewModel.collectBooksFromFirestore().observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Response.Loading -> {
-                    Toast.makeText(requireContext(),
-                        "Checking user library, please wait..", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Checking user library, please wait..", Toast.LENGTH_SHORT
+                    ).show()
                     fragmentBinding?.progressBar?.visibility = View.VISIBLE
                 }
                 is Response.Success -> {
@@ -118,10 +119,14 @@ class BooksFragment @Inject constructor(
                         val bookSubtitle = firebaseBookList[i].bookSubtitle
                         val bookTitle = firebaseBookList[i].bookTitle
 
-                        booksViewModel.insertBook(DataModel.LocalBook(bookId, bookAuthor, bookCategories,
-                            bookSmallThumbnail, bookThumbnail, bookDescription,
-                            bookNotes, bookPages, bookPublishedDate,
-                            bookPublisher, bookSubtitle, bookTitle))
+                        booksViewModel.insertBook(
+                            DataModel.LocalBook(
+                                bookId, bookAuthor, bookCategories,
+                                bookSmallThumbnail, bookThumbnail, bookDescription,
+                                bookNotes, bookPages, bookPublishedDate,
+                                bookPublisher, bookSubtitle, bookTitle
+                            )
+                        )
                         i++
                     }
                     fragmentBinding?.progressBar?.visibility = View.GONE
@@ -179,7 +184,14 @@ class BooksFragment @Inject constructor(
                         val shelfTitle = firebaseShelvesList[i].shelfTitle
                         val createdAt = firebaseShelvesList[i].createdAt
                         val shelfCover = firebaseShelvesList[i].shelfCover
-                        shelvesViewModel.insertShelf(LocalShelf(shelfId, shelfTitle, createdAt, shelfCover))
+                        shelvesViewModel.insertShelf(
+                            LocalShelf(
+                                shelfId,
+                                shelfTitle,
+                                createdAt,
+                                shelfCover
+                            )
+                        )
                         i++
                     }
                     checkFirstTime.edit().putBoolean("first_time", false).apply()
