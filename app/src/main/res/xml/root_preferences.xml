@@ -38,6 +38,14 @@
     <PreferenceCategory app:title="Account" app:allowDividerBelow="true" >
 
         <Preference
+            app:key="upload_library"
+            app:title="@string/upload_library"
+            app:summary="Link your library with your account"
+            app:allowDividerBelow="true"
+            app:icon="@drawable/ic_baseline_upload_24">
+        </Preference>
+
+        <Preference
             app:key="sign_out"
             app:title="@string/sign_out"
             app:allowDividerBelow="true"

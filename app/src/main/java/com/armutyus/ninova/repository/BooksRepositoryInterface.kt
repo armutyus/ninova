@@ -4,6 +4,7 @@ import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.model.BookDetails
 import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.model.GoogleApiBooks
+import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.BookWithShelves
 import kotlinx.coroutines.flow.Flow
 
@@ -24,5 +25,7 @@ interface BooksRepositoryInterface {
     fun searchLocalBooks(searchString: String): Flow<List<DataModel.LocalBook>>
 
     suspend fun getBookWithShelves(bookId: String): Flow<List<BookWithShelves>>
+
+    suspend fun getBookShelfCrossRef(): Flow<List<BookShelfCrossRef>>
 
 }

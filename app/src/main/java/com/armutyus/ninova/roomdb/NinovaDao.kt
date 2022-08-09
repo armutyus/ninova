@@ -53,6 +53,10 @@ interface NinovaDao {
     suspend fun deleteBookShelfCrossRef(crossRef: BookShelfCrossRef)
 
     @Transaction
+    @Query("SELECT * FROM BookShelfCrossRef")
+    fun getBookShelfCrossRef(): Flow<List<BookShelfCrossRef>>
+
+    @Transaction
     @Query("SELECT * FROM Shelf")
     fun getBooksOfShelf(): Flow<List<ShelfWithBooks>>
 

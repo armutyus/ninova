@@ -1,17 +1,21 @@
 package com.armutyus.ninova.ui.login
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.constants.Constants.MAIN_INTENT
 import com.armutyus.ninova.constants.Constants.REGISTER_INTENT
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.ActivityLoginBinding
 import com.armutyus.ninova.databinding.RegisterUserBottomSheetBinding
+import com.armutyus.ninova.ui.settings.SettingsViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,7 +35,11 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var bottomSheetBinding: RegisterUserBottomSheetBinding
+    private val checkFirstTime: SharedPreferences
+        get() = this.getSharedPreferences(Constants.FIRST_TIME,Context.MODE_PRIVATE)
+
     private val viewModel by viewModels<LoginViewModel>()
+    private val settingsViewModel by viewModels<SettingsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -173,6 +181,11 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goToMainActivity() {
+        with(checkFirstTime.edit()) {
+            putBoolean("first_time", true)
+            apply()
+        }
+        clearDatabase()
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(mainIntent)
         finish()
@@ -181,6 +194,10 @@ class LoginActivity : AppCompatActivity() {
     private fun goToForgotPasswordPage() {
         registerIntent.putExtra("action", "forgot_password")
         startActivity(registerIntent)
+    }
+
+    private fun clearDatabase() {
+        settingsViewModel.clearDatabase()
     }
 
 }

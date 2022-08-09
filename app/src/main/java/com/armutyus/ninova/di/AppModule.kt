@@ -75,9 +75,7 @@ object AppModule {
     @Provides
     fun injectLocalBooksDatabase(@ApplicationContext context: Context) = Room.databaseBuilder(
         context, NinovaLocalDB::class.java, "NinovaLocalDB"
-    ).build().also {
-        Log.d("DB",it.openHelper.writableDatabase.path)
-    }
+    ).build()
 
     @Singleton
     @Provides

@@ -3,7 +3,9 @@ package com.armutyus.ninova.ui.settings
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
@@ -21,7 +23,10 @@ import com.armutyus.ninova.constants.Constants.REGISTER
 import com.armutyus.ninova.constants.Constants.REGISTER_INTENT
 import com.armutyus.ninova.constants.Constants.SETTINGS_ACTION_KEY
 import com.armutyus.ninova.constants.Constants.SYSTEM_THEME
+import com.armutyus.ninova.constants.Constants.VERSION_NAME
 import com.armutyus.ninova.constants.Response
+import com.armutyus.ninova.ui.books.BooksViewModel
+import com.armutyus.ninova.ui.shelves.ShelvesViewModel
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -29,7 +34,7 @@ import javax.inject.Named
 
 @AndroidEntryPoint
 class SettingsFragment @Inject constructor(
-    private val auth: FirebaseAuth
+    auth: FirebaseAuth
 ) : PreferenceFragmentCompat(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Named(LOGIN_INTENT)
@@ -50,10 +55,11 @@ class SettingsFragment @Inject constructor(
 
     private var sharedPreferences: SharedPreferences? = null
     private lateinit var settingsViewModel: SettingsViewModel
+    private lateinit var shelvesViewModel: ShelvesViewModel
+    private lateinit var booksViewModel: BooksViewModel
+    private val user = auth.currentUser!!
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-
-        val user = auth.currentUser!!
 
         if (user.isAnonymous) {
             setPreferencesFromResource(R.xml.anonymous_preferences, rootKey)
@@ -61,7 +67,11 @@ class SettingsFragment @Inject constructor(
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
         }
 
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
         settingsViewModel = ViewModelProvider(requireActivity())[SettingsViewModel::class.java]
+        shelvesViewModel = ViewModelProvider(requireActivity())[ShelvesViewModel::class.java]
+        booksViewModel = ViewModelProvider(requireActivity())[BooksViewModel::class.java]
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
         val changeEmailListener = Preference.OnPreferenceClickListener {
@@ -84,6 +94,7 @@ class SettingsFragment @Inject constructor(
             true
         }
         findPreference<Preference>("about_ninova")?.onPreferenceClickListener = aboutNinovaListener
+        findPreference<Preference>("about_ninova")?.summary = "Version: $VERSION_NAME"
 
         val privacyPolicyListener = Preference.OnPreferenceClickListener {
             //intent to privacy policy
@@ -98,6 +109,17 @@ class SettingsFragment @Inject constructor(
             true
         }
         findPreference<Preference>("sign_out")?.onPreferenceClickListener = signOutListener
+
+        val uploadLibraryListener = Preference.OnPreferenceClickListener {
+            uploadBooks()
+            uploadShelves()
+            uploadCrossRefs()
+            true
+        }
+        findPreference<Preference>("upload_library")?.onPreferenceClickListener =
+            uploadLibraryListener
+        findPreference<Preference>("upload_library")?.summary =
+            "Link your library with your account: ${user.email}"
 
         val registerListener = Preference.OnPreferenceClickListener {
             registerIntent.putExtra(SETTINGS_ACTION_KEY, REGISTER)
@@ -148,18 +170,118 @@ class SettingsFragment @Inject constructor(
         }
     }
 
+    private fun uploadBooks() {
+        booksViewModel.getBookList()
+        booksViewModel.localBookList.observe(viewLifecycleOwner) { localBookList ->
+            var i = 0
+            while (i < localBookList.size) {
+                settingsViewModel.uploadUserBooksToFirestore(localBookList[i])
+                    .observe(viewLifecycleOwner) { response ->
+                        when (response) {
+                            is Response.Loading -> {
+                                Toast.makeText(requireContext(), "Uploading library..", Toast.LENGTH_SHORT)
+                                    .show()
+                                Log.i("booksUpload", "Books uploading")
+                            }
+                            is Response.Success ->
+                                Log.i("bookUpload", "Books uploaded")
+                            is Response.Failure -> {
+                                println("Book Upload Error: " + response.errorMessage)
+                                Toast.makeText(
+                                    requireContext(),
+                                    response.errorMessage,
+                                    Toast.LENGTH_LONG
+                                )
+                                    .show()
+                            }
+                        }
+                    }
+                i++
+            }
+        }
+    }
+
+    private fun uploadShelves() {
+        shelvesViewModel.getShelfList()
+        shelvesViewModel.shelfList.observe(viewLifecycleOwner) { localShelfList ->
+            var i = 0
+            while (i < localShelfList.size) {
+                settingsViewModel.uploadUserShelvesToFirestore(localShelfList[i])
+                    .observe(viewLifecycleOwner) { response ->
+                        when (response) {
+                            is Response.Loading ->
+                                Log.i("shelvesUpload", "Shelves uploading")
+                            is Response.Success ->
+                                Log.i("shelvesUpload", "Shelves uploaded")
+                            is Response.Failure -> {
+                                Log.e("Shelves Upload Error", response.errorMessage)
+                                Toast.makeText(
+                                    requireContext(),
+                                    response.errorMessage,
+                                    Toast.LENGTH_LONG
+                                )
+                                    .show()
+                            }
+                        }
+                    }
+                i++
+            }
+        }
+    }
+
+    private fun uploadCrossRefs() {
+        booksViewModel.getBookShelfCrossRef()
+        booksViewModel.bookShelfCrossRefList.observe(viewLifecycleOwner) { localCrossRefList ->
+            var i = 0
+            while (i < localCrossRefList.size) {
+                settingsViewModel.uploadUserCrossRefToFirestore(localCrossRefList[i])
+                    .observe(viewLifecycleOwner) { response ->
+                        when (response) {
+                            is Response.Loading ->
+                                Log.i("crossRefsUpload", "CrossRefs uploading")
+                            is Response.Success ->
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Library uploaded to: ${user.email}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            is Response.Failure -> {
+                                println("Create Error: " + response.errorMessage)
+                                Toast.makeText(
+                                    requireContext(),
+                                    response.errorMessage,
+                                    Toast.LENGTH_LONG
+                                )
+                                    .show()
+                            }
+                        }
+                    }
+                i++
+            }
+        }
+    }
+
     private fun signOut() {
         settingsViewModel.signOut().observe(viewLifecycleOwner) { response ->
             when (response) {
-                is Response.Loading -> println("Loading")
-                is Response.Success -> goToLogInActivity()
+                is Response.Loading ->
+                    Toast.makeText(requireContext(), "Please wait..", Toast.LENGTH_SHORT).show()
+                is Response.Success -> {
+                    Toast.makeText(requireContext(), "Signed out!", Toast.LENGTH_SHORT).show()
+                    clearDatabase()
+                    goToLogInActivity()
+                }
                 is Response.Failure -> {
-                    println("Create Error: " + response.errorMessage)
+                    println("Sign Out Error: " + response.errorMessage)
                     Toast.makeText(requireContext(), response.errorMessage, Toast.LENGTH_LONG)
                         .show()
                 }
             }
         }
+    }
+
+    private fun clearDatabase() {
+        settingsViewModel.clearDatabase()
     }
 
     private fun goToLogInActivity() {

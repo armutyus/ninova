@@ -6,4 +6,6 @@ import androidx.room.Entity
 data class BookShelfCrossRef(
     val bookId: String,
     val shelfId: Int
-)
+) {
+    constructor(): this("",0)
+}

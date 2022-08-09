@@ -30,6 +30,11 @@ sealed class DataModel {
         var bookPublisher: String?,
         var bookSubtitle: String?,
         var bookTitle: String?
-    ) : DataModel()
+    ) : DataModel() {
+        constructor(): this("", listOf(), listOf(),
+            "","", "",
+            "","","",
+            "","","")
+    }
 
 }

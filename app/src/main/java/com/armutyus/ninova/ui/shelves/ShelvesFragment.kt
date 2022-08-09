@@ -112,7 +112,8 @@ class ShelvesFragment @Inject constructor(
                 Toast.makeText(requireContext(), "Title cannot be empty!", Toast.LENGTH_LONG).show()
             } else {
                 val timeStamp = Date().time
-                val formattedDate = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(timeStamp)
+                val formattedDate =
+                    SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(timeStamp)
                 shelvesViewModel.insertShelf(
                     LocalShelf(
                         0,
@@ -125,8 +126,6 @@ class ShelvesFragment @Inject constructor(
             }
 
         }
-
-        registerLauncher()
     }
 
     override fun onResume() {

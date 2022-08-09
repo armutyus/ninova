@@ -12,10 +12,5 @@
         android:title="@string/menu_settings"
         android:icon="@drawable/ic_settings"
         app:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/export_db"
-        android:title="@string/menu_settings"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        app:showAsAction="ifRoom"/>
 
 </menu>

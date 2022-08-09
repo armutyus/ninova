@@ -4,6 +4,7 @@ import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.model.BookDetails
 import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.roomdb.NinovaDao
+import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.BookWithShelves
 import com.armutyus.ninova.service.GoogleBooksApiService
 import kotlinx.coroutines.flow.Flow
@@ -69,6 +70,10 @@ class BooksRepositoryImpl @Inject constructor(
 
     override suspend fun getBookWithShelves(bookId: String): Flow<List<BookWithShelves>> {
         return ninovaDao.getShelvesOfBook(bookId)
+    }
+
+    override suspend fun getBookShelfCrossRef(): Flow<List<BookShelfCrossRef>> {
+        return ninovaDao.getBookShelfCrossRef()
     }
 
 }

@@ -29,7 +29,6 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideRetrofit(): GoogleBooksApiService {
-
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -50,9 +49,8 @@ object NetworkModule {
     @Provides
     fun provideAuthRepository(
         auth: FirebaseAuth,
-        db: FirebaseFirestore,
-        storage: FirebaseStorage
-    ) = AuthRepositoryImpl(auth, db, storage) as AuthRepositoryInterface
+        db: FirebaseFirestore
+    ) = FirebaseRepositoryImpl(auth, db) as FirebaseRepositoryInterface
 
     @Singleton
     @Provides

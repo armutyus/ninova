@@ -23,6 +23,7 @@ object Constants {
     const val DARK_THEME = "dark"
     const val DETAILS_EXTRA = "fromDetails"
     const val DETAILS_STRING_EXTRA = "detailsActivity"
+    const val FIRST_TIME = "first_time"
     const val FORGOT_PASSWORD = "forgot_password"
     const val FROM_DETAILS_ACTIVITY = "bookDetailsActivity"
     const val FROM_DETAILS_TO_NOTES_EXTRA = "detailsToNotes"
@@ -34,16 +35,16 @@ object Constants {
 
     //References
     const val BASE_URL = "https://www.googleapis.com/books/v1/"
-    const val DB_REF = "userLibraryCollection"
-    const val DOCUMENT_REF = "userLibraryDocument"
-    const val USERS_REF = "users"
+    const val BOOKS_REF = "Books"
+    const val BOOKSHELFCROSS_REF = "BookShelfCrossRef"
+    const val SHELVES_REF = "Shelves"
+    const val USERS_REF = "Users"
 
     //UserFields
     const val CREATED_AT = "createdAt"
     const val EMAIL = "email"
     const val NAME = "name"
     const val PHOTO_URL = "photoUrl"
-    const val USER_TYPE = "userType"
 
     //BookViewType
     const val BOOK_TYPE_FOR_DETAILS = "bookTypeForDetails"

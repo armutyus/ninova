@@ -1,8 +1,10 @@
 package com.armutyus.ninova.ui.shelves
 
-import android.content.Context
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -10,7 +12,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -104,7 +105,8 @@ class BookToShelfFragment @Inject constructor(
                 Toast.makeText(requireContext(), "Title cannot be empty!", Toast.LENGTH_LONG).show()
             } else {
                 val timeStamp = Date().time
-                val formattedDate = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(timeStamp)
+                val formattedDate =
+                    SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(timeStamp)
                 shelvesViewModel.insertShelf(
                     LocalShelf(
                         0,

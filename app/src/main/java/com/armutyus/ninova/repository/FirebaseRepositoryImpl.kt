@@ -1,30 +1,30 @@
 package com.armutyus.ninova.repository
 
-import android.net.Uri
-import android.os.Environment
+import com.armutyus.ninova.constants.Constants.BOOKSHELFCROSS_REF
+import com.armutyus.ninova.constants.Constants.BOOKS_REF
 import com.armutyus.ninova.constants.Constants.CREATED_AT
 import com.armutyus.ninova.constants.Constants.EMAIL
 import com.armutyus.ninova.constants.Constants.ERROR_MESSAGE
 import com.armutyus.ninova.constants.Constants.NAME
 import com.armutyus.ninova.constants.Constants.PHOTO_URL
+import com.armutyus.ninova.constants.Constants.SHELVES_REF
 import com.armutyus.ninova.constants.Constants.USERS_REF
 import com.armutyus.ninova.constants.Response
+import com.armutyus.ninova.model.DataModel
+import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
+import com.armutyus.ninova.roomdb.entities.LocalShelf
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
-import java.io.File
 import javax.inject.Inject
 
-class AuthRepositoryImpl @Inject constructor(
+class FirebaseRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
-    private val db: FirebaseFirestore,
-    private val storage: FirebaseStorage
-) : AuthRepositoryInterface {
+    private val db: FirebaseFirestore
+) : FirebaseRepositoryInterface {
 
     override suspend fun signInWithEmailPassword(email: String, password: String) = flow {
         try {
@@ -82,18 +82,120 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun exportUserDbToStorage(dbFileUri: Uri) = flow {
+    override suspend fun downloadUserBooksFromFirestore() = flow {
         try {
             emit(Response.Loading)
             auth.currentUser?.apply {
-                storage.reference.child(uid).putFile(dbFileUri).await().also {
-                    emit(Response.Success(it))
+                db.collection(USERS_REF).document(uid).collection(BOOKS_REF)
+                    .get().await().toObjects(DataModel.LocalBook::class.java).also {
+                        emit(Response.Success(it))
+                    }
                 }
+        } catch (e: Exception) {
+            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+        }
+    }
+
+    override suspend fun downloadUserShelvesFromFirestore() = flow {
+        try {
+            emit(Response.Loading)
+            auth.currentUser?.apply {
+                db.collection(USERS_REF).document(uid).collection(SHELVES_REF)
+                    .get().await().toObjects(LocalShelf::class.java).also {
+                        emit(Response.Success(it))
+                    }
+                }
+        } catch (e: Exception) {
+            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+        }
+    }
+
+    override suspend fun downloadUserCrossRefFromFirestore() = flow {
+        try {
+            emit(Response.Loading)
+            auth.currentUser?.apply {
+                db.collection(USERS_REF).document(uid).collection(BOOKSHELFCROSS_REF)
+                    .get().await().toObjects(BookShelfCrossRef::class.java).also {
+                        emit(Response.Success(it))
+                    }
+                }
+        } catch (e: Exception) {
+            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+        }
+    }
+
+    override suspend fun uploadUserBooksToFirestore(localBook: DataModel.LocalBook) = flow {
+        try {
+            emit(Response.Loading)
+            auth.currentUser?.apply {
+                db.collection(USERS_REF).document(uid).collection(BOOKS_REF)
+                    .document(localBook.bookTitle!!).set(
+                        mapOf(
+                            "bookId" to localBook.bookId,
+                            "bookAuthors" to localBook.bookAuthors,
+                            "bookCategories" to localBook.bookCategories,
+                            "bookCoverSmallThumbnail" to localBook.bookCoverSmallThumbnail,
+                            "bookCoverThumbnail" to localBook.bookCoverThumbnail,
+                            "bookDescription" to localBook.bookDescription,
+                            "bookNotes" to localBook.bookNotes,
+                            "bookPages" to localBook.bookPages,
+                            "bookPublishedDate" to localBook.bookPublishedDate,
+                            "bookPublisher" to localBook.bookPublisher,
+                            "bookSubtitle" to localBook.bookSubtitle,
+                            "bookTitle" to localBook.bookTitle
+                        )
+                    ).await().also {
+                        emit(Response.Success(it))
+                    }
             }
         } catch (e: Exception) {
             emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
         }
     }
+
+    override suspend fun uploadUserShelvesToFirestore(shelf: LocalShelf) = flow {
+        try {
+            emit(Response.Loading)
+            auth.currentUser?.apply {
+                db.collection(USERS_REF).document(uid).collection(SHELVES_REF)
+                    .document(shelf.shelfTitle!!).set(
+                        mapOf(
+                            "shelfId" to shelf.shelfId,
+                            "shelfTitle" to shelf.shelfTitle,
+                            "createdAt" to shelf.createdAt,
+                            "shelfCover" to shelf.shelfCover
+                        )
+                    ).await().also {
+                        emit(Response.Success(it))
+                    }
+            }
+        } catch (e: Exception) {
+            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+        }
+    }
+
+    override suspend fun uploadUserCrossRefToFirestore(bookShelfCrossRef: BookShelfCrossRef) =
+        flow {
+            try {
+                emit(Response.Loading)
+                auth.currentUser?.apply {
+                    val crossRefDocumentId =
+                        db.collection(USERS_REF).document(uid).collection(BOOKSHELFCROSS_REF)
+                            .document().id
+                    db.collection(USERS_REF).document(uid).collection(BOOKSHELFCROSS_REF)
+                        .document(crossRefDocumentId).set(
+                            mapOf(
+                                "bookId" to bookShelfCrossRef.bookId,
+                                "shelfId" to bookShelfCrossRef.shelfId
+                            )
+                        ).await().also {
+                            emit(Response.Success(it))
+                        }
+                }
+            } catch (e: Exception) {
+                emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+            }
+        }
 
     override suspend fun signUpWithEmailPassword(email: String, password: String) = flow {
         try {
@@ -163,11 +265,6 @@ class AuthRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
         }
-    }
-
-
-    override fun getCurrentUser(): FirebaseUser? {
-        return auth.currentUser
     }
 
 }
