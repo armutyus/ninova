@@ -1,6 +1,7 @@
 package com.armutyus.ninova.ui.search.adapters
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +18,7 @@ import javax.inject.Named
 
 class MainSearchRecyclerViewAdapter @Inject constructor(
     private val glide: RequestManager
-) : RecyclerView.Adapter<MainSearchViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     @Named(Constants.BOOK_DETAILS_INTENT)
     @Inject
@@ -35,19 +36,30 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainSearchViewHolder {
-        val layout = when (viewType) {
-            GOOGLE_BOOK_TYPE -> R.layout.search_main_row
-            LOCAL_BOOK_TYPE -> R.layout.search_local_book_row
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
+
+        return when (viewType) {
+            GOOGLE_BOOK_TYPE -> ApiBookRowViewHolder(layoutInflater.inflate(R.layout.search_main_row, parent, false))
+            LOCAL_BOOK_TYPE -> LocalBookRowViewHolder(layoutInflater.inflate(R.layout.search_local_book_row, parent, false))
             else -> throw IllegalArgumentException("Invalid view type")
         }
-
-        val view = LayoutInflater.from(parent.context).inflate(layout, parent, false)
-        return MainSearchViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: MainSearchViewHolder, position: Int) {
-        holder.bind(adapterData[position], glide, searchFragment, booksViewModel, bookDetailsIntent)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        return when (holder.itemViewType) {
+            GOOGLE_BOOK_TYPE -> {
+                holder as ApiBookRowViewHolder
+                holder.bindApiBook(adapterData[position] as DataModel.GoogleBookItem, glide, searchFragment, booksViewModel, bookDetailsIntent)
+            }
+
+            LOCAL_BOOK_TYPE -> {
+                holder as LocalBookRowViewHolder
+                holder.bindLocalBook(adapterData[position] as DataModel.LocalBook, glide, bookDetailsIntent)
+            }
+
+            else -> throw IllegalArgumentException("Unsupported type")
+        }
     }
 
     override fun getItemViewType(position: Int) = when (adapterData[position]) {

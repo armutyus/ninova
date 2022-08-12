@@ -16,7 +16,7 @@ import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.search.MainSearchFragment
 import com.bumptech.glide.RequestManager
 
-class MainSearchViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class ApiBookRowViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
     fun bindApiBook(
         book: DataModel.GoogleBookItem,
@@ -91,47 +91,4 @@ class MainSearchViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
     }
 
-    fun bindLocalBook(book: DataModel.LocalBook, glide: RequestManager, bookDetailsIntent: Intent) {
-        val bookCover = itemView.findViewById<ImageView>(R.id.bookImage)
-        val bookTitle = itemView.findViewById<TextView>(R.id.bookTitleText)
-        val bookAuthor = itemView.findViewById<TextView>(R.id.bookAuthorText)
-        val bookPages = itemView.findViewById<TextView>(R.id.bookPageText)
-        val bookReleaseDate = itemView.findViewById<TextView>(R.id.bookReleaseDateText)
-
-        itemView.apply {
-            glide.load(book.bookCoverSmallThumbnail).centerCrop().into(bookCover)
-            bookTitle.text = book.bookTitle
-            bookAuthor.text = book.bookAuthors?.joinToString(", ")
-            bookPages.text = book.bookPages
-            bookReleaseDate.text = book.bookPublishedDate
-            setOnClickListener {
-                bookDetailsIntent.putExtra(
-                    Constants.BOOK_TYPE_FOR_DETAILS,
-                    Constants.LOCAL_BOOK_TYPE
-                )
-                Cache.currentLocalBook = book
-                Cache.currentBook = null
-                itemView.context.startActivity(bookDetailsIntent)
-            }
-        }
-    }
-
-    fun bind(
-        dataModel: DataModel,
-        glide: RequestManager,
-        searchFragment: MainSearchFragment,
-        booksViewModel: BooksViewModel,
-        bookDetailsIntent: Intent
-    ) {
-        when (dataModel) {
-            is DataModel.GoogleBookItem -> bindApiBook(
-                dataModel,
-                glide,
-                searchFragment,
-                booksViewModel,
-                bookDetailsIntent
-            )
-            is DataModel.LocalBook -> bindLocalBook(dataModel, glide, bookDetailsIntent)
-        }
-    }
 }
