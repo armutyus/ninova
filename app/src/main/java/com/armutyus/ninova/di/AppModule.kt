@@ -70,14 +70,14 @@ object AppModule {
         return Intent(context, BookDetailsActivity::class.java)
     }
 
-    @Singleton
     @Provides
+    @Singleton
     fun injectLocalBooksDatabase(@ApplicationContext context: Context) = Room.databaseBuilder(
         context, NinovaLocalDB::class.java, "NinovaLocalDB"
     ).build()
 
-    @Singleton
     @Provides
+    @Singleton
     fun injectNinovaDao(database: NinovaLocalDB) = database.ninovaDao()
 
 }

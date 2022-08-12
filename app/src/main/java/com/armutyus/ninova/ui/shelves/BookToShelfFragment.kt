@@ -68,7 +68,6 @@ class BookToShelfFragment @Inject constructor(
         recyclerView.adapter = bookToShelfAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         bookToShelfAdapter.setFragment(this)
-        bookToShelfAdapter.setViewModel(shelvesViewModel)
 
         binding.addShelfButton.setOnClickListener {
             showAddShelfDialog()
@@ -82,7 +81,6 @@ class BookToShelfFragment @Inject constructor(
             }
         }
 
-        shelvesViewModel.getShelfWithBookList()
         observeShelfList()
     }
 

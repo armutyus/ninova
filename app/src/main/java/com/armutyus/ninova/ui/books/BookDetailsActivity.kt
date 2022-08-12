@@ -110,7 +110,7 @@ class BookDetailsActivity : AppCompatActivity() {
                             bookDetails.imageLinks?.smallThumbnail,
                             bookDetails.imageLinks?.thumbnail,
                             Html.fromHtml(
-                                bookDetails.description,
+                                bookDetails.description ?: "",
                                 Html.FROM_HTML_OPTION_USE_CSS_COLORS
                             ).toString(),
                             "",
