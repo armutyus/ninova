@@ -74,41 +74,48 @@ class SettingsFragment @Inject constructor(
         booksViewModel = ViewModelProvider(requireActivity())[BooksViewModel::class.java]
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
+        val aboutNinova = findPreference<Preference>("about_ninova")
+        val changeEmail = findPreference<Preference>("change_email")
+        val changePassword = findPreference<Preference>("change_password")
+        val privacyPolicy = findPreference<Preference>("privacy_policy")
+        val register = findPreference<Preference>("register")
+        val signOut = findPreference<Preference>("sign_out")
+        val switchAccount = findPreference<Preference>("switch_account")
+        val uploadLibrary = findPreference<Preference>("upload_library")
+
         val changeEmailListener = Preference.OnPreferenceClickListener {
             registerIntent.putExtra(SETTINGS_ACTION_KEY, CHANGE_EMAIL)
             goToRegisterActivity()
             true
         }
-        findPreference<Preference>("change_email")?.onPreferenceClickListener = changeEmailListener
+        changeEmail?.onPreferenceClickListener = changeEmailListener
 
         val changePasswordListener = Preference.OnPreferenceClickListener {
             registerIntent.putExtra(SETTINGS_ACTION_KEY, CHANGE_PASSWORD)
             goToRegisterActivity()
             true
         }
-        findPreference<Preference>("change_password")?.onPreferenceClickListener =
-            changePasswordListener
+        changePassword?.onPreferenceClickListener = changePasswordListener
 
         val aboutNinovaListener = Preference.OnPreferenceClickListener {
             goToAboutActivity()
             true
         }
-        findPreference<Preference>("about_ninova")?.onPreferenceClickListener = aboutNinovaListener
-        findPreference<Preference>("about_ninova")?.summary = "Version: $VERSION_NAME"
+        aboutNinova?.onPreferenceClickListener = aboutNinovaListener
+        aboutNinova?.summary = "Version: $VERSION_NAME"
 
         val privacyPolicyListener = Preference.OnPreferenceClickListener {
             //intent to privacy policy
             println("Privacy policy")
             true
         }
-        findPreference<Preference>("privacy_policy")?.onPreferenceClickListener =
-            privacyPolicyListener
+        privacyPolicy?.onPreferenceClickListener = privacyPolicyListener
 
         val signOutListener = Preference.OnPreferenceClickListener {
             signOut()
             true
         }
-        findPreference<Preference>("sign_out")?.onPreferenceClickListener = signOutListener
+        signOut?.onPreferenceClickListener = signOutListener
 
         val uploadLibraryListener = Preference.OnPreferenceClickListener {
             uploadBooks()
@@ -116,24 +123,21 @@ class SettingsFragment @Inject constructor(
             uploadCrossRefs()
             true
         }
-        findPreference<Preference>("upload_library")?.onPreferenceClickListener =
-            uploadLibraryListener
-        findPreference<Preference>("upload_library")?.summary =
-            "Link your library with your account: ${user.email}"
+        uploadLibrary?.onPreferenceClickListener = uploadLibraryListener
+        uploadLibrary?.summary = "Link your library with your account: ${user.email}"
 
         val registerListener = Preference.OnPreferenceClickListener {
             registerIntent.putExtra(SETTINGS_ACTION_KEY, REGISTER)
             goToRegisterActivity()
             true
         }
-        findPreference<Preference>("register")?.onPreferenceClickListener = registerListener
+        register?.onPreferenceClickListener = registerListener
 
         val switchAccountListener = Preference.OnPreferenceClickListener {
             startActivity(loginIntent)
             true
         }
-        findPreference<Preference>("switch_account")?.onPreferenceClickListener =
-            switchAccountListener
+        switchAccount?.onPreferenceClickListener = switchAccountListener
 
     }
 

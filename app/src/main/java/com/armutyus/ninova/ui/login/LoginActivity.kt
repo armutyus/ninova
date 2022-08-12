@@ -35,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var bottomSheetBinding: RegisterUserBottomSheetBinding
-    private val checkFirstTime: SharedPreferences
+    private val checkUserComesFirstTime: SharedPreferences
         get() = this.getSharedPreferences(Constants.FIRST_TIME, Context.MODE_PRIVATE)
 
     private val viewModel by viewModels<LoginViewModel>()
@@ -181,7 +181,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goToMainActivity() {
-        with(checkFirstTime.edit()) {
+        with(checkUserComesFirstTime.edit()) {
             putBoolean("first_time", true)
             apply()
         }

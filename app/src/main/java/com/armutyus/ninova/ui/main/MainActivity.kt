@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private val shelvesViewModel by viewModels<ShelvesViewModel>()
     private val booksViewModel by viewModels<BooksViewModel>()
-    private val checkFirstTime: SharedPreferences
+    private val checkUserComesFirstTime: SharedPreferences
         get() = this.getSharedPreferences(FIRST_TIME, Context.MODE_PRIVATE)
     private lateinit var auth: FirebaseAuth
 
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        if (checkFirstTime.getBoolean("first_time", true) && !auth.currentUser!!.isAnonymous) {
+        if (checkUserComesFirstTime.getBoolean("first_time", true) && !auth.currentUser!!.isAnonymous) {
             fetchBooks()
             fetchShelves()
             fetchCrossRefs()
@@ -226,7 +226,7 @@ class MainActivity : AppCompatActivity() {
                         shelvesViewModel.insertBookShelfCrossRef(crossRef)
                         i++
                     }
-                    with(checkFirstTime.edit()) {
+                    with(checkUserComesFirstTime.edit()) {
                         putBoolean("first_time", false)
                         apply()
                     }

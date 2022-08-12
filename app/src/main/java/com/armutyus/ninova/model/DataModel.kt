@@ -12,7 +12,6 @@ sealed class DataModel {
     ) : DataModel() {
         fun isBookAddedCheck(booksViewModel: BooksViewModel): Boolean {
             val searchBookList = booksViewModel.localBookList.value?.find { it.bookId == id }
-            println(booksViewModel.localBookList.value?.toString())
             return searchBookList != null
         }
     }
