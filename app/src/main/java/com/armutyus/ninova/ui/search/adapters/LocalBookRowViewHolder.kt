@@ -11,7 +11,7 @@ import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.model.DataModel
 import com.bumptech.glide.RequestManager
 
-class LocalBookRowViewHolder(view: View): RecyclerView.ViewHolder(view) {
+class LocalBookRowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     fun bindLocalBook(book: DataModel.LocalBook, glide: RequestManager, bookDetailsIntent: Intent) {
         val bookCover = itemView.findViewById<ImageView>(R.id.bookImage)

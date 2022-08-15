@@ -11,7 +11,6 @@ import com.armutyus.ninova.roomdb.entities.ShelfWithBooks
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -38,9 +37,7 @@ class ShelvesViewModel @Inject constructor(
 
     fun getShelfList() {
         CoroutineScope(Dispatchers.IO).launch {
-            shelfRepositoryInterface.getLocalShelves().collectLatest {
-                _shelfList.postValue(it)
-            }
+            _shelfList.postValue(shelfRepositoryInterface.getLocalShelves())
         }
     }
 
@@ -72,17 +69,13 @@ class ShelvesViewModel @Inject constructor(
 
     fun searchShelves(searchString: String) {
         viewModelScope.launch {
-            shelfRepositoryInterface.searchLocalShelves(searchString).collectLatest {
-                _searchShelvesList.postValue(it)
-            }
+            _searchShelvesList.postValue(shelfRepositoryInterface.searchLocalShelves(searchString))
         }
     }
 
     fun getShelfWithBookList() {
         viewModelScope.launch {
-            shelfRepositoryInterface.getShelfWithBooks().collectLatest {
-                _shelfWithBooksList.postValue(it)
-            }
+            _shelfWithBooksList.postValue(shelfRepositoryInterface.getShelfWithBooks())
         }
     }
 

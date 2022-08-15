@@ -6,7 +6,6 @@ import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.BookWithShelves
 import com.armutyus.ninova.roomdb.entities.LocalShelf
 import com.armutyus.ninova.roomdb.entities.ShelfWithBooks
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NinovaDao {
@@ -21,13 +20,13 @@ interface NinovaDao {
     suspend fun deleteBook(localBook: DataModel.LocalBook)
 
     @Query("SELECT * FROM Book WHERE bookId = :id")
-    fun getLocalBooksById(id: String): Flow<DataModel.LocalBook>
+    fun getLocalBooksById(id: String): DataModel.LocalBook
 
     @Query("SELECT * FROM Book")
-    fun getLocalBooks(): Flow<List<DataModel.LocalBook>>
+    fun getLocalBooks(): List<DataModel.LocalBook>
 
     @Query("SELECT * FROM Book WHERE bookAuthors LIKE :searchString OR bookTitle LIKE :searchString")
-    fun searchLocalBooks(searchString: String): Flow<List<DataModel.LocalBook>>
+    fun searchLocalBooks(searchString: String): List<DataModel.LocalBook>
 
     //Shelf works
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -40,10 +39,10 @@ interface NinovaDao {
     suspend fun deleteShelf(localShelf: LocalShelf)
 
     @Query("SELECT * FROM Shelf")
-    fun getLocalShelves(): Flow<List<LocalShelf>>
+    fun getLocalShelves(): List<LocalShelf>
 
     @Query("SELECT * FROM Shelf WHERE shelfTitle LIKE :searchString")
-    fun searchLocalShelf(searchString: String): Flow<List<LocalShelf>>
+    fun searchLocalShelf(searchString: String): List<LocalShelf>
 
     //Cross works
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -54,13 +53,13 @@ interface NinovaDao {
 
     @Transaction
     @Query("SELECT * FROM BookShelfCrossRef")
-    fun getBookShelfCrossRef(): Flow<List<BookShelfCrossRef>>
+    fun getBookShelfCrossRef(): List<BookShelfCrossRef>
 
     @Transaction
     @Query("SELECT * FROM Shelf")
-    fun getBooksOfShelf(): Flow<List<ShelfWithBooks>>
+    fun getBooksOfShelf(): List<ShelfWithBooks>
 
     @Transaction
     @Query("SELECT * FROM Book WHERE bookId = :bookId")
-    fun getShelvesOfBook(bookId: String): Flow<List<BookWithShelves>>
+    fun getShelvesOfBook(bookId: String): List<BookWithShelves>
 }

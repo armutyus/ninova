@@ -17,178 +17,92 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 class FirebaseRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
-    private val db: FirebaseFirestore
+    private val db: FirebaseFirestore,
+    private val coroutineContext: CoroutineContext = Dispatchers.IO
 ) : FirebaseRepositoryInterface {
 
-    override suspend fun signInWithEmailPassword(email: String, password: String) = flow {
-        try {
-            emit(Response.Loading)
-            val authResult = auth.signInWithEmailAndPassword(email, password).await()
-            authResult.apply {
-                emit(Response.Success(true))
-            }
-        } catch (e: Exception) {
-            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
-        }
-    }
-
-    override suspend fun anonymousToPermanent(credential: AuthCredential) = flow {
-        try {
-            emit(Response.Loading)
-            val authResult = auth.currentUser!!.linkWithCredential(credential).await()
-            authResult.apply {
-                emit(Response.Success(true))
-            }
-        } catch (e: Exception) {
-            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
-        }
-    }
-
-    override suspend fun signInAnonymous() = flow {
-        try {
-            emit(Response.Loading)
-            val authResult = auth.signInAnonymously().await()
-            authResult.apply {
-                emit(Response.Success(true))
-            }
-        } catch (e: Exception) {
-            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
-        }
-    }
-
-    override suspend fun createUserInFirestore() = flow {
-        try {
-            emit(Response.Loading)
-            auth.currentUser?.apply {
-                db.collection(USERS_REF).document(uid).set(
-                    mapOf(
-                        NAME to displayName,
-                        EMAIL to email,
-                        PHOTO_URL to photoUrl?.toString(),
-                        CREATED_AT to FieldValue.serverTimestamp()
-                    )
-                ).await().also {
-                    emit(Response.Success(it))
+    override suspend fun signInWithEmailPassword(email: String, password: String) =
+        withContext(coroutineContext) {
+            flow {
+                try {
+                    emit(Response.Loading)
+                    val authResult = auth.signInWithEmailAndPassword(email, password).await()
+                    authResult.apply {
+                        emit(Response.Success(true))
+                    }
+                } catch (e: Exception) {
+                    emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
                 }
             }
-        } catch (e: Exception) {
-            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
         }
-    }
 
-    override suspend fun downloadUserBooksFromFirestore() = flow {
-        try {
-            emit(Response.Loading)
-            auth.currentUser?.apply {
-                db.collection(USERS_REF).document(uid).collection(BOOKS_REF)
-                    .get().await().toObjects(DataModel.LocalBook::class.java).also {
-                        emit(Response.Success(it))
+    override suspend fun anonymousToPermanent(credential: AuthCredential) =
+        withContext(coroutineContext) {
+            flow {
+                try {
+                    emit(Response.Loading)
+                    val authResult = auth.currentUser!!.linkWithCredential(credential).await()
+                    authResult.apply {
+                        emit(Response.Success(true))
                     }
+                } catch (e: Exception) {
+                    emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+                }
             }
-        } catch (e: Exception) {
-            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+        }
+
+    override suspend fun signInAnonymous() = withContext(coroutineContext) {
+        flow {
+            try {
+                emit(Response.Loading)
+                val authResult = auth.signInAnonymously().await()
+                authResult.apply {
+                    emit(Response.Success(true))
+                }
+            } catch (e: Exception) {
+                emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+            }
         }
     }
 
-    override suspend fun downloadUserShelvesFromFirestore() = flow {
-        try {
-            emit(Response.Loading)
-            auth.currentUser?.apply {
-                db.collection(USERS_REF).document(uid).collection(SHELVES_REF)
-                    .get().await().toObjects(LocalShelf::class.java).also {
-                        emit(Response.Success(it))
-                    }
-            }
-        } catch (e: Exception) {
-            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
-        }
-    }
-
-    override suspend fun downloadUserCrossRefFromFirestore() = flow {
-        try {
-            emit(Response.Loading)
-            auth.currentUser?.apply {
-                db.collection(USERS_REF).document(uid).collection(BOOKSHELFCROSS_REF)
-                    .get().await().toObjects(BookShelfCrossRef::class.java).also {
-                        emit(Response.Success(it))
-                    }
-            }
-        } catch (e: Exception) {
-            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
-        }
-    }
-
-    override suspend fun uploadUserBooksToFirestore(localBook: DataModel.LocalBook) = flow {
-        try {
-            emit(Response.Loading)
-            auth.currentUser?.apply {
-                db.collection(USERS_REF).document(uid).collection(BOOKS_REF)
-                    .document(localBook.bookTitle!!).set(
-                        mapOf(
-                            "bookId" to localBook.bookId,
-                            "bookAuthors" to localBook.bookAuthors,
-                            "bookCategories" to localBook.bookCategories,
-                            "bookCoverSmallThumbnail" to localBook.bookCoverSmallThumbnail,
-                            "bookCoverThumbnail" to localBook.bookCoverThumbnail,
-                            "bookDescription" to localBook.bookDescription,
-                            "bookNotes" to localBook.bookNotes,
-                            "bookPages" to localBook.bookPages,
-                            "bookPublishedDate" to localBook.bookPublishedDate,
-                            "bookPublisher" to localBook.bookPublisher,
-                            "bookSubtitle" to localBook.bookSubtitle,
-                            "bookTitle" to localBook.bookTitle
-                        )
-                    ).await().also {
-                        emit(Response.Success(it))
-                    }
-            }
-        } catch (e: Exception) {
-            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
-        }
-    }
-
-    override suspend fun uploadUserShelvesToFirestore(shelf: LocalShelf) = flow {
-        try {
-            emit(Response.Loading)
-            auth.currentUser?.apply {
-                db.collection(USERS_REF).document(uid).collection(SHELVES_REF)
-                    .document(shelf.shelfTitle!!).set(
-                        mapOf(
-                            "shelfId" to shelf.shelfId,
-                            "shelfTitle" to shelf.shelfTitle,
-                            "createdAt" to shelf.createdAt,
-                            "shelfCover" to shelf.shelfCover
-                        )
-                    ).await().also {
-                        emit(Response.Success(it))
-                    }
-            }
-        } catch (e: Exception) {
-            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
-        }
-    }
-
-    override suspend fun uploadUserCrossRefToFirestore(bookShelfCrossRef: BookShelfCrossRef) =
+    override suspend fun createUserInFirestore() = withContext(coroutineContext) {
         flow {
             try {
                 emit(Response.Loading)
                 auth.currentUser?.apply {
-                    val crossRefDocumentId =
-                        db.collection(USERS_REF).document(uid).collection(BOOKSHELFCROSS_REF)
-                            .document().id
-                    db.collection(USERS_REF).document(uid).collection(BOOKSHELFCROSS_REF)
-                        .document(crossRefDocumentId).set(
-                            mapOf(
-                                "bookId" to bookShelfCrossRef.bookId,
-                                "shelfId" to bookShelfCrossRef.shelfId
-                            )
-                        ).await().also {
+                    db.collection(USERS_REF).document(uid).set(
+                        mapOf(
+                            NAME to displayName,
+                            EMAIL to email,
+                            PHOTO_URL to photoUrl?.toString(),
+                            CREATED_AT to FieldValue.serverTimestamp()
+                        )
+                    ).await().also {
+                        emit(Response.Success(it))
+                    }
+                }
+            } catch (e: Exception) {
+                emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+            }
+        }
+    }
+
+    override suspend fun downloadUserBooksFromFirestore() = withContext(coroutineContext) {
+        flow {
+            try {
+                emit(Response.Loading)
+                auth.currentUser?.apply {
+                    db.collection(USERS_REF).document(uid).collection(BOOKS_REF)
+                        .get().await().toObjects(DataModel.LocalBook::class.java).also {
                             emit(Response.Success(it))
                         }
                 }
@@ -196,74 +110,201 @@ class FirebaseRepositoryImpl @Inject constructor(
                 emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
             }
         }
+    }
 
-    override suspend fun signUpWithEmailPassword(email: String, password: String) = flow {
-        try {
-            emit(Response.Loading)
-            val authResult = auth.createUserWithEmailAndPassword(email, password).await()
-            authResult.apply {
-                emit(Response.Success(true))
+    override suspend fun downloadUserShelvesFromFirestore() = withContext(coroutineContext) {
+        flow {
+            try {
+                emit(Response.Loading)
+                auth.currentUser?.apply {
+                    db.collection(USERS_REF).document(uid).collection(SHELVES_REF)
+                        .get().await().toObjects(LocalShelf::class.java).also {
+                            emit(Response.Success(it))
+                        }
+                }
+            } catch (e: Exception) {
+                emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
             }
-        } catch (e: Exception) {
-            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
         }
     }
 
-    override suspend fun signOut() = flow {
-        try {
-            emit(Response.Loading)
-            auth.signOut().apply {
-                emit(Response.Success(this))
+    override suspend fun downloadUserCrossRefFromFirestore() = withContext(coroutineContext) {
+        flow {
+            try {
+                emit(Response.Loading)
+                auth.currentUser?.apply {
+                    db.collection(USERS_REF).document(uid).collection(BOOKSHELFCROSS_REF)
+                        .get().await().toObjects(BookShelfCrossRef::class.java).also {
+                            emit(Response.Success(it))
+                        }
+                }
+            } catch (e: Exception) {
+                emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
             }
-        } catch (e: Exception) {
-            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
         }
     }
 
-    override suspend fun reAuthUser(credential: AuthCredential) = flow {
-        try {
-            emit(Response.Loading)
-            val reAuthResult = auth.currentUser!!.reauthenticate(credential).await()
-            reAuthResult.apply {
-                emit(Response.Success(true))
+    override suspend fun uploadUserBooksToFirestore(localBook: DataModel.LocalBook) =
+        withContext(coroutineContext) {
+            flow {
+                try {
+                    emit(Response.Loading)
+                    auth.currentUser?.apply {
+                        db.collection(USERS_REF).document(uid).collection(BOOKS_REF)
+                            .document(localBook.bookTitle!!).set(
+                                mapOf(
+                                    "bookId" to localBook.bookId,
+                                    "bookAuthors" to localBook.bookAuthors,
+                                    "bookCategories" to localBook.bookCategories,
+                                    "bookCoverSmallThumbnail" to localBook.bookCoverSmallThumbnail,
+                                    "bookCoverThumbnail" to localBook.bookCoverThumbnail,
+                                    "bookDescription" to localBook.bookDescription,
+                                    "bookNotes" to localBook.bookNotes,
+                                    "bookPages" to localBook.bookPages,
+                                    "bookPublishedDate" to localBook.bookPublishedDate,
+                                    "bookPublisher" to localBook.bookPublisher,
+                                    "bookSubtitle" to localBook.bookSubtitle,
+                                    "bookTitle" to localBook.bookTitle
+                                )
+                            ).await().also {
+                                emit(Response.Success(it))
+                            }
+                    }
+                } catch (e: Exception) {
+                    emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+                }
             }
-        } catch (e: Exception) {
-            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+        }
+
+    override suspend fun uploadUserShelvesToFirestore(shelf: LocalShelf) =
+        withContext(coroutineContext) {
+            flow {
+                try {
+                    emit(Response.Loading)
+                    auth.currentUser?.apply {
+                        db.collection(USERS_REF).document(uid).collection(SHELVES_REF)
+                            .document(shelf.shelfTitle!!).set(
+                                mapOf(
+                                    "shelfId" to shelf.shelfId,
+                                    "shelfTitle" to shelf.shelfTitle,
+                                    "createdAt" to shelf.createdAt,
+                                    "shelfCover" to shelf.shelfCover
+                                )
+                            ).await().also {
+                                emit(Response.Success(it))
+                            }
+                    }
+                } catch (e: Exception) {
+                    emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+                }
+            }
+        }
+
+    override suspend fun uploadUserCrossRefToFirestore(bookShelfCrossRef: BookShelfCrossRef) =
+        withContext(coroutineContext) {
+            flow {
+                try {
+                    emit(Response.Loading)
+                    auth.currentUser?.apply {
+                        val crossRefDocumentId =
+                            db.collection(USERS_REF).document(uid).collection(BOOKSHELFCROSS_REF)
+                                .document().id
+                        db.collection(USERS_REF).document(uid).collection(BOOKSHELFCROSS_REF)
+                            .document(crossRefDocumentId).set(
+                                mapOf(
+                                    "bookId" to bookShelfCrossRef.bookId,
+                                    "shelfId" to bookShelfCrossRef.shelfId
+                                )
+                            ).await().also {
+                                emit(Response.Success(it))
+                            }
+                    }
+                } catch (e: Exception) {
+                    emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+                }
+            }
+        }
+
+    override suspend fun signUpWithEmailPassword(email: String, password: String) =
+        withContext(coroutineContext) {
+            flow {
+                try {
+                    emit(Response.Loading)
+                    val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+                    authResult.apply {
+                        emit(Response.Success(true))
+                    }
+                } catch (e: Exception) {
+                    emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+                }
+            }
+        }
+
+    override suspend fun signOut() = withContext(coroutineContext) {
+        flow {
+            try {
+                emit(Response.Loading)
+                auth.signOut().apply {
+                    emit(Response.Success(this))
+                }
+            } catch (e: Exception) {
+                emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+            }
         }
     }
 
-    override suspend fun changeUserEmail(email: String) = flow {
-        try {
-            emit(Response.Loading)
-            val reAuthResult = auth.currentUser!!.updateEmail(email).await()
-            reAuthResult.apply {
-                emit(Response.Success(true))
+    override suspend fun reAuthUser(credential: AuthCredential) = withContext(coroutineContext) {
+        flow {
+            try {
+                emit(Response.Loading)
+                val reAuthResult = auth.currentUser!!.reauthenticate(credential).await()
+                reAuthResult.apply {
+                    emit(Response.Success(true))
+                }
+            } catch (e: Exception) {
+                emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
             }
-        } catch (e: Exception) {
-            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
         }
     }
 
-    override suspend fun changeUserPassword(password: String) = flow {
-        try {
-            emit(Response.Loading)
-            val reAuthResult = auth.currentUser!!.updatePassword(password).await()
-            reAuthResult.apply {
-                emit(Response.Success(true))
+    override suspend fun changeUserEmail(email: String) = withContext(coroutineContext) {
+        flow {
+            try {
+                emit(Response.Loading)
+                val reAuthResult = auth.currentUser!!.updateEmail(email).await()
+                reAuthResult.apply {
+                    emit(Response.Success(true))
+                }
+            } catch (e: Exception) {
+                emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
             }
-        } catch (e: Exception) {
-            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
         }
     }
 
-    override suspend fun sendResetPassword(email: String) = flow {
-        try {
-            emit(Response.Loading)
-            auth.sendPasswordResetEmail(email).await().apply {
-                emit(Response.Success(true))
+    override suspend fun changeUserPassword(password: String) = withContext(coroutineContext) {
+        flow {
+            try {
+                emit(Response.Loading)
+                val reAuthResult = auth.currentUser!!.updatePassword(password).await()
+                reAuthResult.apply {
+                    emit(Response.Success(true))
+                }
+            } catch (e: Exception) {
+                emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
             }
-        } catch (e: Exception) {
-            emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+        }
+    }
+
+    override suspend fun sendResetPassword(email: String) = withContext(coroutineContext) {
+        flow {
+            try {
+                emit(Response.Loading)
+                auth.sendPasswordResetEmail(email).await().apply {
+                    emit(Response.Success(true))
+                }
+            } catch (e: Exception) {
+                emit(Response.Failure(e.localizedMessage ?: ERROR_MESSAGE))
+            }
         }
     }
 

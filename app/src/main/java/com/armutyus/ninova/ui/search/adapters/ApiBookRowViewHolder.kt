@@ -16,7 +16,7 @@ import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.search.MainSearchFragment
 import com.bumptech.glide.RequestManager
 
-class ApiBookRowViewHolder(view: View): RecyclerView.ViewHolder(view) {
+class ApiBookRowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     fun bindApiBook(
         book: DataModel.GoogleBookItem,

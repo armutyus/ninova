@@ -4,11 +4,14 @@ import com.armutyus.ninova.roomdb.NinovaDao
 import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.LocalShelf
 import com.armutyus.ninova.roomdb.entities.ShelfWithBooks
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 class ShelfRepositoryImpl @Inject constructor(
-    private val ninovaDao: NinovaDao
+    private val ninovaDao: NinovaDao,
+    private val coroutineContext: CoroutineContext = Dispatchers.IO
 ) : ShelfRepositoryInterface {
     override suspend fun insert(localShelf: LocalShelf) {
         ninovaDao.insertShelf(localShelf)
@@ -22,13 +25,14 @@ class ShelfRepositoryImpl @Inject constructor(
         ninovaDao.deleteShelf(localShelf)
     }
 
-    override fun getLocalShelves(): Flow<List<LocalShelf>> {
-        return ninovaDao.getLocalShelves()
+    override suspend fun getLocalShelves(): List<LocalShelf> = withContext(coroutineContext) {
+        ninovaDao.getLocalShelves()
     }
 
-    override fun searchLocalShelves(searchString: String): Flow<List<LocalShelf>> {
-        return ninovaDao.searchLocalShelf(searchString)
-    }
+    override suspend fun searchLocalShelves(searchString: String): List<LocalShelf> =
+        withContext(coroutineContext) {
+            ninovaDao.searchLocalShelf(searchString)
+        }
 
     override suspend fun insertBookShelfCrossRef(crossRef: BookShelfCrossRef) {
         ninovaDao.insertBookShelfCrossRef(crossRef)
@@ -38,7 +42,7 @@ class ShelfRepositoryImpl @Inject constructor(
         ninovaDao.deleteBookShelfCrossRef(crossRef)
     }
 
-    override suspend fun getShelfWithBooks(): Flow<List<ShelfWithBooks>> {
-        return ninovaDao.getBooksOfShelf()
+    override suspend fun getShelfWithBooks(): List<ShelfWithBooks> = withContext(coroutineContext) {
+        ninovaDao.getBooksOfShelf()
     }
 }

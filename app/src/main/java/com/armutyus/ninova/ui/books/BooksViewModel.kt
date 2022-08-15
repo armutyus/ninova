@@ -4,8 +4,9 @@ import androidx.lifecycle.*
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.model.BookDetails
 import com.armutyus.ninova.model.DataModel
-import com.armutyus.ninova.repository.BooksRepositoryInterface
+import com.armutyus.ninova.repository.ApiBooksRepositoryInterface
 import com.armutyus.ninova.repository.FirebaseRepositoryInterface
+import com.armutyus.ninova.repository.LocalBooksRepositoryInterface
 import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.BookWithShelves
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BooksViewModel @Inject constructor(
-    private val booksRepository: BooksRepositoryInterface,
+    private val apiBooksRepository: ApiBooksRepositoryInterface,
+    private val booksRepository: LocalBooksRepositoryInterface,
     private val firebaseRepository: FirebaseRepositoryInterface
 ) : ViewModel() {
 
@@ -37,7 +39,7 @@ class BooksViewModel @Inject constructor(
         get() = _localBookList
 
     fun getBookDetailsById(id: String) = viewModelScope.launch {
-        booksRepository.getBookDetails(id).collectLatest { response ->
+        apiBooksRepository.getBookDetails(id).collectLatest { response ->
             _bookDetails.postValue(response)
         }
     }
@@ -56,25 +58,19 @@ class BooksViewModel @Inject constructor(
 
     fun getBookList() {
         viewModelScope.launch {
-            booksRepository.getLocalBooks().collectLatest {
-                _localBookList.postValue(it)
-            }
+            _localBookList.postValue(booksRepository.getLocalBooks())
         }
     }
 
     fun getBookWithShelves(bookId: String) {
         viewModelScope.launch {
-            booksRepository.getBookWithShelves(bookId).collectLatest {
-                _bookWithShelvesList.postValue(it)
-            }
+            _bookWithShelvesList.postValue(booksRepository.getBookWithShelves(bookId))
         }
     }
 
     fun getBookShelfCrossRef() {
         viewModelScope.launch {
-            booksRepository.getBookShelfCrossRef().collectLatest {
-                _bookShelfCrossRefList.postValue(it)
-            }
+            _bookShelfCrossRefList.postValue(booksRepository.getBookShelfCrossRef())
         }
     }
 

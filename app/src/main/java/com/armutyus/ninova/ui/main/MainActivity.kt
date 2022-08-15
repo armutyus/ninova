@@ -66,7 +66,11 @@ class MainActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        if (checkUserComesFirstTime.getBoolean("first_time", true) && !auth.currentUser!!.isAnonymous) {
+        if (checkUserComesFirstTime.getBoolean(
+                "first_time",
+                true
+            ) && !auth.currentUser!!.isAnonymous
+        ) {
             fetchBooks()
             fetchShelves()
             fetchCrossRefs()

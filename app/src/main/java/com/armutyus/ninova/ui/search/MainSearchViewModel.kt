@@ -7,7 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.model.GoogleApiBooks
-import com.armutyus.ninova.repository.BooksRepositoryInterface
+import com.armutyus.ninova.repository.ApiBooksRepositoryInterface
+import com.armutyus.ninova.repository.LocalBooksRepositoryInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainSearchViewModel @Inject constructor(
-    private val booksRepository: BooksRepositoryInterface
+    private val apiBooksRepository: ApiBooksRepositoryInterface,
+    private val booksRepository: LocalBooksRepositoryInterface
 ) : ViewModel() {
 
     //LocalBook Works
@@ -30,9 +32,7 @@ class MainSearchViewModel @Inject constructor(
 
     fun searchLocalBooks(searchString: String) {
         viewModelScope.launch {
-            booksRepository.searchLocalBooks(searchString).collectLatest {
-                _searchLocalBookList.postValue(it)
-            }
+            _searchLocalBookList.postValue(booksRepository.searchLocalBooks(searchString))
         }
     }
 
@@ -59,13 +59,13 @@ class MainSearchViewModel @Inject constructor(
         get() = _randomBooksResponse
 
     fun searchBooksFromApi(searchQuery: String) = viewModelScope.launch {
-        booksRepository.searchBooksFromApi(searchQuery).collectLatest { response ->
+        apiBooksRepository.searchBooksFromApi(searchQuery).collectLatest { response ->
             _searchBooksResponse.postValue(response)
         }
     }
 
     fun randomBooksFromApi() = viewModelScope.launch {
-        booksRepository.searchBooksFromApi("Witcher").collectLatest { response ->
+        apiBooksRepository.searchBooksFromApi("Witcher").collectLatest { response ->
             _randomBooksResponse.postValue(response)
         }
     }

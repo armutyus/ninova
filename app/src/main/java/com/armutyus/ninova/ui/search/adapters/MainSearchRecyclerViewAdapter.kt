@@ -1,7 +1,6 @@
 package com.armutyus.ninova.ui.search.adapters
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -40,8 +39,20 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
         val layoutInflater = LayoutInflater.from(parent.context)
 
         return when (viewType) {
-            GOOGLE_BOOK_TYPE -> ApiBookRowViewHolder(layoutInflater.inflate(R.layout.search_main_row, parent, false))
-            LOCAL_BOOK_TYPE -> LocalBookRowViewHolder(layoutInflater.inflate(R.layout.search_local_book_row, parent, false))
+            GOOGLE_BOOK_TYPE -> ApiBookRowViewHolder(
+                layoutInflater.inflate(
+                    R.layout.search_main_row,
+                    parent,
+                    false
+                )
+            )
+            LOCAL_BOOK_TYPE -> LocalBookRowViewHolder(
+                layoutInflater.inflate(
+                    R.layout.search_local_book_row,
+                    parent,
+                    false
+                )
+            )
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
@@ -50,12 +61,22 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
         return when (holder.itemViewType) {
             GOOGLE_BOOK_TYPE -> {
                 holder as ApiBookRowViewHolder
-                holder.bindApiBook(adapterData[position] as DataModel.GoogleBookItem, glide, searchFragment, booksViewModel, bookDetailsIntent)
+                holder.bindApiBook(
+                    adapterData[position] as DataModel.GoogleBookItem,
+                    glide,
+                    searchFragment,
+                    booksViewModel,
+                    bookDetailsIntent
+                )
             }
 
             LOCAL_BOOK_TYPE -> {
                 holder as LocalBookRowViewHolder
-                holder.bindLocalBook(adapterData[position] as DataModel.LocalBook, glide, bookDetailsIntent)
+                holder.bindLocalBook(
+                    adapterData[position] as DataModel.LocalBook,
+                    glide,
+                    bookDetailsIntent
+                )
             }
 
             else -> throw IllegalArgumentException("Unsupported type")
