@@ -29,10 +29,9 @@ class ShelfRepositoryImpl @Inject constructor(
         ninovaDao.getLocalShelves()
     }
 
-    override suspend fun searchLocalShelves(searchString: String): List<LocalShelf> =
-        withContext(coroutineContext) {
-            ninovaDao.searchLocalShelf(searchString)
-        }
+    override suspend fun searchLocalShelves(searchString: String): List<LocalShelf> = withContext(coroutineContext) {
+        ninovaDao.searchLocalShelf(searchString)
+    }
 
     override suspend fun insertBookShelfCrossRef(crossRef: BookShelfCrossRef) {
         ninovaDao.insertBookShelfCrossRef(crossRef)

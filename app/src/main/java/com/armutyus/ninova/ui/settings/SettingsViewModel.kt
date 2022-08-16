@@ -1,13 +1,12 @@
 package com.armutyus.ninova.ui.settings
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
+import androidx.lifecycle.*
+import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.repository.FirebaseRepositoryInterface
 import com.armutyus.ninova.roomdb.NinovaLocalDB
 import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.LocalShelf
-import com.google.firebase.auth.AuthCredential
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,41 +19,25 @@ class SettingsViewModel @Inject constructor(
     private val db: NinovaLocalDB
 ) : ViewModel() {
 
-    fun createUser() = liveData(Dispatchers.IO) {
-        repository.createUserInFirestore().collect { response ->
-            emit(response)
-        }
-    }
+    private val _firebaseAuthResponse = MutableLiveData<Response<Boolean>>()
+    val firebaseAuthResponse: LiveData<Response<Boolean>>
+        get() = _firebaseAuthResponse
 
-    fun registerAnonymousUser(credential: AuthCredential) = liveData(Dispatchers.IO) {
-        repository.anonymousToPermanent(credential).collect { response ->
-            emit(response)
-        }
-    }
-
-    fun uploadUserBooksToFirestore(localBook: DataModel.LocalBook) = liveData(Dispatchers.IO) {
-        repository.uploadUserBooksToFirestore(localBook).collect { response ->
-            emit(response)
-        }
+    fun uploadUserBooksToFirestore(localBook: DataModel.LocalBook) = viewModelScope.launch {
+        _firebaseAuthResponse.value = repository.uploadUserBooksToFirestore(localBook)
     }
 
     fun uploadUserCrossRefToFirestore(bookShelfCrossRef: BookShelfCrossRef) =
-        liveData(Dispatchers.IO) {
-            repository.uploadUserCrossRefToFirestore(bookShelfCrossRef).collect { response ->
-                emit(response)
-            }
+        viewModelScope.launch {
+            _firebaseAuthResponse.value = repository.uploadUserCrossRefToFirestore(bookShelfCrossRef)
         }
 
-    fun uploadUserShelvesToFirestore(shelf: LocalShelf) = liveData(Dispatchers.IO) {
-        repository.uploadUserShelvesToFirestore(shelf).collect { response ->
-            emit(response)
-        }
+    fun uploadUserShelvesToFirestore(shelf: LocalShelf) = viewModelScope.launch {
+        _firebaseAuthResponse.value = repository.uploadUserShelvesToFirestore(shelf)
     }
 
-    fun signOut() = liveData(Dispatchers.IO) {
-        repository.signOut().collect { response ->
-            emit(response)
-        }
+    fun signOut() = viewModelScope.launch {
+        _firebaseAuthResponse.value = repository.signOut()
     }
 
     fun clearDatabase() {

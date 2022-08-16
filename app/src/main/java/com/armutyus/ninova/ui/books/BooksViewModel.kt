@@ -9,6 +9,7 @@ import com.armutyus.ninova.repository.FirebaseRepositoryInterface
 import com.armutyus.ninova.repository.LocalBooksRepositoryInterface
 import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.BookWithShelves
+import com.armutyus.ninova.roomdb.entities.LocalShelf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -21,10 +22,19 @@ class BooksViewModel @Inject constructor(
     private val booksRepository: LocalBooksRepositoryInterface,
     private val firebaseRepository: FirebaseRepositoryInterface
 ) : ViewModel() {
+    // Google Book Works
 
     private val _bookDetails = MutableLiveData<Response<BookDetails>>()
     val bookDetails: LiveData<Response<BookDetails>>
         get() = _bookDetails
+
+    fun getBookDetailsById(id: String) = viewModelScope.launch {
+        apiBooksRepository.getBookDetails(id).collectLatest { response ->
+            _bookDetails.postValue(response)
+        }
+    }
+
+    // Local Book Works
 
     private val _bookShelfCrossRefList = MutableLiveData<List<BookShelfCrossRef>>()
     val bookShelfCrossRefList: LiveData<List<BookShelfCrossRef>>
@@ -37,12 +47,6 @@ class BooksViewModel @Inject constructor(
     private val _localBookList = MutableLiveData<List<DataModel.LocalBook>>()
     val localBookList: LiveData<List<DataModel.LocalBook>>
         get() = _localBookList
-
-    fun getBookDetailsById(id: String) = viewModelScope.launch {
-        apiBooksRepository.getBookDetails(id).collectLatest { response ->
-            _bookDetails.postValue(response)
-        }
-    }
 
     fun deleteBook(localBook: DataModel.LocalBook) = viewModelScope.launch {
         booksRepository.delete(localBook)
@@ -76,22 +80,28 @@ class BooksViewModel @Inject constructor(
 
     //Firebase Works
 
-    fun collectBooksFromFirestore() = liveData(Dispatchers.IO) {
-        firebaseRepository.downloadUserBooksFromFirestore().collect { response ->
-            emit(response)
-        }
+    private val _firebaseBookList = MutableLiveData<Response<List<DataModel.LocalBook>>>()
+    val firebaseBookList: LiveData<Response<List<DataModel.LocalBook>>>
+        get() = _firebaseBookList
+
+    private val _firebaseCrossRefList = MutableLiveData<Response<List<BookShelfCrossRef>>>()
+    val firebaseCrossRefList: LiveData<Response<List<BookShelfCrossRef>>>
+        get() = _firebaseCrossRefList
+
+    private val _firebaseShelfList = MutableLiveData<Response<List<LocalShelf>>>()
+    val firebaseShelfList: LiveData<Response<List<LocalShelf>>>
+        get() = _firebaseShelfList
+
+    fun collectBooksFromFirestore() = viewModelScope.launch {
+        _firebaseBookList.value = firebaseRepository.downloadUserBooksFromFirestore()
     }
 
-    fun collectCrossRefFromFirestore() = liveData(Dispatchers.IO) {
-        firebaseRepository.downloadUserCrossRefFromFirestore().collect { response ->
-            emit(response)
-        }
+    fun collectCrossRefFromFirestore() = viewModelScope.launch {
+        _firebaseCrossRefList.value = firebaseRepository.downloadUserCrossRefFromFirestore()
     }
 
-    fun collectShelvesFromFirestore() = liveData(Dispatchers.IO) {
-        firebaseRepository.downloadUserShelvesFromFirestore().collect { response ->
-            emit(response)
-        }
+    fun collectShelvesFromFirestore() = viewModelScope.launch {
+        _firebaseShelfList.value = firebaseRepository.downloadUserShelvesFromFirestore()
     }
 
 }

@@ -35,14 +35,14 @@ class ShelvesViewModel @Inject constructor(
     val shelfWithBooksList: LiveData<List<ShelfWithBooks>>
         get() = _shelfWithBooksList
 
-    fun getShelfList() {
-        CoroutineScope(Dispatchers.IO).launch {
-            _shelfList.postValue(shelfRepositoryInterface.getLocalShelves())
-        }
+    fun setCurrentList(shelfList: List<LocalShelf>) {
+        _currentShelfList.postValue(shelfList)
     }
 
-    fun setCurrentList(shelfList: List<LocalShelf>) {
-        _currentShelfList.value = shelfList
+    fun getShelfList() {
+        viewModelScope.launch {
+            _shelfList.postValue(shelfRepositoryInterface.getLocalShelves())
+        }
     }
 
     fun insertShelf(localShelf: LocalShelf) = viewModelScope.launch {

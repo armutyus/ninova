@@ -179,8 +179,8 @@ class SettingsFragment @Inject constructor(
         booksViewModel.localBookList.observe(viewLifecycleOwner) { localBookList ->
             var i = 0
             while (i < localBookList.size) {
-                settingsViewModel.uploadUserBooksToFirestore(localBookList[i])
-                    .observe(viewLifecycleOwner) { response ->
+                settingsViewModel.uploadUserBooksToFirestore(localBookList[i]).invokeOnCompletion {
+                    settingsViewModel.firebaseAuthResponse.observe(viewLifecycleOwner) { response ->
                         when (response) {
                             is Response.Loading -> {
                                 Toast.makeText(
@@ -204,6 +204,7 @@ class SettingsFragment @Inject constructor(
                             }
                         }
                     }
+                }
                 i++
             }
         }
@@ -214,8 +215,8 @@ class SettingsFragment @Inject constructor(
         shelvesViewModel.shelfList.observe(viewLifecycleOwner) { localShelfList ->
             var i = 0
             while (i < localShelfList.size) {
-                settingsViewModel.uploadUserShelvesToFirestore(localShelfList[i])
-                    .observe(viewLifecycleOwner) { response ->
+                settingsViewModel.uploadUserShelvesToFirestore(localShelfList[i]).invokeOnCompletion {
+                    settingsViewModel.firebaseAuthResponse.observe(viewLifecycleOwner) { response ->
                         when (response) {
                             is Response.Loading ->
                                 Log.i("shelvesUpload", "Shelves uploading")
@@ -232,6 +233,7 @@ class SettingsFragment @Inject constructor(
                             }
                         }
                     }
+                }
                 i++
             }
         }
@@ -242,8 +244,8 @@ class SettingsFragment @Inject constructor(
         booksViewModel.bookShelfCrossRefList.observe(viewLifecycleOwner) { localCrossRefList ->
             var i = 0
             while (i < localCrossRefList.size) {
-                settingsViewModel.uploadUserCrossRefToFirestore(localCrossRefList[i])
-                    .observe(viewLifecycleOwner) { response ->
+                settingsViewModel.uploadUserCrossRefToFirestore(localCrossRefList[i]).invokeOnCompletion {
+                    settingsViewModel.firebaseAuthResponse.observe(viewLifecycleOwner) { response ->
                         when (response) {
                             is Response.Loading ->
                                 Log.i("crossRefsUpload", "CrossRefs uploading")
@@ -264,27 +266,32 @@ class SettingsFragment @Inject constructor(
                             }
                         }
                     }
+
+                }
                 i++
             }
         }
     }
 
     private fun signOut() {
-        settingsViewModel.signOut().observe(viewLifecycleOwner) { response ->
-            when (response) {
-                is Response.Loading ->
-                    Toast.makeText(requireContext(), "Please wait..", Toast.LENGTH_SHORT).show()
-                is Response.Success -> {
-                    Toast.makeText(requireContext(), "Signed out!", Toast.LENGTH_SHORT).show()
-                    clearDatabase()
-                    goToLogInActivity()
-                }
-                is Response.Failure -> {
-                    println("Sign Out Error: " + response.errorMessage)
-                    Toast.makeText(requireContext(), response.errorMessage, Toast.LENGTH_LONG)
-                        .show()
+        settingsViewModel.signOut().invokeOnCompletion {
+            settingsViewModel.firebaseAuthResponse.observe(viewLifecycleOwner) { response ->
+                when (response) {
+                    is Response.Loading ->
+                        Toast.makeText(requireContext(), "Please wait..", Toast.LENGTH_SHORT).show()
+                    is Response.Success -> {
+                        Toast.makeText(requireContext(), "Signed out!", Toast.LENGTH_SHORT).show()
+                        clearDatabase()
+                        goToLogInActivity()
+                    }
+                    is Response.Failure -> {
+                        println("Sign Out Error: " + response.errorMessage)
+                        Toast.makeText(requireContext(), response.errorMessage, Toast.LENGTH_LONG)
+                            .show()
+                    }
                 }
             }
+
         }
     }
 

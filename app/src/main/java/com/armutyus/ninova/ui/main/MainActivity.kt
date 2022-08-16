@@ -188,85 +188,91 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchBooks() {
-        booksViewModel.collectBooksFromFirestore().observe(this) { response ->
-            when (response) {
-                is Response.Loading -> {
-                    Toast.makeText(
-                        this,
-                        "Checking user library, please wait..", Toast.LENGTH_SHORT
-                    ).show()
-                    Log.i("booksDownload", "Books downloading")
-                }
-                is Response.Success -> {
-                    val firebaseBookList = response.data
-                    var i = 0
-                    while (i < firebaseBookList.size) {
-                        val book = firebaseBookList[i]
-                        booksViewModel.insertBook(book)
-                        i++
+        booksViewModel.collectBooksFromFirestore().invokeOnCompletion {
+            booksViewModel.firebaseBookList.observe(this) { response ->
+                when (response) {
+                    is Response.Loading -> {
+                        Toast.makeText(
+                            this,
+                            "Checking user library, please wait..", Toast.LENGTH_SHORT
+                        ).show()
+                        Log.i("booksDownload", "Books downloading")
                     }
-                    Log.i("booksDownload", "Books downloaded")
-                }
-                is Response.Failure -> {
-                    Log.e("Firebase Fetch Books Error:", response.errorMessage)
-                    Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
-                        .show()
+                    is Response.Success -> {
+                        val firebaseBookList = response.data
+                        var i = 0
+                        while (i < firebaseBookList.size) {
+                            val book = firebaseBookList[i]
+                            booksViewModel.insertBook(book)
+                            i++
+                        }
+                        Log.i("booksDownload", "Books downloaded")
+                    }
+                    is Response.Failure -> {
+                        Log.e("Firebase Fetch Books Error:", response.errorMessage)
+                        Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
+                            .show()
+                    }
                 }
             }
         }
     }
 
     private fun fetchCrossRefs() {
-        booksViewModel.collectCrossRefFromFirestore().observe(this) { response ->
-            when (response) {
-                is Response.Loading -> {
-                    Log.i("crossRefsDownload", "CrossRefs downloading")
-                }
-                is Response.Success -> {
-                    val firebaseCrossRefList = response.data
-                    var i = 0
-                    while (i < firebaseCrossRefList.size) {
-                        val crossRef = firebaseCrossRefList[i]
-                        shelvesViewModel.insertBookShelfCrossRef(crossRef)
-                        i++
+        booksViewModel.collectCrossRefFromFirestore().invokeOnCompletion {
+            booksViewModel.firebaseCrossRefList.observe(this) { response ->
+                when (response) {
+                    is Response.Loading -> {
+                        Log.i("crossRefsDownload", "CrossRefs downloading")
                     }
-                    with(checkUserComesFirstTime.edit()) {
-                        putBoolean("first_time", false)
-                        apply()
+                    is Response.Success -> {
+                        val firebaseCrossRefList = response.data
+                        var i = 0
+                        while (i < firebaseCrossRefList.size) {
+                            val crossRef = firebaseCrossRefList[i]
+                            shelvesViewModel.insertBookShelfCrossRef(crossRef)
+                            i++
+                        }
+                        with(checkUserComesFirstTime.edit()) {
+                            putBoolean("first_time", false)
+                            apply()
+                        }
+                        Log.i("crossRefsDownload", "CrossRefs downloaded")
                     }
-                    Log.i("crossRefsDownload", "CrossRefs downloaded")
-                }
-                is Response.Failure -> {
-                    Log.e("Firebase Fetch CrossRefs Error:", response.errorMessage)
-                    Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
-                        .show()
+                    is Response.Failure -> {
+                        Log.e("Firebase Fetch CrossRefs Error:", response.errorMessage)
+                        Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
+                            .show()
+                    }
                 }
             }
         }
     }
 
     private fun fetchShelves() {
-        booksViewModel.collectShelvesFromFirestore().observe(this) { response ->
-            when (response) {
-                is Response.Loading -> {
-                    Log.i("shelvesDownload", "Shelves downloading")
-                }
-                is Response.Success -> {
-                    val firebaseShelvesList = response.data
-                    var i = 0
-                    while (i < firebaseShelvesList.size) {
-                        val shelf = firebaseShelvesList[i]
-                        shelvesViewModel.insertShelf(shelf)
-                        i++
+        booksViewModel.collectShelvesFromFirestore().invokeOnCompletion {
+            booksViewModel.firebaseShelfList.observe(this) { response ->
+                when (response) {
+                    is Response.Loading -> {
+                        Log.i("shelvesDownload", "Shelves downloading")
                     }
-                    Log.i("shelvesDownload", "Shelves downloaded")
-                    Toast.makeText(this, "Library successfully synced..", Toast.LENGTH_LONG)
-                        .show()
-                }
-                is Response.Failure -> {
-                    Log.e("Firebase Fetch CrossRefs Error:", response.errorMessage)
-                    Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
-                        .show()
+                    is Response.Success -> {
+                        val firebaseShelvesList = response.data
+                        var i = 0
+                        while (i < firebaseShelvesList.size) {
+                            val shelf = firebaseShelvesList[i]
+                            shelvesViewModel.insertShelf(shelf)
+                            i++
+                        }
+                        Log.i("shelvesDownload", "Shelves downloaded")
+                        Toast.makeText(this, "Library successfully synced..", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                    is Response.Failure -> {
+                        Log.e("Firebase Fetch CrossRefs Error:", response.errorMessage)
+                        Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
+                            .show()
+                    }
                 }
             }
         }
