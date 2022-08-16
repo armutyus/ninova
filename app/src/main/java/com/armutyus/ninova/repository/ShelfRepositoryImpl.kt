@@ -13,15 +13,15 @@ class ShelfRepositoryImpl @Inject constructor(
     private val ninovaDao: NinovaDao,
     private val coroutineContext: CoroutineContext = Dispatchers.IO
 ) : ShelfRepositoryInterface {
-    override suspend fun insert(localShelf: LocalShelf) {
+    override suspend fun insert(localShelf: LocalShelf) = withContext(coroutineContext) {
         ninovaDao.insertShelf(localShelf)
     }
 
-    override suspend fun update(localShelf: LocalShelf) {
+    override suspend fun update(localShelf: LocalShelf) = withContext(coroutineContext) {
         ninovaDao.updateShelf(localShelf)
     }
 
-    override suspend fun delete(localShelf: LocalShelf) {
+    override suspend fun delete(localShelf: LocalShelf) = withContext(coroutineContext) {
         ninovaDao.deleteShelf(localShelf)
     }
 
@@ -29,17 +29,20 @@ class ShelfRepositoryImpl @Inject constructor(
         ninovaDao.getLocalShelves()
     }
 
-    override suspend fun searchLocalShelves(searchString: String): List<LocalShelf> = withContext(coroutineContext) {
-        ninovaDao.searchLocalShelf(searchString)
-    }
+    override suspend fun searchLocalShelves(searchString: String): List<LocalShelf> =
+        withContext(coroutineContext) {
+            ninovaDao.searchLocalShelf(searchString)
+        }
 
-    override suspend fun insertBookShelfCrossRef(crossRef: BookShelfCrossRef) {
-        ninovaDao.insertBookShelfCrossRef(crossRef)
-    }
+    override suspend fun insertBookShelfCrossRef(crossRef: BookShelfCrossRef) =
+        withContext(coroutineContext) {
+            ninovaDao.insertBookShelfCrossRef(crossRef)
+        }
 
-    override suspend fun deleteBookShelfCrossRef(crossRef: BookShelfCrossRef) {
-        ninovaDao.deleteBookShelfCrossRef(crossRef)
-    }
+    override suspend fun deleteBookShelfCrossRef(crossRef: BookShelfCrossRef) =
+        withContext(coroutineContext) {
+            ninovaDao.deleteBookShelfCrossRef(crossRef)
+        }
 
     override suspend fun getShelfWithBooks(): List<ShelfWithBooks> = withContext(coroutineContext) {
         ninovaDao.getBooksOfShelf()

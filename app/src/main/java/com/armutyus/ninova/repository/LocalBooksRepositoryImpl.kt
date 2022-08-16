@@ -14,32 +14,36 @@ class LocalBooksRepositoryImpl @Inject constructor(
     private val coroutineContext: CoroutineDispatcher = Dispatchers.IO
 ) : LocalBooksRepositoryInterface {
 
-    override suspend fun searchLocalBooks(searchString: String): List<DataModel.LocalBook> = withContext(coroutineContext) {
-        ninovaDao.searchLocalBooks(searchString)
-    }
+    override suspend fun searchLocalBooks(searchString: String): List<DataModel.LocalBook> =
+        withContext(coroutineContext) {
+            ninovaDao.searchLocalBooks(searchString)
+        }
 
-    override suspend fun delete(localBook: DataModel.LocalBook) {
+    override suspend fun delete(localBook: DataModel.LocalBook) = withContext(coroutineContext) {
         ninovaDao.deleteBook(localBook)
     }
 
-    override suspend fun insert(localBook: DataModel.LocalBook) {
+    override suspend fun insert(localBook: DataModel.LocalBook) = withContext(coroutineContext) {
         ninovaDao.insertBook(localBook)
     }
 
-    override suspend fun update(localBook: DataModel.LocalBook) {
+    override suspend fun update(localBook: DataModel.LocalBook) = withContext(coroutineContext) {
         ninovaDao.updateBook(localBook)
     }
 
-    override suspend fun getLocalBooks(): List<DataModel.LocalBook> = withContext(coroutineContext) {
-        ninovaDao.getLocalBooks()
-    }
+    override suspend fun getLocalBooks(): List<DataModel.LocalBook> =
+        withContext(coroutineContext) {
+            ninovaDao.getLocalBooks()
+        }
 
-    override suspend fun getBookWithShelves(bookId: String): List<BookWithShelves> = withContext(coroutineContext) {
-        ninovaDao.getShelvesOfBook(bookId)
-    }
+    override suspend fun getBookWithShelves(bookId: String): List<BookWithShelves> =
+        withContext(coroutineContext) {
+            ninovaDao.getShelvesOfBook(bookId)
+        }
 
-    override suspend fun getBookShelfCrossRef(): List<BookShelfCrossRef> = withContext(coroutineContext) {
-        ninovaDao.getBookShelfCrossRef()
-    }
+    override suspend fun getBookShelfCrossRef(): List<BookShelfCrossRef> =
+        withContext(coroutineContext) {
+            ninovaDao.getBookShelfCrossRef()
+        }
 
 }

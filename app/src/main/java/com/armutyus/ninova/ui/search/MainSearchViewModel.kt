@@ -32,12 +32,12 @@ class MainSearchViewModel @Inject constructor(
 
     fun searchLocalBooks(searchString: String) {
         viewModelScope.launch {
-            _searchLocalBookList.postValue(booksRepository.searchLocalBooks(searchString))
+            _searchLocalBookList.value = booksRepository.searchLocalBooks(searchString)
         }
     }
 
     fun setCurrentLocalBookList(bookList: List<DataModel.LocalBook>) {
-        _currentLocalBookList.postValue(bookList)
+        _currentLocalBookList.value = bookList
     }
 
     fun insertBook(localBook: DataModel.LocalBook) = viewModelScope.launch {

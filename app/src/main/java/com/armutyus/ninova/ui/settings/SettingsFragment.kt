@@ -215,25 +215,26 @@ class SettingsFragment @Inject constructor(
         shelvesViewModel.shelfList.observe(viewLifecycleOwner) { localShelfList ->
             var i = 0
             while (i < localShelfList.size) {
-                settingsViewModel.uploadUserShelvesToFirestore(localShelfList[i]).invokeOnCompletion {
-                    settingsViewModel.firebaseAuthResponse.observe(viewLifecycleOwner) { response ->
-                        when (response) {
-                            is Response.Loading ->
-                                Log.i("shelvesUpload", "Shelves uploading")
-                            is Response.Success ->
-                                Log.i("shelvesUpload", "Shelves uploaded")
-                            is Response.Failure -> {
-                                Log.e("Shelves Upload Error", response.errorMessage)
-                                Toast.makeText(
-                                    requireContext(),
-                                    response.errorMessage,
-                                    Toast.LENGTH_LONG
-                                )
-                                    .show()
+                settingsViewModel.uploadUserShelvesToFirestore(localShelfList[i])
+                    .invokeOnCompletion {
+                        settingsViewModel.firebaseAuthResponse.observe(viewLifecycleOwner) { response ->
+                            when (response) {
+                                is Response.Loading ->
+                                    Log.i("shelvesUpload", "Shelves uploading")
+                                is Response.Success ->
+                                    Log.i("shelvesUpload", "Shelves uploaded")
+                                is Response.Failure -> {
+                                    Log.e("Shelves Upload Error", response.errorMessage)
+                                    Toast.makeText(
+                                        requireContext(),
+                                        response.errorMessage,
+                                        Toast.LENGTH_LONG
+                                    )
+                                        .show()
+                                }
                             }
                         }
                     }
-                }
                 i++
             }
         }
@@ -244,30 +245,31 @@ class SettingsFragment @Inject constructor(
         booksViewModel.bookShelfCrossRefList.observe(viewLifecycleOwner) { localCrossRefList ->
             var i = 0
             while (i < localCrossRefList.size) {
-                settingsViewModel.uploadUserCrossRefToFirestore(localCrossRefList[i]).invokeOnCompletion {
-                    settingsViewModel.firebaseAuthResponse.observe(viewLifecycleOwner) { response ->
-                        when (response) {
-                            is Response.Loading ->
-                                Log.i("crossRefsUpload", "CrossRefs uploading")
-                            is Response.Success ->
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Library uploaded to: ${user.email}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            is Response.Failure -> {
-                                println("Create Error: " + response.errorMessage)
-                                Toast.makeText(
-                                    requireContext(),
-                                    response.errorMessage,
-                                    Toast.LENGTH_LONG
-                                )
-                                    .show()
+                settingsViewModel.uploadUserCrossRefToFirestore(localCrossRefList[i])
+                    .invokeOnCompletion {
+                        settingsViewModel.firebaseAuthResponse.observe(viewLifecycleOwner) { response ->
+                            when (response) {
+                                is Response.Loading ->
+                                    Log.i("crossRefsUpload", "CrossRefs uploading")
+                                is Response.Success ->
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Library uploaded to: ${user.email}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                is Response.Failure -> {
+                                    println("Create Error: " + response.errorMessage)
+                                    Toast.makeText(
+                                        requireContext(),
+                                        response.errorMessage,
+                                        Toast.LENGTH_LONG
+                                    )
+                                        .show()
+                                }
                             }
                         }
-                    }
 
-                }
+                    }
                 i++
             }
         }

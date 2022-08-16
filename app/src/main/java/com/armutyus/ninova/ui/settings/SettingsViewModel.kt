@@ -1,6 +1,9 @@
 package com.armutyus.ninova.ui.settings
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.repository.FirebaseRepositoryInterface
@@ -29,7 +32,8 @@ class SettingsViewModel @Inject constructor(
 
     fun uploadUserCrossRefToFirestore(bookShelfCrossRef: BookShelfCrossRef) =
         viewModelScope.launch {
-            _firebaseAuthResponse.value = repository.uploadUserCrossRefToFirestore(bookShelfCrossRef)
+            _firebaseAuthResponse.value =
+                repository.uploadUserCrossRefToFirestore(bookShelfCrossRef)
         }
 
     fun uploadUserShelvesToFirestore(shelf: LocalShelf) = viewModelScope.launch {

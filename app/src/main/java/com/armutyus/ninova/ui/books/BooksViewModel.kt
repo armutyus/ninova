@@ -1,6 +1,9 @@
 package com.armutyus.ninova.ui.books
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.model.BookDetails
 import com.armutyus.ninova.model.DataModel
@@ -11,7 +14,6 @@ import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.BookWithShelves
 import com.armutyus.ninova.roomdb.entities.LocalShelf
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -62,19 +64,19 @@ class BooksViewModel @Inject constructor(
 
     fun getBookList() {
         viewModelScope.launch {
-            _localBookList.postValue(booksRepository.getLocalBooks())
+            _localBookList.value = booksRepository.getLocalBooks()
         }
     }
 
     fun getBookWithShelves(bookId: String) {
         viewModelScope.launch {
-            _bookWithShelvesList.postValue(booksRepository.getBookWithShelves(bookId))
+            _bookWithShelvesList.value = booksRepository.getBookWithShelves(bookId)
         }
     }
 
     fun getBookShelfCrossRef() {
         viewModelScope.launch {
-            _bookShelfCrossRefList.postValue(booksRepository.getBookShelfCrossRef())
+            _bookShelfCrossRefList.value = booksRepository.getBookShelfCrossRef()
         }
     }
 

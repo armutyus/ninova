@@ -5,7 +5,6 @@ import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.LocalShelf
 import com.google.firebase.auth.AuthCredential
-import kotlinx.coroutines.flow.Flow
 
 interface FirebaseRepositoryInterface {
 
