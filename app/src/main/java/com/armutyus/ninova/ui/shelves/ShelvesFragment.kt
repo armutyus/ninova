@@ -37,6 +37,7 @@ class ShelvesFragment @Inject constructor(
 ) : Fragment(R.layout.fragment_shelves), SearchView.OnQueryTextListener, OnShelfCoverClickListener {
 
     private var fragmentBinding: FragmentShelvesBinding? = null
+
     //private lateinit var shelvesViewModel: ShelvesViewModel
     private val shelvesViewModel by activityViewModels<ShelvesViewModel>()
     private lateinit var bottomSheetBinding: AddNewShelfBottomSheetBinding
@@ -122,7 +123,9 @@ class ShelvesFragment @Inject constructor(
                         formattedDate,
                         "",
                     )
-                )
+                ).invokeOnCompletion {
+                    shelvesViewModel.getShelfList()
+                }
                 dialog.hide()
             }
 
