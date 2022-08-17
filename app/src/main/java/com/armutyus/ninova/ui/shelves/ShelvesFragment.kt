@@ -14,7 +14,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,7 +37,8 @@ class ShelvesFragment @Inject constructor(
 ) : Fragment(R.layout.fragment_shelves), SearchView.OnQueryTextListener, OnShelfCoverClickListener {
 
     private var fragmentBinding: FragmentShelvesBinding? = null
-    private lateinit var shelvesViewModel: ShelvesViewModel
+    //private lateinit var shelvesViewModel: ShelvesViewModel
+    private val shelvesViewModel by activityViewModels<ShelvesViewModel>()
     private lateinit var bottomSheetBinding: AddNewShelfBottomSheetBinding
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
@@ -77,7 +78,7 @@ class ShelvesFragment @Inject constructor(
 
         val binding = FragmentShelvesBinding.bind(view)
         fragmentBinding = binding
-        shelvesViewModel = ViewModelProvider(requireActivity())[ShelvesViewModel::class.java]
+        //shelvesViewModel = ViewModelProvider(requireActivity())[ShelvesViewModel::class.java]
 
         val recyclerView = binding.mainShelvesRecyclerView
         recyclerView.adapter = shelvesAdapter
@@ -135,7 +136,8 @@ class ShelvesFragment @Inject constructor(
 
     private fun observeShelfList() {
         shelvesViewModel.currentShelfList.observe(viewLifecycleOwner) { currentShelfList ->
-            shelvesAdapter.mainShelfList = currentShelfList
+            shelvesAdapter.submitList(currentShelfList.toMutableList())
+            shelvesAdapter.notifyDataSetChanged()
             setVisibilities(currentShelfList)
         }
 
@@ -146,7 +148,6 @@ class ShelvesFragment @Inject constructor(
         shelvesViewModel.searchShelvesList.observe(viewLifecycleOwner) {
             shelvesViewModel.setCurrentList(it?.toList() ?: listOf())
         }
-
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {

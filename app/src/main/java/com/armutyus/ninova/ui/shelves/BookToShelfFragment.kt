@@ -12,6 +12,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -38,14 +39,13 @@ class BookToShelfFragment @Inject constructor(
     SearchView.OnQueryTextListener {
 
     private var fragmentBinding: FragmentBookToShelfBinding? = null
-    private lateinit var shelvesViewModel: ShelvesViewModel
+    private val shelvesViewModel by activityViewModels<ShelvesViewModel>()
     private lateinit var bottomSheetBinding: AddNewShelfBottomSheetBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentBookToShelfBinding.bind(view)
         fragmentBinding = binding
-        shelvesViewModel = ViewModelProvider(requireActivity())[ShelvesViewModel::class.java]
 
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
