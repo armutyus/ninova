@@ -30,11 +30,11 @@ class ShelvesRecyclerViewAdapter @Inject constructor(
 
     private val diffUtil = object : DiffUtil.ItemCallback<LocalShelf>() {
         override fun areItemsTheSame(oldItem: LocalShelf, newItem: LocalShelf): Boolean {
-            return oldItem.shelfId == newItem.shelfId
+            return oldItem == newItem
         }
 
         override fun areContentsTheSame(oldItem: LocalShelf, newItem: LocalShelf): Boolean {
-            return oldItem.shelfId == newItem.shelfId
+            return oldItem == newItem
         }
     }
 
@@ -42,11 +42,7 @@ class ShelvesRecyclerViewAdapter @Inject constructor(
 
     var mainShelfList: List<LocalShelf>
         get() = recyclerListDiffer.currentList
-        set(value) = submitList(value)
-
-    fun submitList(list: List<LocalShelf>) {
-        recyclerListDiffer.submitList(list)
-    }
+        set(value) = recyclerListDiffer.submitList(value)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShelvesViewHolder {
         val view =

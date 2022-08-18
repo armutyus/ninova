@@ -22,7 +22,7 @@ import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.constants.Cache.currentShelf
 import com.armutyus.ninova.constants.Constants.DETAILS_EXTRA
-import com.armutyus.ninova.constants.Constants.FIRST_TIME
+import com.armutyus.ninova.constants.Constants.MAIN_SHARED_PREF
 import com.armutyus.ninova.constants.Constants.FROM_DETAILS_TO_NOTES_EXTRA
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.ActivityMainBinding
@@ -39,10 +39,10 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    private val shelvesViewModel by viewModels<ShelvesViewModel>()
     private val booksViewModel by viewModels<BooksViewModel>()
-    private val checkUserComesFirstTime: SharedPreferences
-        get() = this.getSharedPreferences(FIRST_TIME, Context.MODE_PRIVATE)
+    private val shelvesViewModel by viewModels<ShelvesViewModel>()
+    private val sharedPreferences: SharedPreferences
+        get() = this.getSharedPreferences(MAIN_SHARED_PREF, Context.MODE_PRIVATE)
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        if (checkUserComesFirstTime.getBoolean(
+        if (sharedPreferences.getBoolean(
                 "first_time",
                 true
             ) && !auth.currentUser!!.isAnonymous
@@ -203,7 +203,9 @@ class MainActivity : AppCompatActivity() {
                         var i = 0
                         while (i < firebaseBookList.size) {
                             val book = firebaseBookList[i]
-                            booksViewModel.insertBook(book)
+                            booksViewModel.insertBook(book).invokeOnCompletion {
+                                booksViewModel.getBookList()
+                            }
                             i++
                         }
                         Log.i("booksDownload", "Books downloaded")
@@ -230,12 +232,14 @@ class MainActivity : AppCompatActivity() {
                         var i = 0
                         while (i < firebaseCrossRefList.size) {
                             val crossRef = firebaseCrossRefList[i]
-                            shelvesViewModel.insertBookShelfCrossRef(crossRef)
+                            shelvesViewModel.insertBookShelfCrossRef(crossRef).invokeOnCompletion {
+                                shelvesViewModel.getShelfWithBookList()
+                            }
                             i++
                         }
-                        with(checkUserComesFirstTime.edit()) {
-                            putBoolean("first_time", false)
-                            apply()
+                        with(sharedPreferences.edit()) {
+                            //putBoolean("library_downloaded", true).apply()
+                            putBoolean("first_time", false).apply()
                         }
                         Log.i("crossRefsDownload", "CrossRefs downloaded")
                     }
@@ -261,7 +265,9 @@ class MainActivity : AppCompatActivity() {
                         var i = 0
                         while (i < firebaseShelvesList.size) {
                             val shelf = firebaseShelvesList[i]
-                            shelvesViewModel.insertShelf(shelf)
+                            shelvesViewModel.insertShelf(shelf).invokeOnCompletion {
+                                shelvesViewModel.getShelfList()
+                            }
                             i++
                         }
                         Log.i("shelvesDownload", "Shelves downloaded")

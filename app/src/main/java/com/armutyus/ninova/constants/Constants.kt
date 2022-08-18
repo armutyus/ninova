@@ -23,7 +23,7 @@ object Constants {
     const val DARK_THEME = "dark"
     const val DETAILS_EXTRA = "fromDetails"
     const val DETAILS_STRING_EXTRA = "detailsActivity"
-    const val FIRST_TIME = "first_time"
+    const val MAIN_SHARED_PREF = "main_shared_preferences"
     const val FORGOT_PASSWORD = "forgot_password"
     const val FROM_DETAILS_ACTIVITY = "bookDetailsActivity"
     const val FROM_DETAILS_TO_NOTES_EXTRA = "detailsToNotes"

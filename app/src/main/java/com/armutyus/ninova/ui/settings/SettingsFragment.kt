@@ -7,6 +7,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -54,9 +55,9 @@ class SettingsFragment @Inject constructor(
     lateinit var aboutIntent: Intent
 
     private var sharedPreferences: SharedPreferences? = null
-    private lateinit var settingsViewModel: SettingsViewModel
-    private lateinit var shelvesViewModel: ShelvesViewModel
-    private lateinit var booksViewModel: BooksViewModel
+    private val settingsViewModel by activityViewModels<SettingsViewModel>()
+    private val shelvesViewModel by activityViewModels<ShelvesViewModel>()
+    private val booksViewModel by activityViewModels<BooksViewModel>()
     private val user = auth.currentUser!!
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -69,9 +70,6 @@ class SettingsFragment @Inject constructor(
 
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
-        settingsViewModel = ViewModelProvider(requireActivity())[SettingsViewModel::class.java]
-        shelvesViewModel = ViewModelProvider(requireActivity())[ShelvesViewModel::class.java]
-        booksViewModel = ViewModelProvider(requireActivity())[BooksViewModel::class.java]
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
         val aboutNinova = findPreference<Preference>("about_ninova")
@@ -182,17 +180,15 @@ class SettingsFragment @Inject constructor(
                 settingsViewModel.uploadUserBooksToFirestore(localBookList[i]).invokeOnCompletion {
                     settingsViewModel.firebaseAuthResponse.observe(viewLifecycleOwner) { response ->
                         when (response) {
-                            is Response.Loading -> {
+                            is Response.Loading -> Log.i("booksUpload", "Books uploading")
+                            is Response.Success -> {
                                 Toast.makeText(
                                     requireContext(),
-                                    "Uploading library..",
+                                    "Library uploaded to: ${user.email}",
                                     Toast.LENGTH_SHORT
-                                )
-                                    .show()
-                                Log.i("booksUpload", "Books uploading")
-                            }
-                            is Response.Success ->
+                                ).show()
                                 Log.i("bookUpload", "Books uploaded")
+                            }
                             is Response.Failure -> {
                                 println("Book Upload Error: " + response.errorMessage)
                                 Toast.makeText(
@@ -254,7 +250,7 @@ class SettingsFragment @Inject constructor(
                                 is Response.Success ->
                                     Toast.makeText(
                                         requireContext(),
-                                        "Library uploaded to: ${user.email}",
+                                        "Uploading library..",
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 is Response.Failure -> {

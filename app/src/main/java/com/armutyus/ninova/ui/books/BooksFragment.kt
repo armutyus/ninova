@@ -5,15 +5,17 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.databinding.FragmentBooksBinding
 import com.armutyus.ninova.ui.books.adapters.BooksRecyclerViewAdapter
 import com.armutyus.ninova.ui.shelves.ShelvesViewModel
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class BooksFragment @Inject constructor(
@@ -21,10 +23,9 @@ class BooksFragment @Inject constructor(
 ) : Fragment(R.layout.fragment_books) {
 
     private var fragmentBinding: FragmentBooksBinding? = null
-    private lateinit var shelvesViewModel: ShelvesViewModel
-    private lateinit var booksViewModel: BooksViewModel
-    private val checkFirstTime: SharedPreferences
-        get() = requireActivity().getPreferences(Context.MODE_PRIVATE)
+
+    private val booksViewModel by activityViewModels<BooksViewModel>()
+    private val shelvesViewModel by activityViewModels<ShelvesViewModel>()
 
     private val swipeCallBack = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         override fun onMove(
@@ -41,11 +42,13 @@ class BooksFragment @Inject constructor(
             booksViewModel.deleteBook(swipedBook).invokeOnCompletion {
                 Snackbar.make(requireView(), "Book deleted from your library", Snackbar.LENGTH_LONG)
                     .setAction("UNDO") {
-                        booksViewModel.insertBook(swipedBook)
+                        booksViewModel.insertBook(swipedBook).invokeOnCompletion {
+                            booksViewModel.getBookList()
+                        }
                     }.show()
+                booksViewModel.getBookList()
             }
         }
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,15 +57,11 @@ class BooksFragment @Inject constructor(
         val binding = FragmentBooksBinding.bind(view)
         fragmentBinding = binding
 
-        booksViewModel = ViewModelProvider(requireActivity())[BooksViewModel::class.java]
-        shelvesViewModel = ViewModelProvider(requireActivity())[ShelvesViewModel::class.java]
-
         val recyclerView = binding.mainBooksRecyclerView
         recyclerView.adapter = booksAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         ItemTouchHelper(swipeCallBack).attachToRecyclerView(recyclerView)
 
-        booksViewModel.getBookList()
         shelvesViewModel.getShelfWithBookList()
         observeBookList()
     }

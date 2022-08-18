@@ -112,7 +112,9 @@ class BookToShelfFragment @Inject constructor(
                         formattedDate,
                         "",
                     )
-                )
+                ).invokeOnCompletion {
+                    shelvesViewModel.getShelfList()
+                }
                 dialog.hide()
             }
 

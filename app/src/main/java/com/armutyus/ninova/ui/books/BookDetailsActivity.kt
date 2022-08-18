@@ -101,6 +101,8 @@ class BookDetailsActivity : AppCompatActivity() {
             GOOGLE_BOOK_TYPE -> {
                 supportActionBar?.title = currentBook?.volumeInfo?.title
                 setupBookInfo()
+                isBookAddedCheck()
+
                 binding.addBookToLibraryButton.setOnClickListener {
                     viewModel.insertBook(
                         DataModel.LocalBook(
@@ -195,6 +197,17 @@ class BookDetailsActivity : AppCompatActivity() {
         binding.addBookToLibraryButton.visibility = View.GONE
         binding.bookDetailNotesLinearLayout.visibility = View.GONE
         binding.bookDetailInfoLinearLayout.visibility = View.GONE
+    }
+
+    private fun isBookAddedCheck() {
+        viewModel.getBookList()
+        viewModel.localBookList.observe(this) {
+            if (currentBook?.isBookAddedCheck(viewModel) == true) {
+                binding.addBookToLibraryButton.visibility = View.GONE
+            } else {
+                binding.addBookToLibraryButton.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun setupBookInfo() {

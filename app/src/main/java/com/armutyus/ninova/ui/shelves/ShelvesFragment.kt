@@ -37,8 +37,6 @@ class ShelvesFragment @Inject constructor(
 ) : Fragment(R.layout.fragment_shelves), SearchView.OnQueryTextListener, OnShelfCoverClickListener {
 
     private var fragmentBinding: FragmentShelvesBinding? = null
-
-    //private lateinit var shelvesViewModel: ShelvesViewModel
     private val shelvesViewModel by activityViewModels<ShelvesViewModel>()
     private lateinit var bottomSheetBinding: AddNewShelfBottomSheetBinding
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
@@ -62,8 +60,11 @@ class ShelvesFragment @Inject constructor(
                     Snackbar.LENGTH_LONG
                 )
                     .setAction("UNDO") {
-                        shelvesViewModel.insertShelf(swipedShelf)
+                        shelvesViewModel.insertShelf(swipedShelf).invokeOnCompletion {
+                            shelvesViewModel.getShelfList()
+                        }
                     }.show()
+                shelvesViewModel.getShelfList()
             }
         }
 
@@ -79,7 +80,6 @@ class ShelvesFragment @Inject constructor(
 
         val binding = FragmentShelvesBinding.bind(view)
         fragmentBinding = binding
-        //shelvesViewModel = ViewModelProvider(requireActivity())[ShelvesViewModel::class.java]
 
         val recyclerView = binding.mainShelvesRecyclerView
         recyclerView.adapter = shelvesAdapter
@@ -139,8 +139,7 @@ class ShelvesFragment @Inject constructor(
 
     private fun observeShelfList() {
         shelvesViewModel.currentShelfList.observe(viewLifecycleOwner) { currentShelfList ->
-            shelvesAdapter.submitList(currentShelfList.toMutableList())
-            shelvesAdapter.notifyDataSetChanged()
+            shelvesAdapter.mainShelfList = currentShelfList
             setVisibilities(currentShelfList)
         }
 

@@ -2,8 +2,10 @@ package com.armutyus.ninova.ui.shelves
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -21,7 +23,7 @@ class ShelfWithBooksFragment @Inject constructor(
 ) : Fragment(R.layout.fragment_shelf_with_books) {
 
     private var fragmentBinding: FragmentShelfWithBooksBinding? = null
-    private lateinit var shelvesViewModel: ShelvesViewModel
+    private val shelvesViewModel by activityViewModels<ShelvesViewModel>()
     private var currentShelfId = 0
     private val args: ShelfWithBooksFragmentArgs by navArgs()
     private val swipeCallBack = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -52,7 +54,6 @@ class ShelfWithBooksFragment @Inject constructor(
 
         val binding = FragmentShelfWithBooksBinding.bind(view)
         fragmentBinding = binding
-        shelvesViewModel = ViewModelProvider(requireActivity())[ShelvesViewModel::class.java]
 
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.armutyus.ninova.R
@@ -17,6 +18,7 @@ import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.search.adapters.MainSearchRecyclerViewAdapter
 import com.armutyus.ninova.ui.search.listeners.OnBookAddButtonClickListener
+import com.armutyus.ninova.ui.shelves.ShelvesViewModel
 import javax.inject.Inject
 
 class MainSearchFragment @Inject constructor(
@@ -26,17 +28,8 @@ class MainSearchFragment @Inject constructor(
 
     private var fragmentBinding: FragmentMainSearchBinding? = null
     private val binding get() = fragmentBinding
-    private lateinit var isListLocalBook: SharedPreferences
-    private lateinit var booksViewModel: BooksViewModel
-    private lateinit var mainSearchViewModel: MainSearchViewModel
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        isListLocalBook = requireActivity().getPreferences(Context.MODE_PRIVATE) ?: return
-        mainSearchViewModel = ViewModelProvider(requireActivity())[MainSearchViewModel::class.java]
-        booksViewModel = ViewModelProvider(requireActivity())[BooksViewModel::class.java]
-    }
+    private val booksViewModel by activityViewModels<BooksViewModel>()
+    private val mainSearchViewModel by activityViewModels<MainSearchViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -147,7 +140,6 @@ class MainSearchFragment @Inject constructor(
                     setVisibilitiesForFailure()
                 }
             }
-
         }
 
         mainSearchViewModel.currentList.observe(viewLifecycleOwner) {

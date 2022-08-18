@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import com.armutyus.ninova.R
@@ -23,13 +24,12 @@ class BookUserNotesFragment @Inject constructor(
 ) : Fragment(R.layout.fragment_book_user_notes) {
 
     private var fragmentBinding: FragmentBookUserNotesBinding? = null
-    private lateinit var booksViewModel: BooksViewModel
+    private val booksViewModel by activityViewModels<BooksViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentBookUserNotesBinding.bind(view)
         fragmentBinding = binding
-        booksViewModel = ViewModelProvider(requireActivity())[BooksViewModel::class.java]
 
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
