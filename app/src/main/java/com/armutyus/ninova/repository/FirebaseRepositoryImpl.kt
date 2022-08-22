@@ -138,11 +138,12 @@ class FirebaseRepositoryImpl @Inject constructor(
         withContext(coroutineContext) {
             try {
                 val uploadBooks = auth.currentUser?.apply {
-                    db.collection(USERS_REF).document(uid).collection(BOOKS_REF).get().continueWith { querySnapshot ->
-                        querySnapshot.result.documents.forEach {
-                            it.reference.delete()
-                        }
-                    }.continueWith {
+                    db.collection(USERS_REF).document(uid).collection(BOOKS_REF).get()
+                        .continueWith { querySnapshot ->
+                            querySnapshot.result.documents.forEach {
+                                it.reference.delete()
+                            }
+                        }.continueWith {
                         db.collection(USERS_REF).document(uid).collection(BOOKS_REF)
                             .document(localBook.bookTitle!!).set(
                                 mapOf(
@@ -174,11 +175,12 @@ class FirebaseRepositoryImpl @Inject constructor(
         withContext(coroutineContext) {
             try {
                 val uploadShelves = auth.currentUser?.apply {
-                    db.collection(USERS_REF).document(uid).collection(SHELVES_REF).get().continueWith { querySnapshot ->
-                        querySnapshot.result.documents.forEach {
-                            it.reference.delete()
-                        }
-                    }.continueWith {
+                    db.collection(USERS_REF).document(uid).collection(SHELVES_REF).get()
+                        .continueWith { querySnapshot ->
+                            querySnapshot.result.documents.forEach {
+                                it.reference.delete()
+                            }
+                        }.continueWith {
                         db.collection(USERS_REF).document(uid).collection(SHELVES_REF)
                             .document(shelf.shelfTitle!!).set(
                                 mapOf(
@@ -205,11 +207,12 @@ class FirebaseRepositoryImpl @Inject constructor(
                     val crossRefDocumentId =
                         db.collection(USERS_REF).document(uid).collection(BOOKSHELFCROSS_REF)
                             .document().id
-                    db.collection(USERS_REF).document(uid).collection(BOOKSHELFCROSS_REF).get().continueWith { querySnapshot ->
-                        querySnapshot.result.documents.forEach {
-                            it.reference.delete()
-                        }
-                    }.continueWith {
+                    db.collection(USERS_REF).document(uid).collection(BOOKSHELFCROSS_REF).get()
+                        .continueWith { querySnapshot ->
+                            querySnapshot.result.documents.forEach {
+                                it.reference.delete()
+                            }
+                        }.continueWith {
                         db.collection(USERS_REF).document(uid).collection(BOOKSHELFCROSS_REF)
                             .document(crossRefDocumentId).set(
                                 mapOf(

@@ -1,7 +1,5 @@
 package com.armutyus.ninova.ui.books
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -10,12 +8,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
-import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.databinding.FragmentBooksBinding
 import com.armutyus.ninova.ui.books.adapters.BooksRecyclerViewAdapter
 import com.armutyus.ninova.ui.shelves.ShelvesViewModel
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class BooksFragment @Inject constructor(

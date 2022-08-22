@@ -1,6 +1,7 @@
 package com.armutyus.ninova.ui.main
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
@@ -11,38 +12,51 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.MenuProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.preference.PreferenceManager
 import com.armutyus.ninova.MobileNavigationDirections
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.constants.Cache.currentShelf
+import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.constants.Constants.DETAILS_EXTRA
-import com.armutyus.ninova.constants.Constants.MAIN_SHARED_PREF
 import com.armutyus.ninova.constants.Constants.FROM_DETAILS_TO_NOTES_EXTRA
+import com.armutyus.ninova.constants.Constants.MAIN_SHARED_PREF
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.ActivityMainBinding
 import com.armutyus.ninova.fragmentfactory.NinovaFragmentFactoryEntryPoint
 import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.shelves.ShelvesViewModel
+import com.armutyus.ninova.ui.splash.SplashViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
+import javax.inject.Inject
+import javax.inject.Named
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    @Named(Constants.LOGIN_INTENT)
+    @Inject
+    lateinit var loginIntent: Intent
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private val booksViewModel by viewModels<BooksViewModel>()
     private val shelvesViewModel by viewModels<ShelvesViewModel>()
+    private val splashViewModel by viewModels<SplashViewModel>()
     private val sharedPreferences: SharedPreferences
         get() = this.getSharedPreferences(MAIN_SHARED_PREF, Context.MODE_PRIVATE)
+    private var themePreferences: SharedPreferences? = null
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +67,15 @@ class MainActivity : AppCompatActivity() {
         )
         supportFragmentManager.fragmentFactory = entryPoint.getFragmentFactory()
 
+        installSplashScreen()
+        checkUserThemePreference()
+
         super.onCreate(savedInstanceState)
+
+        if (!splashViewModel.isUserAuthenticated) {
+            startActivity(loginIntent)
+            finish()
+        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -140,6 +162,28 @@ class MainActivity : AppCompatActivity() {
         navView.setOnItemReselectedListener { selectedItem ->
             if (selectedItem.itemId == navView.selectedItemId) {
                 navController.navigate(navView.selectedItemId)
+            }
+        }
+    }
+
+    private fun checkUserThemePreference() {
+        themePreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val themePref = themePreferences?.getString("theme", Constants.SYSTEM_THEME)
+
+        when (themePref) {
+            Constants.LIGHT_THEME -> {
+                themePreferences?.edit()?.putString("theme", Constants.LIGHT_THEME)?.apply()
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+
+            Constants.DARK_THEME -> {
+                themePreferences?.edit()?.putString("theme", Constants.DARK_THEME)?.apply()
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+
+            Constants.SYSTEM_THEME -> {
+                themePreferences?.edit()?.putString("theme", Constants.SYSTEM_THEME)?.apply()
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
             }
         }
     }

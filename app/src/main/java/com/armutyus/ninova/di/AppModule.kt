@@ -16,7 +16,6 @@ import com.armutyus.ninova.ui.books.BookDetailsActivity
 import com.armutyus.ninova.ui.login.LoginActivity
 import com.armutyus.ninova.ui.login.RegisterActivity
 import com.armutyus.ninova.ui.main.MainActivity
-import com.armutyus.ninova.ui.splash.SplashActivity
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,12 +31,6 @@ object AppModule {
     @Provides
     fun provideContext(application: Application): Context {
         return application.applicationContext
-    }
-
-    @Provides
-    @Named(SPLASH_INTENT)
-    fun provideSplashIntent(context: Context): Intent {
-        return Intent(context, SplashActivity::class.java)
     }
 
     @Provides
