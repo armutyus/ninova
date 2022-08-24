@@ -99,7 +99,7 @@ class MainSearchFragment @Inject constructor(
         val toggleButtonGroup = binding?.searchButtonToggleGroup
 
         mainSearchViewModel.searchLocalBookList.observe(viewLifecycleOwner) {
-            if (toggleButtonGroup?.checkedButtonId != R.id.localSearchButton) return@observe
+            //if (toggleButtonGroup?.checkedButtonId != R.id.localSearchButton) return@observe
             mainSearchViewModel.setCurrentLocalBookList(it.toList())
         }
 
@@ -121,7 +121,7 @@ class MainSearchFragment @Inject constructor(
         }
 
         mainSearchViewModel.searchBooksResponse.observe(viewLifecycleOwner) { response ->
-            if (toggleButtonGroup?.checkedButtonId != R.id.apiSearchButton) return@observe
+            //if (toggleButtonGroup?.checkedButtonId != R.id.apiSearchButton) return@observe
             when (response) {
                 is Response.Loading -> {
                     binding?.progressBar?.visibility = View.VISIBLE
@@ -139,13 +139,15 @@ class MainSearchFragment @Inject constructor(
         }
 
         mainSearchViewModel.currentList.observe(viewLifecycleOwner) {
-            searchFragmentAdapter.setDataType(it)
             setVisibilities(it)
+            if (toggleButtonGroup?.checkedButtonId != R.id.apiSearchButton) return@observe
+            searchFragmentAdapter.setDataType(it)
         }
 
         mainSearchViewModel.currentLocalBookList.observe(viewLifecycleOwner) {
-            searchFragmentAdapter.setDataType(it)
             setVisibilities(it)
+            if (toggleButtonGroup?.checkedButtonId != R.id.localSearchButton) return@observe
+            searchFragmentAdapter.setDataType(it)
         }
 
     }
