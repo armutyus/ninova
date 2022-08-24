@@ -16,7 +16,7 @@
         android:layout_marginEnd="26dp"
         android:hint="@string/prompt_email"
         app:errorEnabled="true"
-        app:boxStrokeColor="@color/light_primary"
+        app:boxStrokeColor="@color/primaryColor"
         app:startIconDrawable="@drawable/ic_login_email_gray">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -34,7 +34,7 @@
         android:layout_marginStart="26dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="26dp"
-        app:boxStrokeColor="@color/light_primary"
+        app:boxStrokeColor="@color/primaryColor"
         android:hint="@string/prompt_password"
         app:errorEnabled="true"
         app:endIconMode="password_toggle"
@@ -55,7 +55,7 @@
         android:layout_marginStart="26dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="26dp"
-        app:boxStrokeColor="@color/light_primary"
+        app:boxStrokeColor="@color/primaryColor"
         android:hint="@string/confirm_password"
         app:errorEnabled="true"
         app:endIconMode="password_toggle"

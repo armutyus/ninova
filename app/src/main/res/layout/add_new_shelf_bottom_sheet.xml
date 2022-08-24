@@ -14,7 +14,7 @@
         android:layout_marginStart="26dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="26dp"
-        app:boxStrokeColor="@color/light_primary"
+        app:boxStrokeColor="@color/primaryColor"
         android:hint="@string/shelf_title"
         app:errorEnabled="true">
         <com.google.android.material.textfield.TextInputEditText

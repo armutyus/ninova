@@ -38,7 +38,7 @@
                 android:text="@string/name_of_the_book"
                 android:maxLines="1"
                 android:ellipsize="marquee"
-                android:textColor="@color/light_primary"
+                android:textColor="@color/primaryColor"
                 android:textSize="14sp" />
 
             <TextView
@@ -49,7 +49,7 @@
                 android:text="@string/author_of_the_book"
                 android:maxLines="1"
                 android:ellipsize="marquee"
-                android:textColor="@color/light_primary_variant"
+                android:textColor="@color/primaryLightColor"
                 android:textSize="12sp" />
 
             <LinearLayout
@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/page_number"
                     android:textSize="11sp"
-                    android:textColor="@color/light_primary_variant"
+                    android:textColor="@color/primaryLightColor"
                     android:gravity="bottom"
                     android:drawablePadding="4dp"
                     app:drawableStartCompat="@drawable/ic_pages_icon">
@@ -76,7 +76,7 @@
                     android:layout_marginStart="8dp"
                     android:text="@string/release_date"
                     android:textSize="11sp"
-                    android:textColor="@color/light_primary_variant"
+                    android:textColor="@color/primaryLightColor"
                     android:gravity="bottom"
                     android:drawablePadding="4dp"
                     app:drawableStartCompat="@drawable/ic_release_date">
@@ -112,6 +112,6 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_margin="16dp"
-        android:background="@color/light_primary"/>
+        android:background="@color/primaryColor"/>
 
 </LinearLayout>

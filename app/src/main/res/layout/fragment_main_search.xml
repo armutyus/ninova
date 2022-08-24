@@ -11,7 +11,7 @@
         android:id="@+id/main_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/light_primary"
+        android:backgroundTint="@color/primaryColor"
         android:iconifiedByDefault="false"
         app:defaultQueryHint="@string/search_button_hint"
         app:showAsAction="always"
@@ -37,9 +37,9 @@
             style="?attr/materialButtonOutlinedStyle"
             android:text="@string/your_library"
             android:textSize="14sp"
-            android:textColor="@color/light_primary"
+            android:textColor="@color/primaryColor"
             app:cornerRadius="10dp"
-            app:strokeColor="@color/light_primary"/>
+            app:strokeColor="@color/primaryColor"/>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/apiSearchButton"
             android:layout_width="match_parent"
@@ -48,9 +48,9 @@
             style="?attr/materialButtonOutlinedStyle"
             android:text="@string/from_ninova"
             android:textSize="14sp"
-            android:textColor="@color/light_primary"
+            android:textColor="@color/primaryColor"
             app:cornerRadius="10dp"
-            app:strokeColor="@color/light_primary"/>
+            app:strokeColor="@color/primaryColor"/>
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -82,7 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/nothing_to_show_here"
-            android:textColor="@color/light_primary"
+            android:textColor="@color/primaryColor"
             android:textSize="16sp" />
 
         <com.airbnb.lottie.LottieAnimationView

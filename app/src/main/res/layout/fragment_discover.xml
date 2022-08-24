@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/work_hard"
-        android:textColor="@color/light_primary"
+        android:textColor="@color/primaryColor"
         android:gravity="center"
         android:padding="48dp"
         android:textSize="16sp"/>

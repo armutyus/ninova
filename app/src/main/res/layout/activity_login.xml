@@ -16,7 +16,7 @@
         android:layout_marginHorizontal="26dp"
         android:hint="@string/prompt_email"
         app:errorEnabled="true"
-        app:boxStrokeColor="@color/light_primary"
+        app:boxStrokeColor="@color/primaryColor"
         app:startIconDrawable="@drawable/ic_login_email_gray">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="26dp"
         android:layout_marginEnd="26dp"
-        app:boxStrokeColor="@color/light_primary"
+        app:boxStrokeColor="@color/primaryColor"
         android:hint="@string/prompt_password"
         app:errorEnabled="true"
         app:endIconMode="password_toggle"
@@ -102,7 +102,7 @@
             android:text="@string/action_register"
             android:textSize="14sp"
             app:cornerRadius="10dp"
-            app:strokeColor="@color/light_primary" />
+            app:strokeColor="@color/primaryColor" />
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
@@ -117,5 +117,5 @@
         android:textSize="14sp"
         android:fontFamily="sans-serif"
         app:cornerRadius="10dp"
-        app:strokeColor="@color/light_primary" />
+        app:strokeColor="@color/primaryColor" />
 </LinearLayout>

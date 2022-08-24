@@ -23,7 +23,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_weight="1"
-            android:backgroundTint="@color/light_primary"
+            android:backgroundTint="@color/primaryColor"
             android:iconifiedByDefault="false"
             android:keyboardNavigationCluster="true"
             app:actionViewClass="androidx.appcompat.widget.SearchView"
@@ -85,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/your_library_is_empty"
-            android:textColor="@color/light_primary"
+            android:textColor="@color/primaryColor"
             android:textSize="16sp" />
 
     </LinearLayout>
