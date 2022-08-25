@@ -8,6 +8,7 @@
              animated drawable. One of these is required. -->
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
 
+
         <!-- Set the theme of the Activity that directly follows your splash screen. -->
         <!-- Required -->
         <item name="postSplashScreenTheme">@style/Theme.Ninova</item>

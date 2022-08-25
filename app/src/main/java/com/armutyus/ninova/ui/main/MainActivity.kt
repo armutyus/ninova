@@ -52,7 +52,6 @@ class MainActivity : AppCompatActivity() {
     private val auth = FirebaseAuth.getInstance()
     private lateinit var binding: ActivityMainBinding
     private val booksViewModel by viewModels<BooksViewModel>()
-    private val currentUser = auth.currentUser!!
     private lateinit var navController: NavController
     private val shelvesViewModel by viewModels<ShelvesViewModel>()
     private val splashViewModel by viewModels<SplashViewModel>()
@@ -69,84 +68,92 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.fragmentFactory = entryPoint.getFragmentFactory()
 
         checkUserThemePreference()
-        installSplashScreen()
+        installSplashScreen().apply {
+            setKeepOnScreenCondition {
+                !splashViewModel.isUserAuthenticated
+            }
+        }
 
         super.onCreate(savedInstanceState)
 
-        if (!splashViewModel.isUserAuthenticated) {
+        if (splashViewModel.isUserAuthenticated) {
+            binding = ActivityMainBinding.inflate(layoutInflater)
+            setContentView(binding.root)
+
+            val navView: BottomNavigationView = binding.navView
+
+            val navHostFragment =
+                supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
+            navController = navHostFragment.navController
+
+            val currentUser = auth.currentUser!!
+
+            if (sharedPreferences.getBoolean(
+                    "first_time",
+                    true
+                ) && !currentUser.isAnonymous
+            ) {
+                fetchBooks()
+                fetchShelves()
+                fetchCrossRefs()
+            }
+
+            if (currentLocalBook?.bookId != null) {
+                when (intent.getStringExtra(DETAILS_EXTRA)) {
+                    currentLocalBook!!.bookId -> {
+                        val action =
+                            MobileNavigationDirections.actionMainToBookToShelfFragment(currentLocalBook!!.bookId)
+                        navController.navigate(action)
+                    }
+
+                    FROM_DETAILS_TO_NOTES_EXTRA -> {
+                        val action = MobileNavigationDirections.actionMainToBookUserNotesFragment()
+                        navController.navigate(action)
+                    }
+
+                    else -> {}
+                }
+            }
+
+            addMenuProvider(object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menu.clear()
+                    menuInflater.inflate(R.menu.settings_menu, menu)
+                }
+
+                override fun onMenuItemSelected(item: MenuItem): Boolean {
+                    when (item.itemId) {
+
+                        R.id.menu_search -> {
+                            navController.navigate(R.id.action_main_to_search)
+                        }
+
+                        R.id.settings -> {
+                            navController.navigate(R.id.action_main_to_settings)
+                        }
+
+                    }
+                    return true
+                }
+            })
+
+            destinationChangeListener(navView)
+
+            val appBarConfiguration = AppBarConfiguration(
+                setOf(
+                    R.id.navigation_books, R.id.navigation_discovery, R.id.navigation_shelves
+                )
+            )
+            setupActionBarWithNavController(navController, appBarConfiguration)
+            navView.setupWithNavController(navController)
+
+            bottomNavItemChangeListener(navView)
+        } else {
             startActivity(loginIntent)
             finish()
         }
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        val navView: BottomNavigationView = binding.navView
-
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
-        navController = navHostFragment.navController
-
-        if (sharedPreferences.getBoolean(
-                "first_time",
-                true
-            ) && !currentUser.isAnonymous
-        ) {
-            fetchBooks()
-            fetchShelves()
-            fetchCrossRefs()
-        }
-
-        if (currentLocalBook?.bookId != null) {
-            when (intent.getStringExtra(DETAILS_EXTRA)) {
-                currentLocalBook!!.bookId -> {
-                    val action =
-                        MobileNavigationDirections.actionMainToBookToShelfFragment(currentLocalBook!!.bookId)
-                    navController.navigate(action)
-                }
-
-                FROM_DETAILS_TO_NOTES_EXTRA -> {
-                    val action = MobileNavigationDirections.actionMainToBookUserNotesFragment()
-                    navController.navigate(action)
-                }
-
-                else -> {}
-            }
-        }
-
-        addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menu.clear()
-                menuInflater.inflate(R.menu.settings_menu, menu)
-            }
-
-            override fun onMenuItemSelected(item: MenuItem): Boolean {
-                when (item.itemId) {
-
-                    R.id.menu_search -> {
-                        navController.navigate(R.id.action_main_to_search)
-                    }
-
-                    R.id.settings -> {
-                        navController.navigate(R.id.action_main_to_settings)
-                    }
-
-                }
-                return true
-            }
-        })
-
-        destinationChangeListener(navView)
-
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_books, R.id.navigation_discovery, R.id.navigation_shelves
-            )
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
-
-        bottomNavItemChangeListener(navView)
     }
 
     private fun bottomNavItemChangeListener(navView: BottomNavigationView) {
