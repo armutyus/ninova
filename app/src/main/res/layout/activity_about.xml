@@ -15,7 +15,7 @@
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:layout_marginTop="36dp"
-        android:src="@drawable/ninova_logo"
+        android:src="@mipmap/ic_launcher_round"
         tools:ignore="ContentDescription" />
 
     <TextView

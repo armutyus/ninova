@@ -49,15 +49,16 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var loginIntent: Intent
 
+    private val auth = FirebaseAuth.getInstance()
     private lateinit var binding: ActivityMainBinding
-    private lateinit var navController: NavController
     private val booksViewModel by viewModels<BooksViewModel>()
+    private val currentUser = auth.currentUser!!
+    private lateinit var navController: NavController
     private val shelvesViewModel by viewModels<ShelvesViewModel>()
     private val splashViewModel by viewModels<SplashViewModel>()
     private val sharedPreferences: SharedPreferences
         get() = this.getSharedPreferences(MAIN_SHARED_PREF, Context.MODE_PRIVATE)
     private var themePreferences: SharedPreferences? = null
-    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -67,8 +68,8 @@ class MainActivity : AppCompatActivity() {
         )
         supportFragmentManager.fragmentFactory = entryPoint.getFragmentFactory()
 
-        installSplashScreen()
         checkUserThemePreference()
+        installSplashScreen()
 
         super.onCreate(savedInstanceState)
 
@@ -86,12 +87,10 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         navController = navHostFragment.navController
 
-        auth = FirebaseAuth.getInstance()
-
         if (sharedPreferences.getBoolean(
                 "first_time",
                 true
-            ) && !auth.currentUser!!.isAnonymous
+            ) && !currentUser.isAnonymous
         ) {
             fetchBooks()
             fetchShelves()
@@ -148,7 +147,6 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         bottomNavItemChangeListener(navView)
-
     }
 
     private fun bottomNavItemChangeListener(navView: BottomNavigationView) {
@@ -190,9 +188,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun destinationChangeListener(navView: BottomNavigationView) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
-
             when (destination.id) {
-
                 R.id.mainSearchFragment -> {
                     supportActionBar?.hide()
                     navView.visibility = View.GONE
@@ -225,9 +221,7 @@ class MainActivity : AppCompatActivity() {
                     supportActionBar?.show()
                     navView.visibility = View.VISIBLE
                 }
-
             }
-
         }
     }
 
@@ -245,14 +239,18 @@ class MainActivity : AppCompatActivity() {
                     is Response.Success -> {
                         val firebaseBookList = response.data
                         var i = 0
-                        while (i < firebaseBookList.size) {
-                            val book = firebaseBookList[i]
-                            booksViewModel.insertBook(book).invokeOnCompletion {
-                                booksViewModel.getBookList()
+                        if (firebaseBookList.isNotEmpty()) {
+                            while (i < firebaseBookList.size) {
+                                val book = firebaseBookList[i]
+                                booksViewModel.insertBook(book).invokeOnCompletion {
+                                    booksViewModel.getBookList()
+                                }
+                                i++
                             }
-                            i++
+                            Log.i("booksDownload", "Books downloaded")
+                        } else {
+                            Log.i("booksDownload", "No books")
                         }
-                        Log.i("booksDownload", "Books downloaded")
                     }
                     is Response.Failure -> {
                         Log.e("Firebase Fetch Books Error:", response.errorMessage)
@@ -274,18 +272,23 @@ class MainActivity : AppCompatActivity() {
                     is Response.Success -> {
                         val firebaseCrossRefList = response.data
                         var i = 0
-                        while (i < firebaseCrossRefList.size) {
-                            val crossRef = firebaseCrossRefList[i]
-                            shelvesViewModel.insertBookShelfCrossRef(crossRef).invokeOnCompletion {
-                                shelvesViewModel.getShelfWithBookList()
+                        if (firebaseCrossRefList.isNotEmpty()) {
+                            while (i < firebaseCrossRefList.size) {
+                                val crossRef = firebaseCrossRefList[i]
+                                shelvesViewModel.insertBookShelfCrossRef(crossRef)
+                                    .invokeOnCompletion {
+                                        shelvesViewModel.getShelfWithBookList()
+                                    }
+                                i++
                             }
-                            i++
+                            Log.i("crossRefsDownload", "CrossRefs downloaded")
+                        } else {
+                            Log.i("crossRefsDownload", "No CrossRefs")
                         }
                         with(sharedPreferences.edit()) {
                             //putBoolean("library_downloaded", true).apply()
                             putBoolean("first_time", false).apply()
                         }
-                        Log.i("crossRefsDownload", "CrossRefs downloaded")
                     }
                     is Response.Failure -> {
                         Log.e("Firebase Fetch CrossRefs Error:", response.errorMessage)
@@ -307,16 +310,23 @@ class MainActivity : AppCompatActivity() {
                     is Response.Success -> {
                         val firebaseShelvesList = response.data
                         var i = 0
-                        while (i < firebaseShelvesList.size) {
-                            val shelf = firebaseShelvesList[i]
-                            shelvesViewModel.insertShelf(shelf).invokeOnCompletion {
-                                shelvesViewModel.getShelfList()
+                        if (firebaseShelvesList.isNotEmpty()) {
+                            while (i < firebaseShelvesList.size) {
+                                val shelf = firebaseShelvesList[i]
+                                shelvesViewModel.insertShelf(shelf).invokeOnCompletion {
+                                    shelvesViewModel.getShelfList()
+                                }
+                                i++
                             }
-                            i++
+                            Log.i("shelvesDownload", "Shelves downloaded")
+                            Toast.makeText(this, "Library successfully synced..", Toast.LENGTH_LONG)
+                                .show()
+                        } else {
+                            Log.i("shelvesDownload", "No shelves")
+                            Toast.makeText(this, "Your library is empty", Toast.LENGTH_LONG)
+                                .show()
                         }
-                        Log.i("shelvesDownload", "Shelves downloaded")
-                        Toast.makeText(this, "Library successfully synced..", Toast.LENGTH_LONG)
-                            .show()
+
                     }
                     is Response.Failure -> {
                         Log.e("Firebase Fetch CrossRefs Error:", response.errorMessage)

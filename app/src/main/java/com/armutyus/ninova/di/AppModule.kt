@@ -9,7 +9,6 @@ import com.armutyus.ninova.constants.Constants.BOOK_DETAILS_INTENT
 import com.armutyus.ninova.constants.Constants.LOGIN_INTENT
 import com.armutyus.ninova.constants.Constants.MAIN_INTENT
 import com.armutyus.ninova.constants.Constants.REGISTER_INTENT
-import com.armutyus.ninova.constants.Constants.SPLASH_INTENT
 import com.armutyus.ninova.roomdb.NinovaLocalDB
 import com.armutyus.ninova.ui.about.AboutActivity
 import com.armutyus.ninova.ui.books.BookDetailsActivity

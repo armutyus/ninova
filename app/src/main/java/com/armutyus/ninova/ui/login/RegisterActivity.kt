@@ -33,9 +33,9 @@ class RegisterActivity : AppCompatActivity() {
     @Inject
     lateinit var mainIntent: Intent
 
+    private val auth = FirebaseAuth.getInstance()
     private lateinit var binding: ActivityRegisterBinding
     private val viewModel by viewModels<LoginViewModel>()
-    private val auth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,6 +142,7 @@ class RegisterActivity : AppCompatActivity() {
                     is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                     is Response.Success -> {
                         mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        mainIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                         goToMainActivity()
                         binding.progressBar.visibility = View.GONE
                     }

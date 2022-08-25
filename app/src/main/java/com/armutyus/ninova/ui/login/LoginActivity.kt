@@ -38,7 +38,7 @@ class LoginActivity : AppCompatActivity() {
     private val sharedPreferences: SharedPreferences
         get() = this.getSharedPreferences(Constants.MAIN_SHARED_PREF, Context.MODE_PRIVATE)
 
-    private val viewModel by viewModels<LoginViewModel>()
+    private val loginViewModel by viewModels<LoginViewModel>()
     private val settingsViewModel by viewModels<SettingsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,8 +76,8 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(this, "Please enter your information correctly!", Toast.LENGTH_LONG)
                 .show()
         } else {
-            viewModel.signInUser(email, password).invokeOnCompletion {
-                viewModel.firebaseAuthResponse.observe(this) { response ->
+            loginViewModel.signInUser(email, password).invokeOnCompletion {
+                loginViewModel.firebaseAuthResponse.observe(this) { response ->
                     when (response) {
                         is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                         is Response.Success -> {
@@ -92,19 +92,17 @@ class LoginActivity : AppCompatActivity() {
                         }
                     }
                 }
-
             }
         }
     }
 
     private fun anonymousSignIn() {
-        viewModel.signInAnonymously().invokeOnCompletion {
-            viewModel.firebaseAuthResponse.observe(this) { response ->
+        loginViewModel.signInAnonymously().invokeOnCompletion {
+            loginViewModel.firebaseAuthResponse.observe(this) { response ->
                 when (response) {
                     is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                     is Response.Success -> {
                         createUserProfile()
-                        goToMainActivity()
                         binding.progressBar.visibility = View.GONE
                     }
                     is Response.Failure -> {
@@ -146,8 +144,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun signUpUser() {
-        viewModel.signUpUser(email, password).invokeOnCompletion {
-            viewModel.firebaseAuthResponse.observe(this) { response ->
+        loginViewModel.signUpUser(email, password).invokeOnCompletion {
+            loginViewModel.firebaseAuthResponse.observe(this) { response ->
                 when (response) {
                     is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                     is Response.Success -> {
@@ -166,8 +164,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun createUserProfile() {
-        viewModel.createUser().invokeOnCompletion {
-            viewModel.firebaseAuthResponse.observe(this) { response ->
+        loginViewModel.createUser().invokeOnCompletion {
+            loginViewModel.firebaseAuthResponse.observe(this) { response ->
                 when (response) {
                     is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                     is Response.Success -> {
@@ -188,11 +186,11 @@ class LoginActivity : AppCompatActivity() {
 
     private fun goToMainActivity() {
         with(sharedPreferences.edit()) {
-            putBoolean("first_time", true)
-            apply()
+            putBoolean("first_time", true).apply()
         }
         clearDatabase()
         mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         startActivity(mainIntent)
         finish()
     }

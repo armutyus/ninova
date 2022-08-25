@@ -144,24 +144,24 @@ class FirebaseRepositoryImpl @Inject constructor(
                                 it.reference.delete()
                             }
                         }.continueWith {
-                        db.collection(USERS_REF).document(uid).collection(BOOKS_REF)
-                            .document(localBook.bookTitle!!).set(
-                                mapOf(
-                                    "bookId" to localBook.bookId,
-                                    "bookAuthors" to localBook.bookAuthors,
-                                    "bookCategories" to localBook.bookCategories,
-                                    "bookCoverSmallThumbnail" to localBook.bookCoverSmallThumbnail,
-                                    "bookCoverThumbnail" to localBook.bookCoverThumbnail,
-                                    "bookDescription" to localBook.bookDescription,
-                                    "bookNotes" to localBook.bookNotes,
-                                    "bookPages" to localBook.bookPages,
-                                    "bookPublishedDate" to localBook.bookPublishedDate,
-                                    "bookPublisher" to localBook.bookPublisher,
-                                    "bookSubtitle" to localBook.bookSubtitle,
-                                    "bookTitle" to localBook.bookTitle
+                            db.collection(USERS_REF).document(uid).collection(BOOKS_REF)
+                                .document(localBook.bookTitle!!).set(
+                                    mapOf(
+                                        "bookId" to localBook.bookId,
+                                        "bookAuthors" to localBook.bookAuthors,
+                                        "bookCategories" to localBook.bookCategories,
+                                        "bookCoverSmallThumbnail" to localBook.bookCoverSmallThumbnail,
+                                        "bookCoverThumbnail" to localBook.bookCoverThumbnail,
+                                        "bookDescription" to localBook.bookDescription,
+                                        "bookNotes" to localBook.bookNotes,
+                                        "bookPages" to localBook.bookPages,
+                                        "bookPublishedDate" to localBook.bookPublishedDate,
+                                        "bookPublisher" to localBook.bookPublisher,
+                                        "bookSubtitle" to localBook.bookSubtitle,
+                                        "bookTitle" to localBook.bookTitle
+                                    )
                                 )
-                            )
-                    }.await()
+                        }.await()
                 }
                 uploadBooks.let {
                     return@let Response.Success(true)
@@ -181,16 +181,16 @@ class FirebaseRepositoryImpl @Inject constructor(
                                 it.reference.delete()
                             }
                         }.continueWith {
-                        db.collection(USERS_REF).document(uid).collection(SHELVES_REF)
-                            .document(shelf.shelfTitle!!).set(
-                                mapOf(
-                                    "shelfId" to shelf.shelfId,
-                                    "shelfTitle" to shelf.shelfTitle,
-                                    "createdAt" to shelf.createdAt,
-                                    "shelfCover" to shelf.shelfCover
+                            db.collection(USERS_REF).document(uid).collection(SHELVES_REF)
+                                .document(shelf.shelfTitle!!).set(
+                                    mapOf(
+                                        "shelfId" to shelf.shelfId,
+                                        "shelfTitle" to shelf.shelfTitle,
+                                        "createdAt" to shelf.createdAt,
+                                        "shelfCover" to shelf.shelfCover
+                                    )
                                 )
-                            )
-                    }.await()
+                        }.await()
                 }
                 uploadShelves.let {
                     return@let Response.Success(true)
@@ -213,14 +213,14 @@ class FirebaseRepositoryImpl @Inject constructor(
                                 it.reference.delete()
                             }
                         }.continueWith {
-                        db.collection(USERS_REF).document(uid).collection(BOOKSHELFCROSS_REF)
-                            .document(crossRefDocumentId).set(
-                                mapOf(
-                                    "bookId" to bookShelfCrossRef.bookId,
-                                    "shelfId" to bookShelfCrossRef.shelfId
+                            db.collection(USERS_REF).document(uid).collection(BOOKSHELFCROSS_REF)
+                                .document(crossRefDocumentId).set(
+                                    mapOf(
+                                        "bookId" to bookShelfCrossRef.bookId,
+                                        "shelfId" to bookShelfCrossRef.shelfId
+                                    )
                                 )
-                            )
-                    }.await()
+                        }.await()
                 }
                 uploadCrossRef.let {
                     return@let Response.Success(true)

@@ -4,10 +4,16 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
@@ -53,11 +59,12 @@ class SettingsFragment @Inject constructor(
     @Inject
     lateinit var aboutIntent: Intent
 
-    private var sharedPreferences: SharedPreferences? = null
+    private val booksViewModel by activityViewModels<BooksViewModel>()
     private val settingsViewModel by activityViewModels<SettingsViewModel>()
     private val shelvesViewModel by activityViewModels<ShelvesViewModel>()
-    private val booksViewModel by activityViewModels<BooksViewModel>()
     private val user = auth.currentUser!!
+
+    private var sharedPreferences: SharedPreferences? = null
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
 
@@ -140,6 +147,18 @@ class SettingsFragment @Inject constructor(
 
     override fun onResume() {
         super.onResume()
+
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menu.clear()
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return false
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
         sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
     }
 
@@ -224,8 +243,7 @@ class SettingsFragment @Inject constructor(
                                         requireContext(),
                                         response.errorMessage,
                                         Toast.LENGTH_LONG
-                                    )
-                                        .show()
+                                    ).show()
                                 }
                             }
                         }
@@ -258,12 +276,10 @@ class SettingsFragment @Inject constructor(
                                         requireContext(),
                                         response.errorMessage,
                                         Toast.LENGTH_LONG
-                                    )
-                                        .show()
+                                    ).show()
                                 }
                             }
                         }
-
                     }
                 i++
             }
