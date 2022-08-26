@@ -57,7 +57,8 @@ class MainActivity : AppCompatActivity() {
     private val splashViewModel by viewModels<SplashViewModel>()
     private val sharedPreferences: SharedPreferences
         get() = this.getSharedPreferences(MAIN_SHARED_PREF, Context.MODE_PRIVATE)
-    private var themePreferences: SharedPreferences? = null
+    private val themePreferences: SharedPreferences
+        get() = PreferenceManager.getDefaultSharedPreferences(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -66,10 +67,9 @@ class MainActivity : AppCompatActivity() {
             NinovaFragmentFactoryEntryPoint::class.java
         )
         supportFragmentManager.fragmentFactory = entryPoint.getFragmentFactory()
-
-        checkUserThemePreference()
         installSplashScreen().apply {
             setKeepOnScreenCondition {
+                checkUserThemePreference()
                 !splashViewModel.isUserAuthenticated
             }
         }
@@ -172,22 +172,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkUserThemePreference() {
-        themePreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val themePref = themePreferences?.getString("theme", Constants.SYSTEM_THEME)
-
+        val themePref = themePreferences.getString("theme", Constants.SYSTEM_THEME)
         when (themePref) {
             Constants.LIGHT_THEME -> {
-                themePreferences?.edit()?.putString("theme", Constants.LIGHT_THEME)?.apply()
+                themePreferences.edit()?.putString("theme", Constants.LIGHT_THEME)?.apply()
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             }
 
             Constants.DARK_THEME -> {
-                themePreferences?.edit()?.putString("theme", Constants.DARK_THEME)?.apply()
+                themePreferences.edit()?.putString("theme", Constants.DARK_THEME)?.apply()
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }
 
             Constants.SYSTEM_THEME -> {
-                themePreferences?.edit()?.putString("theme", Constants.SYSTEM_THEME)?.apply()
+                themePreferences.edit()?.putString("theme", Constants.SYSTEM_THEME)?.apply()
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
             }
         }

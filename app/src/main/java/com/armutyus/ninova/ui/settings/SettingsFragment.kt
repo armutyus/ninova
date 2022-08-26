@@ -64,7 +64,8 @@ class SettingsFragment @Inject constructor(
     private val shelvesViewModel by activityViewModels<ShelvesViewModel>()
     private val user = auth.currentUser!!
 
-    private var sharedPreferences: SharedPreferences? = null
+    private val sharedPreferences: SharedPreferences
+        get() = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
 
@@ -74,9 +75,6 @@ class SettingsFragment @Inject constructor(
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
         }
 
-        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
-
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
         val aboutNinova = findPreference<Preference>("about_ninova")
         val changeEmail = findPreference<Preference>("change_email")
@@ -147,24 +145,14 @@ class SettingsFragment @Inject constructor(
 
     override fun onResume() {
         super.onResume()
-
-        val menuHost: MenuHost = requireActivity()
-        menuHost.addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menu.clear()
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return false
-            }
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-
-        sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
+        removeBackButtonAndMenu()
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onPause() {
         super.onPause()
-        sharedPreferences?.unregisterOnSharedPreferenceChangeListener(this)
+        removeBackButtonAndMenu()
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
     override fun onSharedPreferenceChanged(p0: SharedPreferences?, p1: String?) {
@@ -188,6 +176,21 @@ class SettingsFragment @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun removeBackButtonAndMenu() {
+        (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menu.clear()
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return false
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun uploadBooks() {
