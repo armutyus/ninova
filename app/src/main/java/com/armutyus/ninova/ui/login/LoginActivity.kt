@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -85,7 +86,7 @@ class LoginActivity : AppCompatActivity() {
                             binding.progressBar.visibility = View.GONE
                         }
                         is Response.Failure -> {
-                            println("SignIn Error: " + response.errorMessage)
+                            Log.e("LoginActivity", "SignIn Error: " + response.errorMessage)
                             Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
                                 .show()
                             binding.progressBar.visibility = View.GONE
@@ -106,7 +107,7 @@ class LoginActivity : AppCompatActivity() {
                         binding.progressBar.visibility = View.GONE
                     }
                     is Response.Failure -> {
-                        println("SignIn Error: " + response.errorMessage)
+                        Log.e("LoginActivity", "AnonymousSignIn Error: " + response.errorMessage)
                         Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
                             .show()
                         binding.progressBar.visibility = View.GONE
@@ -153,7 +154,7 @@ class LoginActivity : AppCompatActivity() {
                         binding.progressBar.visibility = View.GONE
                     }
                     is Response.Failure -> {
-                        println("SignUp Error: " + response.errorMessage)
+                        Log.e("LoginActivity", "SignUp Error: " + response.errorMessage)
                         Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
                             .show()
                         binding.progressBar.visibility = View.GONE
@@ -173,7 +174,7 @@ class LoginActivity : AppCompatActivity() {
                         binding.progressBar.visibility = View.GONE
                     }
                     is Response.Failure -> {
-                        println("Create Error: " + response.errorMessage)
+                        Log.e("LoginActivity", "CreateProfile Error: " + response.errorMessage)
                         Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
                             .show()
                         binding.progressBar.visibility = View.GONE
@@ -189,8 +190,8 @@ class LoginActivity : AppCompatActivity() {
             putBoolean("first_time", true).apply()
         }
         clearDatabase()
-        mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        mainIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
+                and Intent.FLAG_ACTIVITY_NEW_TASK)
         startActivity(mainIntent)
         finish()
     }

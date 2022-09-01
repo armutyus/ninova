@@ -33,7 +33,7 @@
             android:layout_margin="2dp"
             android:layout_width="80dp"
             android:layout_height="120dp"
-            android:src="@drawable/placeholder_book_icon"
+            android:src="@drawable/ic_placeholder_book_icon"
             tools:ignore="ContentDescription"
             app:strokeColor="@color/primaryLightColor"
             app:strokeWidth="0.5dp"

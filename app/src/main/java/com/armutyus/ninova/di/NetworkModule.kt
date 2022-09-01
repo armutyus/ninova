@@ -70,7 +70,7 @@ object NetworkModule {
         .setDefaultRequestOptions(
             RequestOptions()
                 .placeholder(Util.progressDrawable(context))
-                .error(R.drawable.placeholder_book_icon)
+                .error(R.drawable.ic_placeholder_book_icon)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
         )
 

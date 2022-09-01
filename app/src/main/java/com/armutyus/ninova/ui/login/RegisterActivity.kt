@@ -2,6 +2,7 @@ package com.armutyus.ninova.ui.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -89,6 +90,7 @@ class RegisterActivity : AppCompatActivity() {
                             Toast.makeText(this, "Account confirmed.", Toast.LENGTH_LONG).show()
                         }
                         is Response.Failure -> {
+                            Log.e("RegisterActivity", "ReAuth Error: " + response.errorMessage)
                             Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG).show()
                             binding.progressBar.visibility = View.GONE
                         }
@@ -126,7 +128,7 @@ class RegisterActivity : AppCompatActivity() {
                         binding.progressBar.visibility = View.GONE
                     }
                     is Response.Failure -> {
-                        println("SignUp Error: " + response.errorMessage)
+                        Log.e("RegisterActivity", "AnonymousSignUp Error: " + response.errorMessage)
                         Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG).show()
                         binding.progressBar.visibility = View.GONE
                     }
@@ -141,13 +143,13 @@ class RegisterActivity : AppCompatActivity() {
                 when (response) {
                     is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                     is Response.Success -> {
-                        mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        mainIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                        mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                and Intent.FLAG_ACTIVITY_NEW_TASK)
                         goToMainActivity()
                         binding.progressBar.visibility = View.GONE
                     }
                     is Response.Failure -> {
-                        println("Create Error: " + response.errorMessage)
+                        Log.e("RegisterActivity", "CreateProfile Error: " + response.errorMessage)
                         Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
                             .show()
                         binding.progressBar.visibility = View.GONE
@@ -175,6 +177,7 @@ class RegisterActivity : AppCompatActivity() {
                             goToMainActivity()
                         }
                         is Response.Failure -> {
+                            Log.e("RegisterActivity", "UpdateEmail Error: " + response.errorMessage)
                             Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
                                 .show()
                             binding.progressBar.visibility = View.GONE
@@ -209,6 +212,7 @@ class RegisterActivity : AppCompatActivity() {
                             signOut()
                         }
                         is Response.Failure -> {
+                            Log.e("RegisterActivity", "UpdatePassword Error: " + response.errorMessage)
                             Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG).show()
                             binding.progressBar.visibility = View.GONE
                         }
@@ -233,6 +237,7 @@ class RegisterActivity : AppCompatActivity() {
                             goToLogInActivity()
                         }
                         is Response.Failure -> {
+                            Log.e("RegisterActivity", "SendPassword Error: " + response.errorMessage)
                             Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
                                 .show()
                             binding.progressBar.visibility = View.GONE
@@ -253,7 +258,7 @@ class RegisterActivity : AppCompatActivity() {
                     is Response.Loading -> println("Loading")
                     is Response.Success -> goToLogInActivity()
                     is Response.Failure -> {
-                        println("Create Error: " + response.errorMessage)
+                        Log.e("RegisterActivity", "SignOut Error: " + response.errorMessage)
                         Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
                             .show()
                     }

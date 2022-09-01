@@ -36,7 +36,6 @@ import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.shelves.ShelvesViewModel
 import com.armutyus.ninova.ui.splash.SplashViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.EntryPointAccessors
 import javax.inject.Inject
@@ -49,7 +48,6 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var loginIntent: Intent
 
-    private val auth = FirebaseAuth.getInstance()
     private lateinit var binding: ActivityMainBinding
     private val booksViewModel by viewModels<BooksViewModel>()
     private lateinit var navController: NavController
@@ -86,12 +84,10 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
             navController = navHostFragment.navController
 
-            val currentUser = auth.currentUser!!
-
             if (sharedPreferences.getBoolean(
                     "first_time",
                     true
-                ) && !currentUser.isAnonymous
+                ) && !splashViewModel.isUserAnonymous
             ) {
                 fetchBooks()
                 fetchShelves()
@@ -172,8 +168,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkUserThemePreference() {
-        val themePref = themePreferences.getString("theme", Constants.SYSTEM_THEME)
-        when (themePref) {
+        when (themePreferences.getString("theme", Constants.SYSTEM_THEME)) {
             Constants.LIGHT_THEME -> {
                 themePreferences.edit()?.putString("theme", Constants.LIGHT_THEME)?.apply()
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -291,7 +286,6 @@ class MainActivity : AppCompatActivity() {
                             Log.i("crossRefsDownload", "No CrossRefs")
                         }
                         with(sharedPreferences.edit()) {
-                            //putBoolean("library_downloaded", true).apply()
                             putBoolean("first_time", false).apply()
                         }
                     }
