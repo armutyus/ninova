@@ -143,8 +143,10 @@ class RegisterActivity : AppCompatActivity() {
                 when (response) {
                     is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                     is Response.Success -> {
-                        mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                and Intent.FLAG_ACTIVITY_NEW_TASK)
+                        mainIntent.addFlags(
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    and Intent.FLAG_ACTIVITY_NEW_TASK
+                        )
                         goToMainActivity()
                         binding.progressBar.visibility = View.GONE
                     }
@@ -212,7 +214,10 @@ class RegisterActivity : AppCompatActivity() {
                             signOut()
                         }
                         is Response.Failure -> {
-                            Log.e("RegisterActivity", "UpdatePassword Error: " + response.errorMessage)
+                            Log.e(
+                                "RegisterActivity",
+                                "UpdatePassword Error: " + response.errorMessage
+                            )
                             Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG).show()
                             binding.progressBar.visibility = View.GONE
                         }
@@ -237,7 +242,10 @@ class RegisterActivity : AppCompatActivity() {
                             goToLogInActivity()
                         }
                         is Response.Failure -> {
-                            Log.e("RegisterActivity", "SendPassword Error: " + response.errorMessage)
+                            Log.e(
+                                "RegisterActivity",
+                                "SendPassword Error: " + response.errorMessage
+                            )
                             Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
                                 .show()
                             binding.progressBar.visibility = View.GONE

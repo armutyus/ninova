@@ -98,7 +98,9 @@ class MainActivity : AppCompatActivity() {
                 when (intent.getStringExtra(DETAILS_EXTRA)) {
                     currentLocalBook!!.bookId -> {
                         val action =
-                            MobileNavigationDirections.actionMainToBookToShelfFragment(currentLocalBook!!.bookId)
+                            MobileNavigationDirections.actionMainToBookToShelfFragment(
+                                currentLocalBook!!.bookId
+                            )
                         navController.navigate(action)
                     }
 

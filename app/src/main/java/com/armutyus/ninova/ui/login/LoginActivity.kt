@@ -190,8 +190,10 @@ class LoginActivity : AppCompatActivity() {
             putBoolean("first_time", true).apply()
         }
         clearDatabase()
-        mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
-                and Intent.FLAG_ACTIVITY_NEW_TASK)
+        mainIntent.addFlags(
+            Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    and Intent.FLAG_ACTIVITY_NEW_TASK
+        )
         startActivity(mainIntent)
         finish()
     }
