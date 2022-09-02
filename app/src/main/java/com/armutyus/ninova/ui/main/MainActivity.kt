@@ -23,6 +23,8 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import com.armutyus.ninova.MobileNavigationDirections
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Cache.currentBook
+import com.armutyus.ninova.constants.Cache.currentBookIdExtra
 import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.constants.Cache.currentShelf
 import com.armutyus.ninova.constants.Constants
@@ -94,18 +96,13 @@ class MainActivity : AppCompatActivity() {
                 fetchCrossRefs()
             }
 
-            if (currentLocalBook?.bookId != null) {
+            if (currentLocalBook?.bookId != null || currentBook?.id != null) {
                 when (intent.getStringExtra(DETAILS_EXTRA)) {
-                    currentLocalBook!!.bookId -> {
+                    currentBookIdExtra -> {
                         val action =
                             MobileNavigationDirections.actionMainToBookToShelfFragment(
-                                currentLocalBook!!.bookId
+                                currentBookIdExtra!!
                             )
-                        navController.navigate(action)
-                    }
-
-                    FROM_DETAILS_TO_NOTES_EXTRA -> {
-                        val action = MobileNavigationDirections.actionMainToBookUserNotesFragment()
                         navController.navigate(action)
                     }
 
@@ -205,12 +202,6 @@ class MainActivity : AppCompatActivity() {
                     supportActionBar?.show()
                     navView.visibility = View.VISIBLE
                     supportActionBar?.title = currentShelf?.shelfTitle
-                }
-
-                R.id.bookUserNotesFragment -> {
-                    supportActionBar?.show()
-                    navView.visibility = View.GONE
-                    supportActionBar?.title = currentLocalBook?.bookTitle
                 }
 
                 R.id.bookToShelfFragment -> {

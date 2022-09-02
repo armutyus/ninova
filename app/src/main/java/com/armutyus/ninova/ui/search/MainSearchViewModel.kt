@@ -45,6 +45,10 @@ class MainSearchViewModel @Inject constructor(
         booksRepository.insert(localBook)
     }
 
+    fun deleteBookById(id: String) = viewModelScope.launch {
+        booksRepository.deleteBookById(id)
+    }
+
     //GoogleBook Works
 
     private val _currentList = MutableLiveData<List<DataModel.GoogleBookItem>>()

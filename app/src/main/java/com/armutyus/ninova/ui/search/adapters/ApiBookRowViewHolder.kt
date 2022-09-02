@@ -1,6 +1,7 @@
 package com.armutyus.ninova.ui.search.adapters
 
 import android.content.Intent
+import android.provider.ContactsContract
 import android.text.Html
 import android.view.View
 import android.widget.ImageButton
@@ -66,11 +67,9 @@ class ApiBookRowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
 
         addedButton?.setOnClickListener {
-            Toast.makeText(
-                itemView.context,
-                "Already added to your library",
-                Toast.LENGTH_SHORT
-            ).show()
+            searchFragment.onAddedButtonClick(book.id!!)
+            addButton.visibility = View.VISIBLE
+            addedButton.visibility = View.GONE
         }
 
         itemView.apply {

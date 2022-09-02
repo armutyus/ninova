@@ -19,6 +19,9 @@ interface NinovaDao {
     @Delete
     suspend fun deleteBook(localBook: DataModel.LocalBook)
 
+    @Query("DELETE FROM Book WHERE bookId = :id")
+    suspend fun deleteBookById(id: String)
+
     @Query("SELECT * FROM Book WHERE bookId = :id")
     fun getLocalBooksById(id: String): DataModel.LocalBook
 

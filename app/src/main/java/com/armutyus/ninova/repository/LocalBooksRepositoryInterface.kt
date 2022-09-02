@@ -8,6 +8,8 @@ interface LocalBooksRepositoryInterface {
 
     suspend fun delete(localBook: DataModel.LocalBook)
 
+    suspend fun deleteBookById(id: String)
+
     suspend fun insert(localBook: DataModel.LocalBook)
 
     suspend fun update(localBook: DataModel.LocalBook)

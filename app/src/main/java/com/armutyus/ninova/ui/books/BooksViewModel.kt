@@ -54,6 +54,10 @@ class BooksViewModel @Inject constructor(
         booksRepository.delete(localBook)
     }
 
+    fun deleteBookById(id: String) = viewModelScope.launch {
+        booksRepository.deleteBookById(id)
+    }
+
     fun insertBook(localBook: DataModel.LocalBook) = viewModelScope.launch {
         booksRepository.insert(localBook)
     }

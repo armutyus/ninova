@@ -23,6 +23,10 @@ class LocalBooksRepositoryImpl @Inject constructor(
         ninovaDao.deleteBook(localBook)
     }
 
+    override suspend fun deleteBookById(id: String) = withContext(coroutineContext) {
+        ninovaDao.deleteBookById(id)
+    }
+
     override suspend fun insert(localBook: DataModel.LocalBook) = withContext(coroutineContext) {
         ninovaDao.insertBook(localBook)
     }

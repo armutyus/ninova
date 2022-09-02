@@ -185,4 +185,8 @@ class MainSearchFragment @Inject constructor(
         mainSearchViewModel.insertBook(localBook)
     }
 
+    override fun onAddedButtonClick(id: String) {
+        mainSearchViewModel.deleteBookById(id)
+    }
+
 }
