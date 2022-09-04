@@ -111,7 +111,7 @@ class SettingsFragment @Inject constructor(
 
         val privacyPolicyListener = Preference.OnPreferenceClickListener {
             val privacyPolicyIntent = Intent(Intent.ACTION_VIEW, Uri.parse(PRIVACY_POLICY_URL))
-            ContextCompat.startActivity(requireContext(),privacyPolicyIntent,null)
+            ContextCompat.startActivity(requireContext(), privacyPolicyIntent, null)
             true
         }
         privacyPolicy?.onPreferenceClickListener = privacyPolicyListener

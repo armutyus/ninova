@@ -23,7 +23,6 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import com.armutyus.ninova.MobileNavigationDirections
 import com.armutyus.ninova.R
-import com.armutyus.ninova.constants.Cache.currentBook
 import com.armutyus.ninova.constants.Cache.currentBookIdExtra
 import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.constants.Cache.currentShelf
@@ -95,7 +94,7 @@ class MainActivity : AppCompatActivity() {
                 fetchCrossRefs()
             }
 
-            if (currentLocalBook?.bookId != null || currentBook?.id != null) {
+            if (currentBookIdExtra != null) {
                 when (intent.getStringExtra(DETAILS_EXTRA)) {
                     currentBookIdExtra -> {
                         val action =
@@ -156,12 +155,6 @@ class MainActivity : AppCompatActivity() {
                 navController.navigate(item.itemId)
             }
             true
-        }
-
-        navView.setOnItemReselectedListener { selectedItem ->
-            if (selectedItem.itemId == navView.selectedItemId) {
-                navController.navigate(navView.selectedItemId)
-            }
         }
     }
 
@@ -314,8 +307,6 @@ class MainActivity : AppCompatActivity() {
                                 .show()
                         } else {
                             Log.i("shelvesDownload", "No shelves")
-                            Toast.makeText(this, "Your library is empty", Toast.LENGTH_LONG)
-                                .show()
                         }
 
                     }

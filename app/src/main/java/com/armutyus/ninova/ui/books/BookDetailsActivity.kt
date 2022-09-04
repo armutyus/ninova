@@ -15,8 +15,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.map
-import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Cache.currentBook
 import com.armutyus.ninova.constants.Cache.currentBookIdExtra
 import com.armutyus.ninova.constants.Cache.currentLocalBook
@@ -90,7 +88,11 @@ class BookDetailsActivity : AppCompatActivity() {
 
                 binding.addBookToLibraryButton.setOnClickListener {
                     viewModel.insertBook(currentLocalBook!!).invokeOnCompletion {
-                        Snackbar.make(binding.addBookToLibraryButton, "Saved to your library", Snackbar.LENGTH_LONG)
+                        Snackbar.make(
+                            binding.addBookToLibraryButton,
+                            "Saved to your library",
+                            Snackbar.LENGTH_LONG
+                        )
                             .setAction("UNDO") {
                                 viewModel.deleteBook(currentLocalBook!!).invokeOnCompletion {
                                     binding.addBookToLibraryButton.visibility = View.VISIBLE
@@ -149,7 +151,11 @@ class BookDetailsActivity : AppCompatActivity() {
                             bookDetails.title
                         )
                     ).invokeOnCompletion {
-                        Snackbar.make(binding.addBookToLibraryButton, "Saved to your library", Snackbar.LENGTH_LONG)
+                        Snackbar.make(
+                            binding.addBookToLibraryButton,
+                            "Saved to your library",
+                            Snackbar.LENGTH_LONG
+                        )
                             .setAction("UNDO") {
                                 viewModel.deleteBookById(currentBook?.id!!).invokeOnCompletion {
                                     binding.addBookToLibraryButton.visibility = View.VISIBLE
@@ -158,6 +164,7 @@ class BookDetailsActivity : AppCompatActivity() {
                             }.show()
                         binding.addBookToLibraryButton.visibility = View.GONE
                         binding.removeBookFromLibraryButton.visibility = View.VISIBLE
+
                         viewModel.getBookList()
                     }
                 }
@@ -171,7 +178,8 @@ class BookDetailsActivity : AppCompatActivity() {
 
                 binding.saveUserNotes.setOnClickListener {
                     viewModel.localBookList.observe(this) { localBookList ->
-                        currentLocalBook = localBookList.firstOrNull { it.bookId == currentBook?.id }
+                        currentLocalBook =
+                            localBookList.firstOrNull { it.bookId == currentBook?.id }
                     }
                     saveUserNotes()
                 }
@@ -198,7 +206,8 @@ class BookDetailsActivity : AppCompatActivity() {
             viewModel.getBookWithShelves(googleBookItem.id!!)
             viewModel.getBookList()
             viewModel.localBookList.observe(this) { localBookList ->
-                val userNotesFromLocal = localBookList.firstOrNull { it.bookId == googleBookItem.id }?.bookNotes
+                val userNotesFromLocal =
+                    localBookList.firstOrNull { it.bookId == googleBookItem.id }?.bookNotes
                 binding.userBookNotesEditText.setText(userNotesFromLocal)
             }
         }
@@ -264,16 +273,14 @@ class BookDetailsActivity : AppCompatActivity() {
         viewModel.localBookList.observe(this) {
             if (currentBook?.isBookAddedCheck(viewModel) == true) {
                 binding.addBookToLibraryButton.visibility = View.GONE
+                binding.bookDetailShelvesTextViews.visibility = View.VISIBLE
                 binding.removeBookFromLibraryButton.visibility = View.VISIBLE
-                binding.saveUserNotes.isEnabled = true
-                binding.shelvesOfBooks.isClickable = true
             } else {
                 binding.addBookToLibraryButton.visibility = View.VISIBLE
+                binding.bookDetailShelvesTextViews.visibility = View.GONE
                 binding.removeBookFromLibraryButton.visibility = View.GONE
-                binding.saveUserNotes.isEnabled = false
-                binding.shelvesOfBooks.isClickable = false
-                binding.shelvesOfBooks.setText(R.string.book_edit_warning)
-                binding.userBookNotesEditText.setText(R.string.book_edit_warning)
+                val notesTab = binding.bookDetailTabLayout.getTabAt(1)
+                notesTab?.view?.isClickable = false
             }
         }
     }

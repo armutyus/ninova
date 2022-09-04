@@ -1,13 +1,11 @@
 package com.armutyus.ninova.ui.search.adapters
 
 import android.content.Intent
-import android.provider.ContactsContract
 import android.text.Html
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Cache
