@@ -2,6 +2,7 @@ package com.armutyus.ninova.ui.settings
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -10,6 +11,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
@@ -25,6 +27,7 @@ import com.armutyus.ninova.constants.Constants.DARK_THEME
 import com.armutyus.ninova.constants.Constants.LIGHT_THEME
 import com.armutyus.ninova.constants.Constants.LOGIN_INTENT
 import com.armutyus.ninova.constants.Constants.MAIN_INTENT
+import com.armutyus.ninova.constants.Constants.PRIVACY_POLICY_URL
 import com.armutyus.ninova.constants.Constants.REGISTER
 import com.armutyus.ninova.constants.Constants.REGISTER_INTENT
 import com.armutyus.ninova.constants.Constants.SETTINGS_ACTION_KEY
@@ -107,8 +110,8 @@ class SettingsFragment @Inject constructor(
         aboutNinova?.summary = "Version: $VERSION_NAME"
 
         val privacyPolicyListener = Preference.OnPreferenceClickListener {
-            //intent to privacy policy
-            println("Privacy policy")
+            val privacyPolicyIntent = Intent(Intent.ACTION_VIEW, Uri.parse(PRIVACY_POLICY_URL))
+            ContextCompat.startActivity(requireContext(),privacyPolicyIntent,null)
             true
         }
         privacyPolicy?.onPreferenceClickListener = privacyPolicyListener

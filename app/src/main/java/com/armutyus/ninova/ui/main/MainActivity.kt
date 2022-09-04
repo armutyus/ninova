@@ -29,7 +29,6 @@ import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.constants.Cache.currentShelf
 import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.constants.Constants.DETAILS_EXTRA
-import com.armutyus.ninova.constants.Constants.FROM_DETAILS_TO_NOTES_EXTRA
 import com.armutyus.ninova.constants.Constants.MAIN_SHARED_PREF
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.ActivityMainBinding

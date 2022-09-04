@@ -26,7 +26,6 @@ object Constants {
     const val MAIN_SHARED_PREF = "main_shared_preferences"
     const val FORGOT_PASSWORD = "forgot_password"
     const val FROM_DETAILS_ACTIVITY = "bookDetailsActivity"
-    const val FROM_DETAILS_TO_NOTES_EXTRA = "detailsToNotes"
     const val LIGHT_THEME = "light"
     const val REGISTER = "register"
     const val SETTINGS_ACTION_KEY = "action"
@@ -37,6 +36,7 @@ object Constants {
     const val BASE_URL = "https://www.googleapis.com/books/v1/"
     const val BOOKS_REF = "Books"
     const val BOOKSHELFCROSS_REF = "BookShelfCrossRef"
+    const val PRIVACY_POLICY_URL = "https://sites.google.com/view/ninova-bookshelf-app"
     const val SHELVES_REF = "Shelves"
     const val USERS_REF = "Users"
 
