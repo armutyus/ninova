@@ -23,7 +23,6 @@
         android:layout_height="wrap_content"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
-        app:lottie_rawRes="@raw/sleepingant"
-        android:layout_gravity="center"
+        app:lottie_rawRes="@raw/hardworking"
         android:visibility="visible" />
 </LinearLayout>
