@@ -65,6 +65,8 @@ class SettingsFragment @Inject constructor(
     private val booksViewModel by activityViewModels<BooksViewModel>()
     private val settingsViewModel by activityViewModels<SettingsViewModel>()
     private val shelvesViewModel by activityViewModels<ShelvesViewModel>()
+    private var showSuccessToast = true
+    private var showUploadToast = true
     private val user = auth.currentUser!!
 
     private val sharedPreferences: SharedPreferences
@@ -206,15 +208,19 @@ class SettingsFragment @Inject constructor(
                         when (response) {
                             is Response.Loading -> Log.i("booksUpload", "Books uploading")
                             is Response.Success -> {
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Library uploaded to: ${user.email}",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                if (showUploadToast) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "Uploading library..",
+                                        Toast.LENGTH_SHORT
+                                    ).show().also {
+                                        showUploadToast = false
+                                    }
+                                }
                                 Log.i("bookUpload", "Books uploaded")
                             }
                             is Response.Failure -> {
-                                println("Book Upload Error: " + response.errorMessage)
+                                Log.e("Books Upload Error", response.errorMessage)
                                 Toast.makeText(
                                     requireContext(),
                                     response.errorMessage,
@@ -270,14 +276,20 @@ class SettingsFragment @Inject constructor(
                             when (response) {
                                 is Response.Loading ->
                                     Log.i("crossRefsUpload", "CrossRefs uploading")
-                                is Response.Success ->
-                                    Toast.makeText(
-                                        requireContext(),
-                                        "Uploading library..",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
+                                is Response.Success -> {
+                                    if (showSuccessToast) {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            "Library uploaded to: ${user.email}",
+                                            Toast.LENGTH_SHORT
+                                        ).show().also {
+                                            showSuccessToast = false
+                                        }
+                                    }
+                                    Log.i("crossRefsUpload", "CrossRefs uploaded")
+                                }
                                 is Response.Failure -> {
-                                    println("Create Error: " + response.errorMessage)
+                                    Log.e("CrossRefs Upload Error", response.errorMessage)
                                     Toast.makeText(
                                         requireContext(),
                                         response.errorMessage,
@@ -304,7 +316,7 @@ class SettingsFragment @Inject constructor(
                         goToLogInActivity()
                     }
                     is Response.Failure -> {
-                        println("Sign Out Error: " + response.errorMessage)
+                        Log.e("Sign Out Error", response.errorMessage)
                         Toast.makeText(requireContext(), response.errorMessage, Toast.LENGTH_LONG)
                             .show()
                     }

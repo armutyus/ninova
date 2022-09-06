@@ -81,8 +81,7 @@ class BookDetailsActivity : AppCompatActivity() {
         when (type) {
             LOCAL_BOOK_TYPE -> {
                 supportActionBar?.title = currentLocalBook?.bookTitle
-                binding.addBookToLibraryButton.visibility = View.GONE
-                binding.removeBookFromLibraryButton.visibility = View.VISIBLE
+                setVisibilitiesForBookAdded()
                 registerLauncher()
                 setupLocalBookInfo()
 
@@ -95,12 +94,10 @@ class BookDetailsActivity : AppCompatActivity() {
                         )
                             .setAction("UNDO") {
                                 viewModel.deleteBook(currentLocalBook!!).invokeOnCompletion {
-                                    binding.addBookToLibraryButton.visibility = View.VISIBLE
-                                    binding.removeBookFromLibraryButton.visibility = View.GONE
+                                    setVisibilitiesForBookRemoved()
                                 }
                             }.show()
-                        binding.addBookToLibraryButton.visibility = View.GONE
-                        binding.removeBookFromLibraryButton.visibility = View.VISIBLE
+                        setVisibilitiesForBookAdded()
                         viewModel.getBookList()
                     }
                 }
@@ -111,8 +108,7 @@ class BookDetailsActivity : AppCompatActivity() {
 
                 binding.removeBookFromLibraryButton.setOnClickListener {
                     viewModel.deleteBook(currentLocalBook!!).invokeOnCompletion {
-                        binding.addBookToLibraryButton.visibility = View.VISIBLE
-                        binding.removeBookFromLibraryButton.visibility = View.GONE
+                        setVisibilitiesForBookRemoved()
                     }
                 }
 
@@ -158,12 +154,10 @@ class BookDetailsActivity : AppCompatActivity() {
                         )
                             .setAction("UNDO") {
                                 viewModel.deleteBookById(currentBook?.id!!).invokeOnCompletion {
-                                    binding.addBookToLibraryButton.visibility = View.VISIBLE
-                                    binding.removeBookFromLibraryButton.visibility = View.GONE
+                                    setVisibilitiesForBookRemoved()
                                 }
                             }.show()
-                        binding.addBookToLibraryButton.visibility = View.GONE
-                        binding.removeBookFromLibraryButton.visibility = View.VISIBLE
+                        setVisibilitiesForBookAdded()
 
                         viewModel.getBookList()
                     }
@@ -171,8 +165,7 @@ class BookDetailsActivity : AppCompatActivity() {
 
                 binding.removeBookFromLibraryButton.setOnClickListener {
                     viewModel.deleteBookById(currentBook?.id!!).invokeOnCompletion {
-                        binding.addBookToLibraryButton.visibility = View.VISIBLE
-                        binding.removeBookFromLibraryButton.visibility = View.GONE
+                        setVisibilitiesForBookRemoved()
                     }
                 }
 
@@ -259,6 +252,25 @@ class BookDetailsActivity : AppCompatActivity() {
 
     }
 
+    private fun isBookAddedCheck() {
+        viewModel.getBookList()
+        viewModel.localBookList.observe(this) {
+            if (currentBook?.isBookAddedCheck(viewModel) == true) {
+                setVisibilitiesForBookAdded()
+            } else {
+                setVisibilitiesForBookRemoved()
+            }
+        }
+    }
+
+    private fun setVisibilitiesForBookAdded() {
+        binding.addBookToLibraryButton.visibility = View.GONE
+        binding.bookDetailShelvesTextViews.visibility = View.VISIBLE
+        binding.removeBookFromLibraryButton.visibility = View.VISIBLE
+        val notesTab = binding.bookDetailTabLayout.getTabAt(1)
+        notesTab?.view?.isClickable = true
+    }
+
     private fun setVisibilitiesForBookNull() {
         binding.linearLayoutDetailsError.visibility = View.VISIBLE
         binding.bookDetailGeneralLayout.visibility = View.GONE
@@ -268,21 +280,12 @@ class BookDetailsActivity : AppCompatActivity() {
         binding.bookDetailInfoLinearLayout.visibility = View.GONE
     }
 
-    private fun isBookAddedCheck() {
-        viewModel.getBookList()
-        viewModel.localBookList.observe(this) {
-            if (currentBook?.isBookAddedCheck(viewModel) == true) {
-                binding.addBookToLibraryButton.visibility = View.GONE
-                binding.bookDetailShelvesTextViews.visibility = View.VISIBLE
-                binding.removeBookFromLibraryButton.visibility = View.VISIBLE
-            } else {
-                binding.addBookToLibraryButton.visibility = View.VISIBLE
-                binding.bookDetailShelvesTextViews.visibility = View.GONE
-                binding.removeBookFromLibraryButton.visibility = View.GONE
-                val notesTab = binding.bookDetailTabLayout.getTabAt(1)
-                notesTab?.view?.isClickable = false
-            }
-        }
+    private fun setVisibilitiesForBookRemoved() {
+        binding.addBookToLibraryButton.visibility = View.VISIBLE
+        binding.bookDetailShelvesTextViews.visibility = View.GONE
+        binding.removeBookFromLibraryButton.visibility = View.GONE
+        val notesTab = binding.bookDetailTabLayout.getTabAt(1)
+        notesTab?.view?.isClickable = false
     }
 
     private fun setupBookInfo() {
