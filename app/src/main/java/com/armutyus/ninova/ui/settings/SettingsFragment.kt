@@ -125,6 +125,8 @@ class SettingsFragment @Inject constructor(
         signOut?.onPreferenceClickListener = signOutListener
 
         val uploadLibraryListener = Preference.OnPreferenceClickListener {
+            showSuccessToast = true
+            showUploadToast = true
             uploadBooks()
             uploadShelves()
             uploadCrossRefs()

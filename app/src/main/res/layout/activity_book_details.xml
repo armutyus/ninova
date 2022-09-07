@@ -145,8 +145,9 @@
                 android:textColor="@color/primaryColor"
                 android:scrollbars="vertical"
                 android:gravity="top"
-                android:background="@android:color/transparent"/>
-
+                android:background="@android:color/transparent"
+                android:inputType="textMultiLine"
+                android:autofillHints="name" />
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton

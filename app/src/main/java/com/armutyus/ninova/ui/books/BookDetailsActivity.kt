@@ -87,16 +87,6 @@ class BookDetailsActivity : AppCompatActivity() {
 
                 binding.addBookToLibraryButton.setOnClickListener {
                     viewModel.insertBook(currentLocalBook!!).invokeOnCompletion {
-                        Snackbar.make(
-                            binding.addBookToLibraryButton,
-                            "Saved to your library",
-                            Snackbar.LENGTH_LONG
-                        )
-                            .setAction("UNDO") {
-                                viewModel.deleteBook(currentLocalBook!!).invokeOnCompletion {
-                                    setVisibilitiesForBookRemoved()
-                                }
-                            }.show()
                         setVisibilitiesForBookAdded()
                         viewModel.getBookList()
                     }
@@ -112,13 +102,13 @@ class BookDetailsActivity : AppCompatActivity() {
                     }
                 }
 
+                binding.saveUserNotes.setOnClickListener {
+                    saveUserNotes()
+                }
+
                 binding.shelvesOfBooks.setOnClickListener {
                     currentBookIdExtra = currentLocalBook?.bookId!!
                     goToBookToShelfFragment(currentBookIdExtra!!)
-                }
-
-                binding.saveUserNotes.setOnClickListener {
-                    saveUserNotes()
                 }
             }
 
@@ -147,18 +137,7 @@ class BookDetailsActivity : AppCompatActivity() {
                             bookDetails.title
                         )
                     ).invokeOnCompletion {
-                        Snackbar.make(
-                            binding.addBookToLibraryButton,
-                            "Saved to your library",
-                            Snackbar.LENGTH_LONG
-                        )
-                            .setAction("UNDO") {
-                                viewModel.deleteBookById(currentBook?.id!!).invokeOnCompletion {
-                                    setVisibilitiesForBookRemoved()
-                                }
-                            }.show()
                         setVisibilitiesForBookAdded()
-
                         viewModel.getBookList()
                     }
                 }

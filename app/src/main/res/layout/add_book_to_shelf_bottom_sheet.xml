@@ -1,28 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:theme="@style/Theme.Ninova"
-    tools:context=".ui.shelves.BookToShelfFragment">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/choose_shelf_to_add_your_book"
-        android:textSize="14sp"
-        android:textColor="@color/primaryColor"
-        android:gravity="center"
-        android:layout_margin="32dp"/>
+    android:theme="@style/Theme.Ninova">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:padding="8dp"
+        android:paddingBottom="16dp"
         android:orientation="horizontal"
         android:gravity="center_horizontal">
 
@@ -30,7 +19,7 @@
             android:id="@+id/bookToShelfSearch"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="12dp"
             android:layout_marginEnd="16dp"
             android:layout_weight="1"
             android:backgroundTint="@color/primaryColor"
@@ -46,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="0.2"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="24dp"
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/add_new_shelf_to_your_library"
             android:src="@drawable/ic_add_button"
@@ -55,10 +44,12 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/addShelvesRecyclerView"
+        android:id="@+id/addBookToShelfRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="16dp"
         android:visibility="gone"
         tools:visibility="visible"/>
 
@@ -93,7 +84,6 @@
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/searchnotfound"/>
-
     </LinearLayout>
 
 </LinearLayout>

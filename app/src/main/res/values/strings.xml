@@ -78,4 +78,5 @@
     <string name="work_hard">We are working hard for new features, please check later</string>
     <string name="book_edit_warning">Add this book to your library to make changes.</string>
     <string name="remove_this_book_from_your_library">REMOVE THIS BOOK FROM YOUR LIBRARY</string>
+    <string name="add_shelves">Add Shelves</string>
 </resources>

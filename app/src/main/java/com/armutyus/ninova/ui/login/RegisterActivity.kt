@@ -144,8 +144,9 @@ class RegisterActivity : AppCompatActivity() {
                     is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                     is Response.Success -> {
                         mainIntent.addFlags(
-                            Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                    and Intent.FLAG_ACTIVITY_NEW_TASK
+                            Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                    or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    or Intent.FLAG_ACTIVITY_NEW_TASK
                         )
                         goToMainActivity()
                         binding.progressBar.visibility = View.GONE
@@ -276,11 +277,13 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun goToMainActivity() {
+        finishAffinity()
         startActivity(mainIntent)
         finish()
     }
 
     private fun goToLogInActivity() {
+        finishAffinity()
         startActivity(loginIntent)
         finish()
     }

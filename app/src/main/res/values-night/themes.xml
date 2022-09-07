@@ -13,5 +13,6 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" >?attr/colorSecondaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="floatingActionButtonStyle">@style/FloatingActionButtonStyle</item>
     </style>
 </resources>

@@ -92,7 +92,7 @@ class ShelvesFragment @Inject constructor(
         searchView.setOnQueryTextListener(this)
         searchView.setIconifiedByDefault(false)
 
-        binding.mainShelvesAddButton.setOnClickListener {
+        binding.mainShelvesFab.setOnClickListener {
             showAddShelfDialog()
         }
 
