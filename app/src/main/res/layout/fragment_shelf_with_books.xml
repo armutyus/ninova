@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:theme="@style/Theme.Ninova"
     tools:context=".ui.shelves.ShelfWithBooksFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -47,7 +48,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/your_shelf_is_empty"
-            android:textColor="@color/primaryColor"
             android:textSize="16sp" />
 
     </LinearLayout>

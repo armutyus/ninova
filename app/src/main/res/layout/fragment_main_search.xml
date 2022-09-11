@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/Theme.Ninova"
     tools:context=".ui.search.MainSearchFragment"
     android:orientation="vertical">
 
@@ -11,7 +12,7 @@
         android:id="@+id/main_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/primaryColor"
+        android:backgroundTint="@color/seed"
         android:iconifiedByDefault="false"
         app:defaultQueryHint="@string/search_button_hint"
         app:showAsAction="always"
@@ -37,9 +38,8 @@
             style="?attr/materialButtonOutlinedStyle"
             android:text="@string/your_library"
             android:textSize="14sp"
-            android:textColor="@color/primaryColor"
             app:cornerRadius="10dp"
-            app:strokeColor="@color/primaryColor"/>
+            app:strokeColor="@color/seed"/>
         <com.google.android.material.button.MaterialButton
             android:id="@+id/apiSearchButton"
             android:layout_width="match_parent"
@@ -48,9 +48,8 @@
             style="?attr/materialButtonOutlinedStyle"
             android:text="@string/from_ninova"
             android:textSize="14sp"
-            android:textColor="@color/primaryColor"
             app:cornerRadius="10dp"
-            app:strokeColor="@color/primaryColor"/>
+            app:strokeColor="@color/seed"/>
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -79,10 +78,10 @@
         tools:visibility="visible">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="@string/nothing_to_show_here"
-            android:textColor="@color/primaryColor"
             android:textSize="16sp" />
 
         <com.airbnb.lottie.LottieAnimationView

@@ -11,7 +11,7 @@ class Util {
             val circularProgressDrawable = CircularProgressDrawable(context)
             circularProgressDrawable.strokeWidth = 5f
             circularProgressDrawable.centerRadius = 30f
-            circularProgressDrawable.backgroundColor = R.color.primaryColor
+            circularProgressDrawable.backgroundColor = R.color.md_theme_light_tertiary
             circularProgressDrawable.start()
 
             return circularProgressDrawable

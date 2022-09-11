@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:theme="@style/Theme.Ninova">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -38,7 +39,6 @@
                 android:text="@string/name_of_the_book"
                 android:maxLines="1"
                 android:ellipsize="marquee"
-                android:textColor="@color/primaryColor"
                 android:textSize="14sp" />
 
             <TextView
@@ -49,7 +49,6 @@
                 android:text="@string/author_of_the_book"
                 android:maxLines="1"
                 android:ellipsize="marquee"
-                android:textColor="@color/primaryLightColor"
                 android:textSize="12sp" />
 
             <LinearLayout
@@ -63,7 +62,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/page_number"
                     android:textSize="11sp"
-                    android:textColor="@color/primaryLightColor"
                     android:gravity="bottom"
                     android:drawablePadding="4dp"
                     app:drawableStartCompat="@drawable/ic_pages_icon">
@@ -76,7 +74,6 @@
                     android:layout_marginStart="8dp"
                     android:text="@string/release_date"
                     android:textSize="11sp"
-                    android:textColor="@color/primaryLightColor"
                     android:gravity="bottom"
                     android:drawablePadding="4dp"
                     app:drawableStartCompat="@drawable/ic_release_date">
@@ -112,6 +109,6 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_margin="16dp"
-        android:background="@color/primaryColor"/>
+        android:background="@color/seed"/>
 
 </LinearLayout>
