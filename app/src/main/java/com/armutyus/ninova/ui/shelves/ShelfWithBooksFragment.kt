@@ -73,7 +73,8 @@ class ShelfWithBooksFragment @Inject constructor(
 
     private fun observeBookList() {
         shelvesViewModel.shelfWithBooksList.observe(viewLifecycleOwner) { booksOfShelfList ->
-            val currentBookList = booksOfShelfList.find { it.shelf.shelfId == currentShelfId }?.book
+            val currentBookList =
+                booksOfShelfList.find { it.shelf.shelfId == currentShelfId }?.bookList
             currentBookList?.let {
                 if (it.isEmpty()) {
                     fragmentBinding?.shelfWithBooksRecyclerView?.visibility = View.GONE

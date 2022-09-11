@@ -48,20 +48,6 @@
             app:argType="integer" />
     </fragment>
 
-    <fragment
-        android:id="@+id/bookToShelfFragment"
-        android:name="com.armutyus.ninova.ui.shelves.BookToShelfFragment"
-        android:label="@string/title_shelves"
-        tools:layout="@layout/fragment_book_to_shelf" >
-        <argument
-            android:name="currentBookId"
-            app:argType="string" />
-    </fragment>
-
-    <action
-        android:id="@+id/action_main_to_bookToShelfFragment"
-        app:destination="@id/bookToShelfFragment" />
-
     <action
         android:id="@+id/action_main_to_search"
         app:destination="@id/mainSearchFragment" />

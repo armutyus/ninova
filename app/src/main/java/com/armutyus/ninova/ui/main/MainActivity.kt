@@ -21,13 +21,10 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
-import com.armutyus.ninova.MobileNavigationDirections
 import com.armutyus.ninova.R
-import com.armutyus.ninova.constants.Cache.currentBookIdExtra
 import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.constants.Cache.currentShelf
 import com.armutyus.ninova.constants.Constants
-import com.armutyus.ninova.constants.Constants.DETAILS_EXTRA
 import com.armutyus.ninova.constants.Constants.MAIN_SHARED_PREF
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.ActivityMainBinding
@@ -92,20 +89,6 @@ class MainActivity : AppCompatActivity() {
                 fetchBooks()
                 fetchShelves()
                 fetchCrossRefs()
-            }
-
-            if (currentBookIdExtra != null) {
-                when (intent.getStringExtra(DETAILS_EXTRA)) {
-                    currentBookIdExtra -> {
-                        val action =
-                            MobileNavigationDirections.actionMainToBookToShelfFragment(
-                                currentBookIdExtra!!
-                            )
-                        navController.navigate(action)
-                    }
-
-                    else -> {}
-                }
             }
 
             addMenuProvider(object : MenuProvider {
@@ -194,12 +177,6 @@ class MainActivity : AppCompatActivity() {
                     supportActionBar?.show()
                     navView.visibility = View.VISIBLE
                     supportActionBar?.title = currentShelf?.shelfTitle
-                }
-
-                R.id.bookToShelfFragment -> {
-                    supportActionBar?.show()
-                    navView.visibility = View.GONE
-                    supportActionBar?.title = currentLocalBook?.bookTitle
                 }
 
                 else -> {

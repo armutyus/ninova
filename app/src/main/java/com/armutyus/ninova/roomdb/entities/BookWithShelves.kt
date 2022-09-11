@@ -12,5 +12,5 @@ data class BookWithShelves(
         entityColumn = "shelfId",
         associateBy = Junction(BookShelfCrossRef::class)
     )
-    val shelf: List<LocalShelf>
+    val shelfList: List<LocalShelf>
 )

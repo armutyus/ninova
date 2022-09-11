@@ -3,22 +3,23 @@ package com.armutyus.ninova.ui.shelves.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.CheckBox
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Cache.currentBookIdExtra
+import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.LocalShelf
-import com.armutyus.ninova.ui.shelves.BookToShelfFragment
-import com.bumptech.glide.RequestManager
+import com.armutyus.ninova.ui.books.BooksViewModel
+import com.armutyus.ninova.ui.shelves.ShelvesViewModel
 import javax.inject.Inject
 
 class BookToShelfRecyclerViewAdapter @Inject constructor(
-    private val glide: RequestManager
 ) : RecyclerView.Adapter<BookToShelfRecyclerViewAdapter.BookToShelfViewHolder>() {
 
-    private lateinit var bookToShelfFragment: BookToShelfFragment
+    private lateinit var shelvesViewModel: ShelvesViewModel
+    private lateinit var booksViewModel: BooksViewModel
 
     class BookToShelfViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
@@ -40,27 +41,35 @@ class BookToShelfRecyclerViewAdapter @Inject constructor(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookToShelfViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.shelves_main_row, parent, false)
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.add_book_to_shelf_row, parent, false)
 
         return BookToShelfViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: BookToShelfViewHolder, position: Int) {
-        val shelfCover = holder.itemView.findViewById<ImageView>(R.id.shelfCoverImage)
-        val shelfTitle = holder.itemView.findViewById<TextView>(R.id.shelfTitleText)
-        val booksInShelf = holder.itemView.findViewById<TextView>(R.id.booksInShelfText)
-        val shelfCreatedDate = holder.itemView.findViewById<TextView>(R.id.shelfCreatedDateText)
+        val shelfRow = holder.itemView.findViewById<CheckBox>(R.id.bottomSheetShelfCheckBox)
         val shelf = bookToShelfList[position]
 
         holder.itemView.apply {
-            glide.load(shelf.shelfCover).centerCrop().into(shelfCover)
-            shelfTitle.text = shelf.shelfTitle
-            shelfCreatedDate.text = shelf.createdAt
-            booksInShelf.visibility = View.GONE
+            shelfRow.text = shelf.shelfTitle
+            val checkedShelfList =
+                booksViewModel.bookWithShelvesList.value?.firstOrNull { it.shelfList.contains(shelf) }?.shelfList
+            shelfRow.isChecked = checkedShelfList != null && checkedShelfList.isNotEmpty()
         }
 
-        holder.itemView.setOnClickListener {
-            bookToShelfFragment.onClick(shelf)
+
+        shelfRow.setOnCheckedChangeListener { _, isChecked ->
+            val crossRef = BookShelfCrossRef(currentBookIdExtra!!, shelf.shelfId)
+            if (isChecked) {
+                shelvesViewModel.insertBookShelfCrossRef(crossRef).invokeOnCompletion {
+                    booksViewModel.getBookWithShelves(currentBookIdExtra!!)
+                }
+            } else {
+                shelvesViewModel.deleteBookShelfCrossRef(crossRef).invokeOnCompletion {
+                    booksViewModel.getBookWithShelves(currentBookIdExtra!!)
+                }
+            }
         }
     }
 
@@ -68,8 +77,9 @@ class BookToShelfRecyclerViewAdapter @Inject constructor(
         return bookToShelfList.size
     }
 
-    fun setFragment(fragment: BookToShelfFragment) {
-        this.bookToShelfFragment = fragment
+    fun setViewModels(shelvesViewModel: ShelvesViewModel, booksViewModel: BooksViewModel) {
+        this.shelvesViewModel = shelvesViewModel
+        this.booksViewModel = booksViewModel
     }
 
 }

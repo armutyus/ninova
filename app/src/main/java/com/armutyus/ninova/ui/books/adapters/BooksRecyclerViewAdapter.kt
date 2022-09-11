@@ -67,13 +67,6 @@ class BooksRecyclerViewAdapter @Inject constructor(
         val bookReleaseDate = holder.itemView.findViewById<TextView>(R.id.bookReleaseDateText)
         val book = mainBooksList[position]
 
-        /*holder.itemView.setOnLongClickListener {
-            val action =
-                BooksFragmentDirections.actionMainToBookToShelfFragment(book.bookId)
-            Navigation.findNavController(it).navigate(action)
-            true
-        }*/
-
         holder.itemView.setOnClickListener {
             bookDetailsIntent.putExtra(BOOK_TYPE_FOR_DETAILS, LOCAL_BOOK_TYPE)
             currentLocalBook = book

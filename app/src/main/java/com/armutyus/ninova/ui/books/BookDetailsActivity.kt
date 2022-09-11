@@ -15,21 +15,23 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.armutyus.ninova.constants.Cache.currentBook
 import com.armutyus.ninova.constants.Cache.currentBookIdExtra
 import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.constants.Constants.BOOK_TYPE_FOR_DETAILS
-import com.armutyus.ninova.constants.Constants.DETAILS_EXTRA
-import com.armutyus.ninova.constants.Constants.DETAILS_STRING_EXTRA
-import com.armutyus.ninova.constants.Constants.FROM_DETAILS_ACTIVITY
 import com.armutyus.ninova.constants.Constants.GOOGLE_BOOK_TYPE
 import com.armutyus.ninova.constants.Constants.LOCAL_BOOK_TYPE
 import com.armutyus.ninova.constants.Constants.MAIN_INTENT
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.ActivityBookDetailsBinding
+import com.armutyus.ninova.databinding.AddBookToShelfBottomSheetBinding
 import com.armutyus.ninova.model.BookDetailsInfo
 import com.armutyus.ninova.model.DataModel
+import com.armutyus.ninova.ui.shelves.ShelvesViewModel
+import com.armutyus.ninova.ui.shelves.adapters.BookToShelfRecyclerViewAdapter
 import com.bumptech.glide.RequestManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,14 +43,21 @@ class BookDetailsActivity : AppCompatActivity() {
 
     var selectedPicture: Uri? = null
     private lateinit var binding: ActivityBookDetailsBinding
+    private lateinit var bookToShelfBottomSheetBinding: AddBookToShelfBottomSheetBinding
     private lateinit var bookDetails: BookDetailsInfo
     private lateinit var tabLayout: TabLayout
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
-    private val viewModel by viewModels<BooksViewModel>()
+    private val booksViewModel by viewModels<BooksViewModel>()
+    private val shelvesViewModel by viewModels<ShelvesViewModel>()
+
 
     @Inject
     lateinit var glide: RequestManager
+
+    @Inject
+    lateinit var bookToShelfAdapter: BookToShelfRecyclerViewAdapter
+
 
     @Named(MAIN_INTENT)
     @Inject
@@ -86,9 +95,9 @@ class BookDetailsActivity : AppCompatActivity() {
                 setupLocalBookInfo()
 
                 binding.addBookToLibraryButton.setOnClickListener {
-                    viewModel.insertBook(currentLocalBook!!).invokeOnCompletion {
+                    booksViewModel.insertBook(currentLocalBook!!).invokeOnCompletion {
                         setVisibilitiesForBookAdded()
-                        viewModel.getBookList()
+                        booksViewModel.getBookList()
                     }
                 }
 
@@ -97,7 +106,7 @@ class BookDetailsActivity : AppCompatActivity() {
                 }
 
                 binding.removeBookFromLibraryButton.setOnClickListener {
-                    viewModel.deleteBook(currentLocalBook!!).invokeOnCompletion {
+                    booksViewModel.deleteBook(currentLocalBook!!).invokeOnCompletion {
                         setVisibilitiesForBookRemoved()
                     }
                 }
@@ -108,7 +117,7 @@ class BookDetailsActivity : AppCompatActivity() {
 
                 binding.shelvesOfBooks.setOnClickListener {
                     currentBookIdExtra = currentLocalBook?.bookId!!
-                    goToBookToShelfFragment(currentBookIdExtra!!)
+                    showAddShelfDialog()
                 }
             }
 
@@ -118,7 +127,7 @@ class BookDetailsActivity : AppCompatActivity() {
                 isBookAddedCheck()
 
                 binding.addBookToLibraryButton.setOnClickListener {
-                    viewModel.insertBook(
+                    booksViewModel.insertBook(
                         DataModel.LocalBook(
                             currentBook?.id!!,
                             bookDetails.authors ?: listOf(),
@@ -138,18 +147,18 @@ class BookDetailsActivity : AppCompatActivity() {
                         )
                     ).invokeOnCompletion {
                         setVisibilitiesForBookAdded()
-                        viewModel.getBookList()
+                        booksViewModel.getBookList()
                     }
                 }
 
                 binding.removeBookFromLibraryButton.setOnClickListener {
-                    viewModel.deleteBookById(currentBook?.id!!).invokeOnCompletion {
+                    booksViewModel.deleteBookById(currentBook?.id!!).invokeOnCompletion {
                         setVisibilitiesForBookRemoved()
                     }
                 }
 
                 binding.saveUserNotes.setOnClickListener {
-                    viewModel.localBookList.observe(this) { localBookList ->
+                    booksViewModel.localBookList.observe(this) { localBookList ->
                         currentLocalBook =
                             localBookList.firstOrNull { it.bookId == currentBook?.id }
                     }
@@ -158,12 +167,13 @@ class BookDetailsActivity : AppCompatActivity() {
 
                 binding.shelvesOfBooks.setOnClickListener {
                     currentBookIdExtra = currentBook?.id!!
-                    goToBookToShelfFragment(currentBookIdExtra!!)
+                    showAddShelfDialog()
                 }
             }
             else -> {}
         }
 
+        shelvesViewModel.getShelfList()
         observeShelfListChanges()
         observeBookDetailsResponse()
     }
@@ -171,13 +181,13 @@ class BookDetailsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         currentLocalBook?.let {
-            viewModel.getBookWithShelves(it.bookId)
+            booksViewModel.getBookWithShelves(it.bookId)
             binding.userBookNotesEditText.setText(it.bookNotes)
         }
         currentBook?.let { googleBookItem ->
-            viewModel.getBookWithShelves(googleBookItem.id!!)
-            viewModel.getBookList()
-            viewModel.localBookList.observe(this) { localBookList ->
+            booksViewModel.getBookWithShelves(googleBookItem.id!!)
+            booksViewModel.getBookList()
+            booksViewModel.localBookList.observe(this) { localBookList ->
                 val userNotesFromLocal =
                     localBookList.firstOrNull { it.bookId == googleBookItem.id }?.bookNotes
                 binding.userBookNotesEditText.setText(userNotesFromLocal)
@@ -185,27 +195,29 @@ class BookDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun goToBookToShelfFragment(id: String) {
-        mainIntent.putExtra(DETAILS_EXTRA, id)
-        mainIntent.putExtra(DETAILS_STRING_EXTRA, FROM_DETAILS_ACTIVITY)
-        startActivity(mainIntent)
-    }
-
     private fun saveUserNotes() {
         currentLocalBook!!.bookNotes = binding.userBookNotesEditText.text.toString()
-        viewModel.updateBook(currentLocalBook!!)
+        booksViewModel.updateBook(currentLocalBook!!)
     }
 
     private var currentShelvesList = mutableListOf<String?>()
 
     private fun observeShelfListChanges() {
-        viewModel.bookWithShelvesList.observe(this) { shelvesOfBook ->
+        booksViewModel.bookWithShelvesList.observe(this) { shelvesOfBook ->
             shelvesOfBook.forEach { bookWithShelves ->
-                val shelfTitleList = bookWithShelves.shelf.map { it.shelfTitle }.toList()
-                currentShelvesList.removeAll(shelfTitleList)
+                val shelfTitleList = bookWithShelves.shelfList.map { it.shelfTitle }.toList()
+                currentShelvesList.clear()
                 currentShelvesList.addAll(shelfTitleList)
             }
             binding.shelvesOfBooks.text = currentShelvesList.joinToString(", ")
+        }
+
+        shelvesViewModel.currentShelfList.observe(this) {
+            bookToShelfAdapter.bookToShelfList = it
+        }
+
+        shelvesViewModel.shelfList.observe(this) {
+            shelvesViewModel.setCurrentList(it?.toList() ?: listOf())
         }
     }
 
@@ -232,9 +244,9 @@ class BookDetailsActivity : AppCompatActivity() {
     }
 
     private fun isBookAddedCheck() {
-        viewModel.getBookList()
-        viewModel.localBookList.observe(this) {
-            if (currentBook?.isBookAddedCheck(viewModel) == true) {
+        booksViewModel.getBookList()
+        booksViewModel.localBookList.observe(this) {
+            if (currentBook?.isBookAddedCheck(booksViewModel) == true) {
                 setVisibilitiesForBookAdded()
             } else {
                 setVisibilitiesForBookRemoved()
@@ -267,11 +279,26 @@ class BookDetailsActivity : AppCompatActivity() {
         notesTab?.view?.isClickable = false
     }
 
+    private fun showAddShelfDialog() {
+        val dialog = BottomSheetDialog(this)
+        bookToShelfBottomSheetBinding = AddBookToShelfBottomSheetBinding.inflate(layoutInflater)
+        dialog.setContentView(bookToShelfBottomSheetBinding.root)
+
+        val recyclerView = bookToShelfBottomSheetBinding.addBookToShelfRecyclerView
+        recyclerView.adapter = bookToShelfAdapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        bookToShelfAdapter.setViewModels(shelvesViewModel, booksViewModel)
+
+        dialog.show()
+
+
+    }
+
     private fun setupBookInfo() {
         if (currentBook == null) {
             setVisibilitiesForBookNull()
         } else {
-            viewModel.getBookDetailsById(currentBook?.id!!)
+            booksViewModel.getBookDetailsById(currentBook?.id!!)
         }
     }
 
@@ -279,12 +306,12 @@ class BookDetailsActivity : AppCompatActivity() {
         if (currentLocalBook == null) {
             setVisibilitiesForBookNull()
         } else {
-            viewModel.getBookDetailsById(currentLocalBook?.bookId!!)
+            booksViewModel.getBookDetailsById(currentLocalBook?.bookId!!)
         }
     }
 
     private fun observeBookDetailsResponse() {
-        viewModel.bookDetails.observe(this) { response ->
+        booksViewModel.bookDetails.observe(this) { response ->
             when (response) {
                 is Response.Loading -> {
                     binding.progressBar.visibility = View.VISIBLE
@@ -442,7 +469,7 @@ class BookDetailsActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.updateBook(currentLocalBook!!)
+        booksViewModel.updateBook(currentLocalBook!!)
 
     }
 
@@ -480,7 +507,7 @@ class BookDetailsActivity : AppCompatActivity() {
                 if (intentFromResult != null) {
                     glide.load(intentFromResult).centerCrop().into(binding.bookCoverImageView)
                     currentLocalBook?.bookCoverSmallThumbnail = intentFromResult.toString()
-                    viewModel.updateBook(currentLocalBook!!)
+                    booksViewModel.updateBook(currentLocalBook!!)
                 }
             }
         }

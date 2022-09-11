@@ -5,7 +5,6 @@ import com.armutyus.ninova.ui.books.BooksFragment
 import com.armutyus.ninova.ui.discover.DiscoverFragment
 import com.armutyus.ninova.ui.search.MainSearchFragment
 import com.armutyus.ninova.ui.settings.SettingsFragment
-import com.armutyus.ninova.ui.shelves.BookToShelfFragment
 import com.armutyus.ninova.ui.shelves.ShelfWithBooksFragment
 import com.armutyus.ninova.ui.shelves.ShelvesFragment
 import dagger.Binds
@@ -47,9 +46,4 @@ abstract class FragmentFactoryModule {
     @IntoMap
     @FragmentKey(ShelfWithBooksFragment::class)
     abstract fun bindShelfWithBooksFragment(fragment: ShelfWithBooksFragment): Fragment
-
-    @Binds
-    @IntoMap
-    @FragmentKey(BookToShelfFragment::class)
-    abstract fun bindBookToShelfFragment(fragment: BookToShelfFragment): Fragment
 }

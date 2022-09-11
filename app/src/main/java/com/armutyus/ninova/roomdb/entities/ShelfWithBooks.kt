@@ -12,8 +12,8 @@ data class ShelfWithBooks(
         entityColumn = "bookId",
         associateBy = Junction(BookShelfCrossRef::class)
     )
-    val book: List<DataModel.LocalBook>
+    val bookList: List<DataModel.LocalBook>
 ) {
     val booksCount: Int
-        get() = book.size
+        get() = bookList.size
 }

@@ -11,7 +11,7 @@ sealed class DataModel {
         val volumeInfo: GoogleBookItemInfo?
     ) : DataModel() {
         fun isBookAddedCheck(booksViewModel: BooksViewModel): Boolean {
-            val searchBookList = booksViewModel.localBookList.value?.find { it.bookId == id }
+            val searchBookList = booksViewModel.localBookList.value?.firstOrNull { it.bookId == id }
             return searchBookList != null
         }
     }
