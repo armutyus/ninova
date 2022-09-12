@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="FloatingActionButtonStyle" parent="Widget.Design.FloatingActionButton">
+    <style name="FloatingActionButtonStyle" parent="Widget.Material3.FloatingActionButton.Surface">
         <item name="shapeAppearanceOverlay">@style/FabShapeStyle</item>
     </style>
-    <style name="FabShapeStyle" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+    <style name="FabShapeStyle" parent="ShapeAppearance.Material3.SmallComponent">
         <item name="cornerSize">50%</item>
         <item name="cornerSizeBottomRight">0dp</item>
         <item name="cornerFamilyTopLeft">rounded</item>

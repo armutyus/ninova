@@ -30,7 +30,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/userEmail"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="26dp"
@@ -38,7 +38,6 @@
             android:layout_marginEnd="26dp"
             android:hint="@string/prompt_email"
             app:errorEnabled="true"
-            app:boxStrokeColor="@color/md_theme_light_primary"
             app:startIconDrawable="@drawable/ic_login_email_gray">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -50,13 +49,12 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/password"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="26dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="26dp"
-            app:boxStrokeColor="@color/md_theme_light_primary"
             android:hint="@string/prompt_password"
             app:errorEnabled="true"
             app:endIconMode="password_toggle"
@@ -71,13 +69,12 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/confirmPassword"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="26dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="26dp"
-            app:boxStrokeColor="@color/md_theme_light_primary"
             android:hint="@string/confirm_password"
             app:errorEnabled="true"
             app:endIconMode="password_toggle"
@@ -112,7 +109,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/changeUserEmail"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="26dp"
@@ -120,7 +117,6 @@
             android:layout_marginEnd="26dp"
             android:hint="@string/enter_your_new_e_mail_address"
             app:errorEnabled="true"
-            app:boxStrokeColor="@color/md_theme_light_primary"
             app:startIconDrawable="@drawable/ic_login_email_gray">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -132,13 +128,12 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passwordToReAuth"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="26dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="26dp"
-            app:boxStrokeColor="@color/md_theme_light_primary"
             android:hint="@string/current_password"
             app:errorEnabled="true"
             app:endIconMode="password_toggle"
@@ -173,13 +168,12 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/userCurrentPassword"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="26dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="26dp"
-            app:boxStrokeColor="@color/md_theme_light_primary"
             android:hint="@string/current_password"
             app:errorEnabled="true"
             app:endIconMode="password_toggle"
@@ -194,13 +188,12 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/newPassword"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="26dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="26dp"
-            app:boxStrokeColor="@color/md_theme_light_primary"
             android:hint="@string/new_password"
             app:errorEnabled="true"
             app:endIconMode="password_toggle"
@@ -215,13 +208,12 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/confirmNewPassword"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="26dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="26dp"
-            app:boxStrokeColor="@color/md_theme_light_primary"
             android:hint="@string/confirm_new_password"
             app:errorEnabled="true"
             app:endIconMode="password_toggle"
@@ -256,7 +248,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/forgotPasswordEmail"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="26dp"
@@ -264,7 +256,6 @@
             android:layout_marginEnd="26dp"
             android:hint="@string/enter_your_e_mail_to_reset_your_password"
             app:errorEnabled="true"
-            app:boxStrokeColor="@color/md_theme_light_primary"
             app:startIconDrawable="@drawable/ic_login_email_gray">
 
             <com.google.android.material.textfield.TextInputEditText

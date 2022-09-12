@@ -11,13 +11,12 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/userEmail"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="26dp"
         android:hint="@string/prompt_email"
         app:errorEnabled="true"
-        app:boxStrokeColor="@color/md_theme_light_primary"
         app:startIconDrawable="@drawable/ic_login_email_gray">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -29,7 +28,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/password"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="26dp"
@@ -37,7 +36,6 @@
         android:hint="@string/prompt_password"
         app:errorEnabled="true"
         app:endIconMode="password_toggle"
-        app:boxStrokeColor="@color/md_theme_light_primary"
         app:startIconDrawable="@drawable/ic_login_lock_gray">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -85,7 +83,6 @@
             android:layout_marginTop="48dp"
             android:height="24dp"
             android:enabled="true"
-            android:fontFamily="sans-serif"
             android:text="@string/action_sign_in"
             app:cornerRadius="10dp" />
 
@@ -99,11 +96,9 @@
             android:width="160dp"
             android:height="24dp"
             android:enabled="true"
-            android:fontFamily="sans-serif"
             android:text="@string/action_register"
             android:textSize="14sp"
-            app:cornerRadius="10dp"
-            app:strokeColor="@color/md_theme_light_primary" />
+            app:cornerRadius="10dp" />
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
@@ -116,7 +111,5 @@
         android:enabled="true"
         android:text="@string/action_without_register"
         android:textSize="14sp"
-        android:fontFamily="sans-serif"
-        app:cornerRadius="10dp"
-        app:strokeColor="@color/md_theme_light_primary" />
+        app:cornerRadius="10dp" />
 </LinearLayout>

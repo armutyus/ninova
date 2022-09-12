@@ -1,4 +1,4 @@
-<vector android:autoMirrored="true" android:tint="@color/md_theme_dark_onPrimaryContainer"
+<vector android:autoMirrored="true" android:tint="?attr/colorControlNormal"
     android:height="24dp"
     android:viewportHeight="24"
     android:viewportWidth="24" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
