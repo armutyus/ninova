@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.15109749872383868" />
+        <entry key="app/src/main/res/drawable-anydpi-v26/ic_launcher_foreground.xml" value="0.1935" />
         <entry key="app/src/main/res/drawable-v24/ic_add_button_white.xml" value="0.1935" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.165" />
         <entry key="app/src/main/res/drawable/gradient_background.xml" value="0.1935" />
@@ -19,6 +20,8 @@
         <entry key="app/src/main/res/drawable/ic_done.xml" value="0.1935" />
         <entry key="app/src/main/res/drawable/ic_error.xml" value="0.1935" />
         <entry key="app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.1935" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1935" />
+        <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.165" />
         <entry key="app/src/main/res/drawable/ic_login_email_gray.xml" value="0.16" />
         <entry key="app/src/main/res/drawable/ic_login_lock_gray.xml" value="0.16" />
         <entry key="app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.1935" />
