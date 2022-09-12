@@ -1,6 +1,6 @@
 package com.armutyus.ninova.repository
 
-import com.armutyus.ninova.constants.Constants.BOOKSHELFCROSS_REF
+import com.armutyus.ninova.constants.Constants.BOOKSHELF_CROSS_REF
 import com.armutyus.ninova.constants.Constants.BOOKS_REF
 import com.armutyus.ninova.constants.Constants.CREATED_AT
 import com.armutyus.ninova.constants.Constants.EMAIL
@@ -123,7 +123,7 @@ class FirebaseRepositoryImpl @Inject constructor(
             try {
                 val uid = auth.currentUser?.uid!!
                 val downloadCrossRefTask =
-                    db.collection(USERS_REF).document(uid).collection(BOOKSHELFCROSS_REF)
+                    db.collection(USERS_REF).document(uid).collection(BOOKSHELF_CROSS_REF)
                         .get().await().toObjects(BookShelfCrossRef::class.java)
                 downloadCrossRefTask.let {
                     return@let Response.Success(it)
@@ -205,15 +205,15 @@ class FirebaseRepositoryImpl @Inject constructor(
             try {
                 val uploadCrossRef = auth.currentUser?.apply {
                     val crossRefDocumentId =
-                        db.collection(USERS_REF).document(uid).collection(BOOKSHELFCROSS_REF)
+                        db.collection(USERS_REF).document(uid).collection(BOOKSHELF_CROSS_REF)
                             .document().id
-                    db.collection(USERS_REF).document(uid).collection(BOOKSHELFCROSS_REF).get()
+                    db.collection(USERS_REF).document(uid).collection(BOOKSHELF_CROSS_REF).get()
                         .continueWith { querySnapshot ->
                             querySnapshot.result.documents.forEach {
                                 it.reference.delete()
                             }
                         }.continueWith {
-                            db.collection(USERS_REF).document(uid).collection(BOOKSHELFCROSS_REF)
+                            db.collection(USERS_REF).document(uid).collection(BOOKSHELF_CROSS_REF)
                                 .document(crossRefDocumentId).set(
                                     mapOf(
                                         "bookId" to bookShelfCrossRef.bookId,

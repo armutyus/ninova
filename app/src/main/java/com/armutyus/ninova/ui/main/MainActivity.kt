@@ -22,7 +22,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import com.armutyus.ninova.R
-import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.constants.Cache.currentShelf
 import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.constants.Constants.MAIN_SHARED_PREF

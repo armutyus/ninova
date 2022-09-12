@@ -15,17 +15,13 @@ object Constants {
     const val LOGIN_INTENT = "loginIntent"
     const val MAIN_INTENT = "mainIntent"
     const val REGISTER_INTENT = "registerIntent"
-    const val SPLASH_INTENT = "splashIntent"
 
     //Preferences
     const val CHANGE_EMAIL = "change_email"
     const val CHANGE_PASSWORD = "change_password"
     const val DARK_THEME = "dark"
-    const val DETAILS_EXTRA = "fromDetails"
-    const val DETAILS_STRING_EXTRA = "detailsActivity"
     const val MAIN_SHARED_PREF = "main_shared_preferences"
     const val FORGOT_PASSWORD = "forgot_password"
-    const val FROM_DETAILS_ACTIVITY = "bookDetailsActivity"
     const val LIGHT_THEME = "light"
     const val REGISTER = "register"
     const val SETTINGS_ACTION_KEY = "action"
@@ -35,7 +31,7 @@ object Constants {
     //References
     const val BASE_URL = "https://www.googleapis.com/books/v1/"
     const val BOOKS_REF = "Books"
-    const val BOOKSHELFCROSS_REF = "BookShelfCrossRef"
+    const val BOOKSHELF_CROSS_REF = "BookShelfCrossRef"
     const val PRIVACY_POLICY_URL = "https://sites.google.com/view/ninova-bookshelf-app"
     const val SHELVES_REF = "Shelves"
     const val USERS_REF = "Users"

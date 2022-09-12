@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Cache
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.FragmentMainSearchBinding
 import com.armutyus.ninova.model.DataModel
@@ -68,7 +69,7 @@ class MainSearchFragment @Inject constructor(
 
     override fun onResume() {
         super.onResume()
-        booksViewModel.getBookList()
+        isBookAddedCheck()
         setVisibilitiesForSearchQueryNull()
     }
 
@@ -148,6 +149,15 @@ class MainSearchFragment @Inject constructor(
             searchFragmentAdapter.setDataType(it)
         }
 
+    }
+
+    private fun isBookAddedCheck() {
+        booksViewModel.getBookList()
+        booksViewModel.localBookList.observe(this) {
+            Cache.currentBook?.isBookAddedCheck(booksViewModel).also {
+                searchFragmentAdapter.notifyDataSetChanged()
+            }
+        }
     }
 
     private fun setVisibilities(bookList: List<DataModel>) {
