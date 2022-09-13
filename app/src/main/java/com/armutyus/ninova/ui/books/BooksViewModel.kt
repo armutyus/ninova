@@ -66,11 +66,11 @@ class BooksViewModel @Inject constructor(
         booksRepository.update(localBook)
     }
 
-    fun getBookList() {
+    fun getBookList() =
         viewModelScope.launch {
             _localBookList.value = booksRepository.getLocalBooks()
         }
-    }
+
 
     fun getBookWithShelves(bookId: String) {
         viewModelScope.launch {

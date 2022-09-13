@@ -158,10 +158,8 @@ class BookDetailsActivity : AppCompatActivity() {
                 }
 
                 binding.saveUserNotes.setOnClickListener {
-                    booksViewModel.localBookList.observe(this) { localBookList ->
-                        currentLocalBook =
-                            localBookList.firstOrNull { it.bookId == currentBook?.id }
-                    }
+                    currentLocalBook =
+                        booksViewModel.localBookList.value?.firstOrNull { it.bookId == currentBook?.id }
                     saveUserNotes()
                 }
 

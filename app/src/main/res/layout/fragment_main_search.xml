@@ -12,7 +12,6 @@
         android:id="@+id/main_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/seed"
         android:iconifiedByDefault="false"
         app:defaultQueryHint="@string/search_button_hint"
         app:showAsAction="always"
@@ -30,6 +29,7 @@
         android:visibility="visible"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp">
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/localSearchButton"
             android:layout_width="match_parent"
@@ -39,7 +39,8 @@
             android:text="@string/your_library"
             android:textSize="14sp"
             app:cornerRadius="10dp"
-            app:strokeColor="@color/seed"/>
+            app:strokeColor="@color/seed" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/apiSearchButton"
             android:layout_width="match_parent"
@@ -49,7 +50,7 @@
             android:text="@string/from_ninova"
             android:textSize="14sp"
             app:cornerRadius="10dp"
-            app:strokeColor="@color/seed"/>
+            app:strokeColor="@color/seed" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -58,7 +59,7 @@
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <androidx.core.widget.ContentLoadingProgressBar
         android:id="@+id/progress_bar"
@@ -90,7 +91,7 @@
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/searchnotfound"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center" />
 
     </LinearLayout>
 

@@ -69,7 +69,7 @@ class MainSearchFragment @Inject constructor(
 
     override fun onResume() {
         super.onResume()
-        isBookAddedCheck()
+        booksViewModel.getBookList()
         setVisibilitiesForSearchQueryNull()
     }
 
@@ -149,11 +149,7 @@ class MainSearchFragment @Inject constructor(
             searchFragmentAdapter.setDataType(it)
         }
 
-    }
-
-    private fun isBookAddedCheck() {
-        booksViewModel.getBookList()
-        booksViewModel.localBookList.observe(this) {
+        booksViewModel.localBookList.observe(viewLifecycleOwner) {
             Cache.currentBook?.isBookAddedCheck(booksViewModel).also {
                 searchFragmentAdapter.notifyDataSetChanged()
             }
