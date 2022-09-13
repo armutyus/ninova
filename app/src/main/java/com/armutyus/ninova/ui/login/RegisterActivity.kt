@@ -67,7 +67,6 @@ class RegisterActivity : AppCompatActivity() {
             reAuthUser().also {
                 updateUserPassword()
             }
-
         }
 
         binding.sendResetPasswordButton.setOnClickListener {
@@ -81,22 +80,19 @@ class RegisterActivity : AppCompatActivity() {
     private fun reAuthUser() {
         if (password.isNotEmpty()) {
             val credential = EmailAuthProvider.getCredential(auth.currentUser!!.email!!, password)
-            viewModel.reAuthUser(credential).invokeOnCompletion {
-                viewModel.firebaseAuthResponse.observe(this) { response ->
-                    when (response) {
-                        is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
-                        is Response.Success -> {
-                            binding.progressBar.visibility = View.GONE
-                            Toast.makeText(this, "Account confirmed.", Toast.LENGTH_LONG).show()
-                        }
-                        is Response.Failure -> {
-                            Log.e("RegisterActivity", "ReAuth Error: " + response.errorMessage)
-                            Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG).show()
-                            binding.progressBar.visibility = View.GONE
-                        }
+            viewModel.reAuthUser(credential) { response ->
+                when (response) {
+                    is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
+                    is Response.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(this, "Account confirmed.", Toast.LENGTH_LONG).show()
+                    }
+                    is Response.Failure -> {
+                        Log.e("RegisterActivity", "ReAuth Error: " + response.errorMessage)
+                        Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG).show()
+                        binding.progressBar.visibility = View.GONE
                     }
                 }
-
             }
         } else {
             Toast.makeText(this, "Please enter your information correctly!", Toast.LENGTH_LONG)
@@ -119,44 +115,40 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun registerAnonymousUser(credential: AuthCredential) {
-        viewModel.registerAnonymousUser(credential).invokeOnCompletion {
-            viewModel.firebaseAuthResponse.observe(this) { response ->
-                when (response) {
-                    is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
-                    is Response.Success -> {
-                        createUserProfile()
-                        binding.progressBar.visibility = View.GONE
-                    }
-                    is Response.Failure -> {
-                        Log.e("RegisterActivity", "AnonymousSignUp Error: " + response.errorMessage)
-                        Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG).show()
-                        binding.progressBar.visibility = View.GONE
-                    }
+        viewModel.registerAnonymousUser(credential) { response ->
+            when (response) {
+                is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
+                is Response.Success -> {
+                    createUserProfile()
+                    binding.progressBar.visibility = View.GONE
+                }
+                is Response.Failure -> {
+                    Log.e("RegisterActivity", "AnonymousSignUp Error: " + response.errorMessage)
+                    Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG).show()
+                    binding.progressBar.visibility = View.GONE
                 }
             }
         }
     }
 
     private fun createUserProfile() {
-        viewModel.createUser().invokeOnCompletion {
-            viewModel.firebaseAuthResponse.observe(this) { response ->
-                when (response) {
-                    is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
-                    is Response.Success -> {
-                        mainIntent.addFlags(
-                            Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                    or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                    or Intent.FLAG_ACTIVITY_NEW_TASK
-                        )
-                        goToMainActivity()
-                        binding.progressBar.visibility = View.GONE
-                    }
-                    is Response.Failure -> {
-                        Log.e("RegisterActivity", "CreateProfile Error: " + response.errorMessage)
-                        Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
-                            .show()
-                        binding.progressBar.visibility = View.GONE
-                    }
+        viewModel.createUser { response ->
+            when (response) {
+                is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
+                is Response.Success -> {
+                    mainIntent.addFlags(
+                        Intent.FLAG_ACTIVITY_CLEAR_TOP
+                                or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                or Intent.FLAG_ACTIVITY_NEW_TASK
+                    )
+                    goToMainActivity()
+                    binding.progressBar.visibility = View.GONE
+                }
+                is Response.Failure -> {
+                    Log.e("RegisterActivity", "CreateProfile Error: " + response.errorMessage)
+                    Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
+                        .show()
+                    binding.progressBar.visibility = View.GONE
                 }
             }
         }
@@ -169,22 +161,20 @@ class RegisterActivity : AppCompatActivity() {
             Toast.makeText(this, "Please enter your information correctly!", Toast.LENGTH_LONG)
                 .show()
         } else {
-            viewModel.changeUserEmail(email).invokeOnCompletion {
-                viewModel.firebaseAuthResponse.observe(this) { response ->
-                    when (response) {
-                        is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
-                        is Response.Success -> {
-                            Toast.makeText(this, "E-mail updated.", Toast.LENGTH_LONG)
-                                .show()
-                            binding.progressBar.visibility = View.GONE
-                            goToMainActivity()
-                        }
-                        is Response.Failure -> {
-                            Log.e("RegisterActivity", "UpdateEmail Error: " + response.errorMessage)
-                            Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
-                                .show()
-                            binding.progressBar.visibility = View.GONE
-                        }
+            viewModel.changeUserEmail(email) { response ->
+                when (response) {
+                    is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
+                    is Response.Success -> {
+                        Toast.makeText(this, "E-mail updated.", Toast.LENGTH_LONG)
+                            .show()
+                        binding.progressBar.visibility = View.GONE
+                        goToMainActivity()
+                    }
+                    is Response.Failure -> {
+                        Log.e("RegisterActivity", "UpdateEmail Error: " + response.errorMessage)
+                        Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
+                            .show()
+                        binding.progressBar.visibility = View.GONE
                     }
                 }
             }
@@ -200,28 +190,26 @@ class RegisterActivity : AppCompatActivity() {
             Toast.makeText(this, "Please enter your information correctly!", Toast.LENGTH_LONG)
                 .show()
         } else {
-            viewModel.changeUserPassword(newPassword).invokeOnCompletion {
-                viewModel.firebaseAuthResponse.observe(this) { response ->
-                    when (response) {
-                        is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
-                        is Response.Success -> {
-                            binding.progressBar.visibility = View.GONE
-                            Toast.makeText(
-                                this,
-                                "Password changed, please login again.",
-                                Toast.LENGTH_LONG
-                            ).show()
-                            loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                            signOut()
-                        }
-                        is Response.Failure -> {
-                            Log.e(
-                                "RegisterActivity",
-                                "UpdatePassword Error: " + response.errorMessage
-                            )
-                            Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG).show()
-                            binding.progressBar.visibility = View.GONE
-                        }
+            viewModel.changeUserPassword(newPassword) { response ->
+                when (response) {
+                    is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
+                    is Response.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(
+                            this,
+                            "Password changed, please login again.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        signOut()
+                    }
+                    is Response.Failure -> {
+                        Log.e(
+                            "RegisterActivity",
+                            "UpdatePassword Error: " + response.errorMessage
+                        )
+                        Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG).show()
+                        binding.progressBar.visibility = View.GONE
                     }
                 }
             }
@@ -232,25 +220,23 @@ class RegisterActivity : AppCompatActivity() {
         email = binding.forgotPasswordEmailText.text.toString().trim()
 
         if (email.isNotEmpty()) {
-            viewModel.sendPasswordEmail(email).invokeOnCompletion {
-                viewModel.firebaseAuthResponse.observe(this) { response ->
-                    when (response) {
-                        is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
-                        is Response.Success -> {
-                            Toast.makeText(this, "Reset password e-mail sent.", Toast.LENGTH_LONG)
-                                .show()
-                            binding.progressBar.visibility = View.GONE
-                            goToLogInActivity()
-                        }
-                        is Response.Failure -> {
-                            Log.e(
-                                "RegisterActivity",
-                                "SendPassword Error: " + response.errorMessage
-                            )
-                            Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
-                                .show()
-                            binding.progressBar.visibility = View.GONE
-                        }
+            viewModel.sendPasswordEmail(email) { response ->
+                when (response) {
+                    is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
+                    is Response.Success -> {
+                        Toast.makeText(this, "Reset password e-mail sent.", Toast.LENGTH_LONG)
+                            .show()
+                        binding.progressBar.visibility = View.GONE
+                        goToLogInActivity()
+                    }
+                    is Response.Failure -> {
+                        Log.e(
+                            "RegisterActivity",
+                            "SendPassword Error: " + response.errorMessage
+                        )
+                        Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
+                            .show()
+                        binding.progressBar.visibility = View.GONE
                     }
                 }
             }
@@ -261,16 +247,14 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun signOut() {
-        viewModel.signOut().invokeOnCompletion {
-            viewModel.firebaseAuthResponse.observe(this) { response ->
-                when (response) {
-                    is Response.Loading -> println("Loading")
-                    is Response.Success -> goToLogInActivity()
-                    is Response.Failure -> {
-                        Log.e("RegisterActivity", "SignOut Error: " + response.errorMessage)
-                        Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
-                            .show()
-                    }
+        viewModel.signOut { response ->
+            when (response) {
+                is Response.Loading -> println("Loading")
+                is Response.Success -> goToLogInActivity()
+                is Response.Failure -> {
+                    Log.e("RegisterActivity", "SignOut Error: " + response.errorMessage)
+                    Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
+                        .show()
                 }
             }
         }

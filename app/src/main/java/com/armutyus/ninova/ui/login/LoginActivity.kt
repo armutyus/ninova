@@ -77,20 +77,18 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(this, "Please enter your information correctly!", Toast.LENGTH_LONG)
                 .show()
         } else {
-            loginViewModel.signInUser(email, password).invokeOnCompletion {
-                loginViewModel.firebaseAuthResponse.observe(this) { response ->
-                    when (response) {
-                        is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
-                        is Response.Success -> {
-                            goToMainActivity()
-                            binding.progressBar.visibility = View.GONE
-                        }
-                        is Response.Failure -> {
-                            Log.e("LoginActivity", "SignIn Error: " + response.errorMessage)
-                            Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
-                                .show()
-                            binding.progressBar.visibility = View.GONE
-                        }
+            loginViewModel.signInUser(email, password) { response ->
+                when (response) {
+                    is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
+                    is Response.Success -> {
+                        goToMainActivity()
+                        binding.progressBar.visibility = View.GONE
+                    }
+                    is Response.Failure -> {
+                        Log.e("LoginActivity", "SignIn Error: " + response.errorMessage)
+                        Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
+                            .show()
+                        binding.progressBar.visibility = View.GONE
                     }
                 }
             }
@@ -98,20 +96,18 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun anonymousSignIn() {
-        loginViewModel.signInAnonymously().invokeOnCompletion {
-            loginViewModel.firebaseAuthResponse.observe(this) { response ->
-                when (response) {
-                    is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
-                    is Response.Success -> {
-                        createUserProfile()
-                        binding.progressBar.visibility = View.GONE
-                    }
-                    is Response.Failure -> {
-                        Log.e("LoginActivity", "AnonymousSignIn Error: " + response.errorMessage)
-                        Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
-                            .show()
-                        binding.progressBar.visibility = View.GONE
-                    }
+        loginViewModel.signInAnonymously { response ->
+            when (response) {
+                is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
+                is Response.Success -> {
+                    createUserProfile()
+                    binding.progressBar.visibility = View.GONE
+                }
+                is Response.Failure -> {
+                    Log.e("LoginActivity", "AnonymousSignIn Error: " + response.errorMessage)
+                    Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
+                        .show()
+                    binding.progressBar.visibility = View.GONE
                 }
             }
         }
@@ -145,40 +141,36 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun signUpUser() {
-        loginViewModel.signUpUser(email, password).invokeOnCompletion {
-            loginViewModel.firebaseAuthResponse.observe(this) { response ->
-                when (response) {
-                    is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
-                    is Response.Success -> {
-                        createUserProfile()
-                        binding.progressBar.visibility = View.GONE
-                    }
-                    is Response.Failure -> {
-                        Log.e("LoginActivity", "SignUp Error: " + response.errorMessage)
-                        Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
-                            .show()
-                        binding.progressBar.visibility = View.GONE
-                    }
+        loginViewModel.signUpUser(email, password) { response ->
+            when (response) {
+                is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
+                is Response.Success -> {
+                    createUserProfile()
+                    binding.progressBar.visibility = View.GONE
+                }
+                is Response.Failure -> {
+                    Log.e("LoginActivity", "SignUp Error: " + response.errorMessage)
+                    Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
+                        .show()
+                    binding.progressBar.visibility = View.GONE
                 }
             }
         }
     }
 
     private fun createUserProfile() {
-        loginViewModel.createUser().invokeOnCompletion {
-            loginViewModel.firebaseAuthResponse.observe(this) { response ->
-                when (response) {
-                    is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
-                    is Response.Success -> {
-                        goToMainActivity()
-                        binding.progressBar.visibility = View.GONE
-                    }
-                    is Response.Failure -> {
-                        Log.e("LoginActivity", "CreateProfile Error: " + response.errorMessage)
-                        Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
-                            .show()
-                        binding.progressBar.visibility = View.GONE
-                    }
+        loginViewModel.createUser { response ->
+            when (response) {
+                is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
+                is Response.Success -> {
+                    goToMainActivity()
+                    binding.progressBar.visibility = View.GONE
+                }
+                is Response.Failure -> {
+                    Log.e("LoginActivity", "CreateProfile Error: " + response.errorMessage)
+                    Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
+                        .show()
+                    binding.progressBar.visibility = View.GONE
                 }
             }
 
