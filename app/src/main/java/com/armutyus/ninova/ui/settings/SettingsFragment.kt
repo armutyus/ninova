@@ -201,130 +201,128 @@ class SettingsFragment @Inject constructor(
     }
 
     private fun uploadBooks() {
-        booksViewModel.getBookList()
-        booksViewModel.localBookList.observe(viewLifecycleOwner) { localBookList ->
+        booksViewModel.loadBookList()
+        val localBookList = booksViewModel.localBookList.value
+        if (localBookList != null) {
             var i = 0
             while (i < localBookList.size) {
-                settingsViewModel.uploadUserBooksToFirestore(localBookList[i]).invokeOnCompletion {
-                    settingsViewModel.firebaseAuthResponse.observe(viewLifecycleOwner) { response ->
-                        when (response) {
-                            is Response.Loading -> Log.i("booksUpload", "Books uploading")
-                            is Response.Success -> {
-                                if (showUploadToast) {
-                                    Toast.makeText(
-                                        requireContext(),
-                                        "Uploading library..",
-                                        Toast.LENGTH_SHORT
-                                    ).show().also {
-                                        showUploadToast = false
-                                    }
-                                }
-                                Log.i("bookUpload", "Books uploaded")
-                            }
-                            is Response.Failure -> {
-                                Log.e("Books Upload Error", response.errorMessage)
+                settingsViewModel.uploadUserBooksToFirestore(localBookList[i]){ response ->
+                    when (response) {
+                        is Response.Loading -> Log.i("booksUpload", "Books uploading")
+                        is Response.Success -> {
+                            if (showUploadToast) {
                                 Toast.makeText(
                                     requireContext(),
-                                    response.errorMessage,
-                                    Toast.LENGTH_LONG
-                                )
-                                    .show()
+                                    "Uploading library..",
+                                    Toast.LENGTH_SHORT
+                                ).show().also {
+                                    showUploadToast = false
+                                }
                             }
+                            Log.i("bookUpload", "Books uploaded")
+                        }
+                        is Response.Failure -> {
+                            Log.e("Books Upload Error", response.errorMessage)
+                            Toast.makeText(
+                                requireContext(),
+                                response.errorMessage,
+                                Toast.LENGTH_LONG
+                            )
+                                .show()
                         }
                     }
                 }
                 i++
             }
+        } else {
+            Log.i("bookUpload", "No books in library")
         }
     }
 
     private fun uploadShelves() {
         shelvesViewModel.getShelfList()
-        shelvesViewModel.shelfList.observe(viewLifecycleOwner) { localShelfList ->
+        val localShelfList = shelvesViewModel.shelfList.value
+        if (localShelfList != null) {
             var i = 0
             while (i < localShelfList.size) {
-                settingsViewModel.uploadUserShelvesToFirestore(localShelfList[i])
-                    .invokeOnCompletion {
-                        settingsViewModel.firebaseAuthResponse.observe(viewLifecycleOwner) { response ->
-                            when (response) {
-                                is Response.Loading ->
-                                    Log.i("shelvesUpload", "Shelves uploading")
-                                is Response.Success ->
-                                    Log.i("shelvesUpload", "Shelves uploaded")
-                                is Response.Failure -> {
-                                    Log.e("Shelves Upload Error", response.errorMessage)
-                                    Toast.makeText(
-                                        requireContext(),
-                                        response.errorMessage,
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                            }
+                settingsViewModel.uploadUserShelvesToFirestore(localShelfList[i]) { response ->
+                    when (response) {
+                        is Response.Loading ->
+                            Log.i("shelvesUpload", "Shelves uploading")
+                        is Response.Success ->
+                            Log.i("shelvesUpload", "Shelves uploaded")
+                        is Response.Failure -> {
+                            Log.e("Shelves Upload Error", response.errorMessage)
+                            Toast.makeText(
+                                requireContext(),
+                                response.errorMessage,
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     }
+                }
                 i++
             }
+        } else {
+            Log.i("shelvesUpload", "No shelves")
         }
     }
 
     private fun uploadCrossRefs() {
-        booksViewModel.getBookShelfCrossRef()
-        booksViewModel.bookShelfCrossRefList.observe(viewLifecycleOwner) { localCrossRefList ->
+        booksViewModel.loadBookShelfCrossRef()
+        val localCrossRefList = booksViewModel.bookShelfCrossRefList.value
+        if (localCrossRefList != null) {
             var i = 0
             while (i < localCrossRefList.size) {
-                settingsViewModel.uploadUserCrossRefToFirestore(localCrossRefList[i])
-                    .invokeOnCompletion {
-                        settingsViewModel.firebaseAuthResponse.observe(viewLifecycleOwner) { response ->
-                            when (response) {
-                                is Response.Loading ->
-                                    Log.i("crossRefsUpload", "CrossRefs uploading")
-                                is Response.Success -> {
-                                    if (showSuccessToast) {
-                                        Toast.makeText(
-                                            requireContext(),
-                                            "Library uploaded to: ${user.email}",
-                                            Toast.LENGTH_SHORT
-                                        ).show().also {
-                                            showSuccessToast = false
-                                        }
-                                    }
-                                    Log.i("crossRefsUpload", "CrossRefs uploaded")
-                                }
-                                is Response.Failure -> {
-                                    Log.e("CrossRefs Upload Error", response.errorMessage)
-                                    Toast.makeText(
-                                        requireContext(),
-                                        response.errorMessage,
-                                        Toast.LENGTH_LONG
-                                    ).show()
+                settingsViewModel.uploadUserCrossRefToFirestore(localCrossRefList[i]) { response ->
+                    when (response) {
+                        is Response.Loading ->
+                            Log.i("crossRefsUpload", "CrossRefs uploading")
+                        is Response.Success -> {
+                            if (showSuccessToast) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Library uploaded to: ${user.email}",
+                                    Toast.LENGTH_SHORT
+                                ).show().also {
+                                    showSuccessToast = false
                                 }
                             }
+                            Log.i("crossRefsUpload", "CrossRefs uploaded")
+                        }
+                        is Response.Failure -> {
+                            Log.e("CrossRefs Upload Error", response.errorMessage)
+                            Toast.makeText(
+                                requireContext(),
+                                response.errorMessage,
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     }
+                }
                 i++
             }
+        } else {
+            Log.i("crossRefsUpload", "No crossrefs")
         }
     }
 
     private fun signOut() {
-        settingsViewModel.signOut().invokeOnCompletion {
-            settingsViewModel.firebaseAuthResponse.observe(viewLifecycleOwner) { response ->
-                when (response) {
-                    is Response.Loading ->
-                        Toast.makeText(requireContext(), "Please wait..", Toast.LENGTH_SHORT).show()
-                    is Response.Success -> {
-                        Toast.makeText(requireContext(), "Signed out!", Toast.LENGTH_SHORT).show()
-                        clearDatabase()
-                        goToLogInActivity()
-                    }
-                    is Response.Failure -> {
-                        Log.e("Sign Out Error", response.errorMessage)
-                        Toast.makeText(requireContext(), response.errorMessage, Toast.LENGTH_LONG)
-                            .show()
-                    }
+        settingsViewModel.signOut { response ->
+            when (response) {
+                is Response.Loading ->
+                    Toast.makeText(requireContext(), "Please wait..", Toast.LENGTH_SHORT).show()
+                is Response.Success -> {
+                    Toast.makeText(requireContext(), "Signed out!", Toast.LENGTH_SHORT).show()
+                    clearDatabase()
+                    goToLogInActivity()
+                }
+                is Response.Failure -> {
+                    Log.e("Sign Out Error", response.errorMessage)
+                    Toast.makeText(requireContext(), response.errorMessage, Toast.LENGTH_LONG)
+                        .show()
                 }
             }
-
         }
     }
 

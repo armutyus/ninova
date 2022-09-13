@@ -63,11 +63,11 @@ class BookToShelfRecyclerViewAdapter @Inject constructor(
             val crossRef = BookShelfCrossRef(currentBookIdExtra!!, shelf.shelfId)
             if (isChecked) {
                 shelvesViewModel.insertBookShelfCrossRef(crossRef).invokeOnCompletion {
-                    booksViewModel.getBookWithShelves(currentBookIdExtra!!)
+                    booksViewModel.loadBookWithShelves(currentBookIdExtra!!)
                 }
             } else {
                 shelvesViewModel.deleteBookShelfCrossRef(crossRef).invokeOnCompletion {
-                    booksViewModel.getBookWithShelves(currentBookIdExtra!!)
+                    booksViewModel.loadBookWithShelves(currentBookIdExtra!!)
                 }
             }
         }

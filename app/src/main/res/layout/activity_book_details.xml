@@ -128,33 +128,16 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <LinearLayout
-            android:id="@+id/bookDetailUserNotesLayout"
+        <EditText
+            android:id="@+id/userBookNotesEditText"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.9"
-            android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/userBookNotesEditText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="@string/enter_your_notes_here"
-                android:scrollbars="vertical"
-                android:gravity="top"
-                android:background="@android:color/transparent"
-                android:inputType="textMultiLine"
-                android:autofillHints="name" />
-        </LinearLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/saveUserNotes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="8dp"
-            android:text="@string/save">
-        </com.google.android.material.button.MaterialButton>
+            android:layout_height="match_parent"
+            android:hint="@string/enter_your_notes_here"
+            android:scrollbars="vertical"
+            android:gravity="top"
+            android:background="@android:color/transparent"
+            android:inputType="textMultiLine"
+            android:autofillHints="name" />
 
     </LinearLayout>
 

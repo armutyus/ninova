@@ -66,7 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/forgot_password"
-        android:layout_marginBottom="14dp" />
+        android:layout_marginBottom="16dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -80,11 +80,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:layout_marginTop="48dp"
             android:height="24dp"
             android:enabled="true"
-            android:text="@string/action_sign_in"
-            app:cornerRadius="10dp" />
+            android:text="@string/action_sign_in" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/register"
@@ -93,12 +91,42 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:width="160dp"
             android:height="24dp"
             android:enabled="true"
-            android:text="@string/action_register"
-            android:textSize="14sp"
-            app:cornerRadius="10dp" />
+            android:text="@string/action_register"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingHorizontal="26dp"
+        android:layout_marginVertical="16dp"
+        android:orientation="horizontal">
+        <View
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="?attr/colorControlHighlight"/>
+
+        <TextView
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:textColor="?attr/colorControlHighlight"
+            android:text="or"
+            android:textStyle="italic"
+            android:layout_gravity="center"/>
+
+        <View
+            android:layout_height="1dp"
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="?attr/colorControlHighlight"/>
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
@@ -109,7 +137,5 @@
         android:layout_marginStart="26dp"
         android:layout_marginEnd="26dp"
         android:enabled="true"
-        android:text="@string/action_without_register"
-        android:textSize="14sp"
-        app:cornerRadius="10dp" />
+        android:text="@string/action_without_register" />
 </LinearLayout>

@@ -22,26 +22,25 @@ class SettingsViewModel @Inject constructor(
     private val db: NinovaLocalDB
 ) : ViewModel() {
 
-    private val _firebaseAuthResponse = MutableLiveData<Response<Boolean>>()
-    val firebaseAuthResponse: LiveData<Response<Boolean>>
-        get() = _firebaseAuthResponse
-
-    fun uploadUserBooksToFirestore(localBook: DataModel.LocalBook) = viewModelScope.launch {
-        _firebaseAuthResponse.value = repository.uploadUserBooksToFirestore(localBook)
+    fun uploadUserBooksToFirestore(localBook: DataModel.LocalBook, onComplete: (Response<Boolean>) -> Unit) = viewModelScope.launch {
+        val response = repository.uploadUserBooksToFirestore(localBook)
+        onComplete(response)
     }
 
-    fun uploadUserCrossRefToFirestore(bookShelfCrossRef: BookShelfCrossRef) =
+    fun uploadUserCrossRefToFirestore(bookShelfCrossRef: BookShelfCrossRef, onComplete: (Response<Boolean>) -> Unit) =
         viewModelScope.launch {
-            _firebaseAuthResponse.value =
-                repository.uploadUserCrossRefToFirestore(bookShelfCrossRef)
+            val response = repository.uploadUserCrossRefToFirestore(bookShelfCrossRef)
+            onComplete(response)
         }
 
-    fun uploadUserShelvesToFirestore(shelf: LocalShelf) = viewModelScope.launch {
-        _firebaseAuthResponse.value = repository.uploadUserShelvesToFirestore(shelf)
+    fun uploadUserShelvesToFirestore(shelf: LocalShelf, onComplete: (Response<Boolean>) -> Unit) = viewModelScope.launch {
+        val response = repository.uploadUserShelvesToFirestore(shelf)
+        onComplete(response)
     }
 
-    fun signOut() = viewModelScope.launch {
-        _firebaseAuthResponse.value = repository.signOut()
+    fun signOut(onComplete: (Response<Boolean>) -> Unit) = viewModelScope.launch {
+        val response = repository.signOut()
+        onComplete(response)
     }
 
     fun clearDatabase() {

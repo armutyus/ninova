@@ -39,10 +39,10 @@ class BooksFragment @Inject constructor(
                 Snackbar.make(requireView(), "Book deleted from your library", Snackbar.LENGTH_LONG)
                     .setAction("UNDO") {
                         booksViewModel.insertBook(swipedBook).invokeOnCompletion {
-                            booksViewModel.getBookList()
+                            booksViewModel.loadBookList()
                         }
                     }.show()
-                booksViewModel.getBookList()
+                booksViewModel.loadBookList()
             }
         }
     }
@@ -64,7 +64,7 @@ class BooksFragment @Inject constructor(
 
     override fun onResume() {
         super.onResume()
-        booksViewModel.getBookList()
+        booksViewModel.loadBookList()
     }
 
     private fun observeBookList() {

@@ -13,14 +13,12 @@ class DiscoverFragment @Inject constructor(
 ) : Fragment(R.layout.fragment_discover) {
 
     private var fragmentBinding: FragmentDiscoverBinding? = null
-    private lateinit var discoverViewModel: DiscoverViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val binding = FragmentDiscoverBinding.bind(view)
         fragmentBinding = binding
-        discoverViewModel = ViewModelProvider(requireActivity())[DiscoverViewModel::class.java]
 
         binding.animationView.visibility = View.VISIBLE
 

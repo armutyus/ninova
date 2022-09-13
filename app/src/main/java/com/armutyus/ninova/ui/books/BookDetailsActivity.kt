@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Html
+import android.text.InputType
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -97,7 +98,7 @@ class BookDetailsActivity : AppCompatActivity() {
                 binding.addBookToLibraryButton.setOnClickListener {
                     booksViewModel.insertBook(currentLocalBook!!).invokeOnCompletion {
                         setVisibilitiesForBookAdded()
-                        booksViewModel.getBookList()
+                        booksViewModel.loadBookList()
                     }
                 }
 
@@ -109,10 +110,6 @@ class BookDetailsActivity : AppCompatActivity() {
                     booksViewModel.deleteBook(currentLocalBook!!).invokeOnCompletion {
                         setVisibilitiesForBookRemoved()
                     }
-                }
-
-                binding.saveUserNotes.setOnClickListener {
-                    saveUserNotes()
                 }
 
                 binding.shelvesOfBooks.setOnClickListener {
@@ -147,7 +144,7 @@ class BookDetailsActivity : AppCompatActivity() {
                         )
                     ).invokeOnCompletion {
                         setVisibilitiesForBookAdded()
-                        booksViewModel.getBookList()
+                        booksViewModel.loadBookList()
                     }
                 }
 
@@ -155,12 +152,6 @@ class BookDetailsActivity : AppCompatActivity() {
                     booksViewModel.deleteBookById(currentBook?.id!!).invokeOnCompletion {
                         setVisibilitiesForBookRemoved()
                     }
-                }
-
-                binding.saveUserNotes.setOnClickListener {
-                    currentLocalBook =
-                        booksViewModel.localBookList.value?.firstOrNull { it.bookId == currentBook?.id }
-                    saveUserNotes()
                 }
 
                 binding.shelvesOfBooks.setOnClickListener {
@@ -179,16 +170,28 @@ class BookDetailsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         currentLocalBook?.let {
-            booksViewModel.getBookWithShelves(it.bookId)
+            booksViewModel.loadBookWithShelves(it.bookId)
             binding.userBookNotesEditText.setText(it.bookNotes)
         }
         currentBook?.let { googleBookItem ->
-            booksViewModel.getBookWithShelves(googleBookItem.id!!)
-            booksViewModel.getBookList()
-            booksViewModel.localBookList.observe(this) { localBookList ->
-                val userNotesFromLocal =
-                    localBookList.firstOrNull { it.bookId == googleBookItem.id }?.bookNotes
-                binding.userBookNotesEditText.setText(userNotesFromLocal)
+            booksViewModel.loadBookWithShelves(googleBookItem.id!!)
+            booksViewModel.loadBookList()
+            val userNotesFromLocal =
+                booksViewModel.localBookList.value?.firstOrNull { it.bookId == googleBookItem.id }?.bookNotes
+            binding.userBookNotesEditText.setText(userNotesFromLocal)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        when (type) {
+            LOCAL_BOOK_TYPE -> saveUserNotes()
+            GOOGLE_BOOK_TYPE -> {
+                currentLocalBook =
+                    booksViewModel.localBookList.value?.firstOrNull { it.bookId == currentBook?.id }
+                if (currentLocalBook != null) {
+                    saveUserNotes()
+                }
             }
         }
     }
@@ -242,8 +245,7 @@ class BookDetailsActivity : AppCompatActivity() {
     }
 
     private fun isBookAddedCheck() {
-        booksViewModel.getBookList()
-        booksViewModel.localBookList.observe(this) {
+        booksViewModel.loadBookList().invokeOnCompletion {
             if (currentBook?.isBookAddedCheck(booksViewModel) == true) {
                 setVisibilitiesForBookAdded()
             } else {
@@ -256,8 +258,8 @@ class BookDetailsActivity : AppCompatActivity() {
         binding.addBookToLibraryButton.visibility = View.GONE
         binding.bookDetailShelvesTextViews.visibility = View.VISIBLE
         binding.removeBookFromLibraryButton.visibility = View.VISIBLE
-        val notesTab = binding.bookDetailTabLayout.getTabAt(1)
-        notesTab?.view?.isClickable = true
+        binding.userBookNotesEditText.inputType = InputType.TYPE_TEXT_FLAG_MULTI_LINE
+
     }
 
     private fun setVisibilitiesForBookNull() {
@@ -273,8 +275,11 @@ class BookDetailsActivity : AppCompatActivity() {
         binding.addBookToLibraryButton.visibility = View.VISIBLE
         binding.bookDetailShelvesTextViews.visibility = View.GONE
         binding.removeBookFromLibraryButton.visibility = View.GONE
+        binding.userBookNotesEditText.inputType = InputType.TYPE_NULL
         val notesTab = binding.bookDetailTabLayout.getTabAt(1)
-        notesTab?.view?.isClickable = false
+        notesTab?.view?.setOnClickListener {
+            Toast.makeText(this,"Add this book to your library to take notes!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun showAddShelfDialog() {

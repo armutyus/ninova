@@ -66,48 +66,34 @@ class BooksViewModel @Inject constructor(
         booksRepository.update(localBook)
     }
 
-    fun getBookList() =
-        viewModelScope.launch {
-            _localBookList.value = booksRepository.getLocalBooks()
-        }
-
-
-    fun getBookWithShelves(bookId: String) {
-        viewModelScope.launch {
-            _bookWithShelvesList.value = booksRepository.getBookWithShelves(bookId)
-        }
+    fun loadBookList() = viewModelScope.launch {
+        _localBookList.value = booksRepository.getLocalBooks()
     }
 
-    fun getBookShelfCrossRef() {
-        viewModelScope.launch {
-            _bookShelfCrossRefList.value = booksRepository.getBookShelfCrossRef()
-        }
+
+    fun loadBookWithShelves(bookId: String) = viewModelScope.launch {
+        _bookWithShelvesList.value = booksRepository.getBookWithShelves(bookId)
+    }
+
+    fun loadBookShelfCrossRef() = viewModelScope.launch {
+        _bookShelfCrossRefList.value = booksRepository.getBookShelfCrossRef()
     }
 
     //Firebase Works
 
-    private val _firebaseBookList = MutableLiveData<Response<List<DataModel.LocalBook>>>()
-    val firebaseBookList: LiveData<Response<List<DataModel.LocalBook>>>
-        get() = _firebaseBookList
-
-    private val _firebaseCrossRefList = MutableLiveData<Response<List<BookShelfCrossRef>>>()
-    val firebaseCrossRefList: LiveData<Response<List<BookShelfCrossRef>>>
-        get() = _firebaseCrossRefList
-
-    private val _firebaseShelfList = MutableLiveData<Response<List<LocalShelf>>>()
-    val firebaseShelfList: LiveData<Response<List<LocalShelf>>>
-        get() = _firebaseShelfList
-
-    fun collectBooksFromFirestore() = viewModelScope.launch {
-        _firebaseBookList.value = firebaseRepository.downloadUserBooksFromFirestore()
+    fun collectBooksFromFirestore(onComplete: (Response<List<DataModel.LocalBook>>) -> Unit) = viewModelScope.launch {
+        val response = firebaseRepository.downloadUserBooksFromFirestore()
+        onComplete(response)
     }
 
-    fun collectCrossRefFromFirestore() = viewModelScope.launch {
-        _firebaseCrossRefList.value = firebaseRepository.downloadUserCrossRefFromFirestore()
+    fun collectCrossRefFromFirestore(onComplete: (Response<List<BookShelfCrossRef>>) -> Unit) = viewModelScope.launch {
+        val response = firebaseRepository.downloadUserCrossRefFromFirestore()
+        onComplete(response)
     }
 
-    fun collectShelvesFromFirestore() = viewModelScope.launch {
-        _firebaseShelfList.value = firebaseRepository.downloadUserShelvesFromFirestore()
+    fun collectShelvesFromFirestore(onComplete: (Response<List<LocalShelf>>) -> Unit) = viewModelScope.launch {
+        val response = firebaseRepository.downloadUserShelvesFromFirestore()
+        onComplete(response)
     }
 
 }
