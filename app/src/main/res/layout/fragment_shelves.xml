@@ -17,8 +17,8 @@
         android:backgroundTint="@color/seed"
         android:iconifiedByDefault="false"
         android:keyboardNavigationCluster="true"
-        android:paddingStart="12dp"
-        android:paddingEnd="24dp"
+        android:paddingStart="4dp"
+        android:paddingEnd="8dp"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:defaultQueryHint="@string/search_shelves"
         app:showAsAction="always" />
@@ -29,10 +29,8 @@
         android:layout_marginBottom="?actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingTop="8dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="16dp"/>
+        android:paddingVertical="16dp"
+        android:paddingHorizontal="16dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"

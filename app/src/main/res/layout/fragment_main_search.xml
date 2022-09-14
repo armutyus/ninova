@@ -12,6 +12,8 @@
         android:id="@+id/main_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="0dp"
+        android:paddingEnd="10dp"
         android:iconifiedByDefault="false"
         app:defaultQueryHint="@string/search_button_hint"
         app:showAsAction="always"

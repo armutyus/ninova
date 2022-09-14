@@ -1,6 +1,8 @@
 package com.armutyus.ninova.constants
 
 import android.content.Context
+import android.view.View
+import android.view.animation.AlphaAnimation
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.armutyus.ninova.R
 
@@ -15,6 +17,13 @@ class Util {
             circularProgressDrawable.start()
 
             return circularProgressDrawable
+        }
+
+        fun View.fadeIn(durationMillis: Long) {
+            this.startAnimation(AlphaAnimation(0F, 1F).apply {
+                duration = durationMillis
+                fillAfter = true
+            })
         }
     }
 

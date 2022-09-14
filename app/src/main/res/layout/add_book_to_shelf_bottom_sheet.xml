@@ -11,13 +11,14 @@
         android:layout_height="wrap_content"
         android:text="@string/select_the_shelves_you_want_to_add"
         android:paddingHorizontal="24dp"
-        android:paddingTop="24dp"/>
+        android:paddingTop="16dp"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/addBookToShelfRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="24dp"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="16dp"
         android:visibility="visible"/>
 
 </LinearLayout>

@@ -80,4 +80,5 @@
     <string name="remove_this_book_from_your_library">REMOVE THIS BOOK FROM YOUR LIBRARY</string>
     <string name="add_shelves">Add Shelves</string>
     <string name="select_the_shelves_you_want_to_add">Select the shelves you want to add:</string>
+    <string name="welcome_to_ninova">WELCOME \n\nTO NINOVA</string>
 </resources>

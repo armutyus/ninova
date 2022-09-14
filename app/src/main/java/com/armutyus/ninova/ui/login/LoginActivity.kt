@@ -14,6 +14,7 @@ import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.constants.Constants.MAIN_INTENT
 import com.armutyus.ninova.constants.Constants.REGISTER_INTENT
 import com.armutyus.ninova.constants.Response
+import com.armutyus.ninova.constants.Util.Companion.fadeIn
 import com.armutyus.ninova.databinding.ActivityLoginBinding
 import com.armutyus.ninova.databinding.RegisterUserBottomSheetBinding
 import com.armutyus.ninova.ui.settings.SettingsViewModel
@@ -47,6 +48,9 @@ class LoginActivity : AppCompatActivity() {
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.welcomeTextView.fadeIn(1500)
+        binding.loginLayout.fadeIn(2000)
 
         binding.forgotPasswordText.setOnClickListener {
             goToForgotPasswordPage()
