@@ -32,8 +32,8 @@ class MainSearchViewModel @Inject constructor(
         get() = _searchLocalBookList
 
     fun searchLocalBooks(searchString: String) = viewModelScope.launch {
-            _searchLocalBookList.value = booksRepository.searchLocalBooks(searchString)
-        }
+        _searchLocalBookList.value = booksRepository.searchLocalBooks(searchString)
+    }
 
     fun setCurrentLocalBookList(bookList: List<DataModel.LocalBook>) {
         _currentLocalBookList.value = bookList

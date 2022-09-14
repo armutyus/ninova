@@ -1,7 +1,5 @@
 package com.armutyus.ninova.ui.settings
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.armutyus.ninova.constants.Response
@@ -22,21 +20,28 @@ class SettingsViewModel @Inject constructor(
     private val db: NinovaLocalDB
 ) : ViewModel() {
 
-    fun uploadUserBooksToFirestore(localBook: DataModel.LocalBook, onComplete: (Response<Boolean>) -> Unit) = viewModelScope.launch {
+    fun uploadUserBooksToFirestore(
+        localBook: DataModel.LocalBook,
+        onComplete: (Response<Boolean>) -> Unit
+    ) = viewModelScope.launch {
         val response = repository.uploadUserBooksToFirestore(localBook)
         onComplete(response)
     }
 
-    fun uploadUserCrossRefToFirestore(bookShelfCrossRef: BookShelfCrossRef, onComplete: (Response<Boolean>) -> Unit) =
+    fun uploadUserCrossRefToFirestore(
+        bookShelfCrossRef: BookShelfCrossRef,
+        onComplete: (Response<Boolean>) -> Unit
+    ) =
         viewModelScope.launch {
             val response = repository.uploadUserCrossRefToFirestore(bookShelfCrossRef)
             onComplete(response)
         }
 
-    fun uploadUserShelvesToFirestore(shelf: LocalShelf, onComplete: (Response<Boolean>) -> Unit) = viewModelScope.launch {
-        val response = repository.uploadUserShelvesToFirestore(shelf)
-        onComplete(response)
-    }
+    fun uploadUserShelvesToFirestore(shelf: LocalShelf, onComplete: (Response<Boolean>) -> Unit) =
+        viewModelScope.launch {
+            val response = repository.uploadUserShelvesToFirestore(shelf)
+            onComplete(response)
+        }
 
     fun signOut(onComplete: (Response<Boolean>) -> Unit) = viewModelScope.launch {
         val response = repository.signOut()

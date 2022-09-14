@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Html
-import android.text.InputType
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -258,8 +257,10 @@ class BookDetailsActivity : AppCompatActivity() {
         binding.addBookToLibraryButton.visibility = View.GONE
         binding.bookDetailShelvesTextViews.visibility = View.VISIBLE
         binding.removeBookFromLibraryButton.visibility = View.VISIBLE
-        binding.userBookNotesEditText.inputType = InputType.TYPE_TEXT_FLAG_MULTI_LINE
-
+        val notesTab = binding.bookDetailTabLayout.getTabAt(1)
+        notesTab?.view?.isEnabled = true
+        notesTab?.view?.setOnClickListener {
+        }
     }
 
     private fun setVisibilitiesForBookNull() {
@@ -275,10 +276,11 @@ class BookDetailsActivity : AppCompatActivity() {
         binding.addBookToLibraryButton.visibility = View.VISIBLE
         binding.bookDetailShelvesTextViews.visibility = View.GONE
         binding.removeBookFromLibraryButton.visibility = View.GONE
-        binding.userBookNotesEditText.inputType = InputType.TYPE_NULL
         val notesTab = binding.bookDetailTabLayout.getTabAt(1)
+        notesTab?.view?.isEnabled = false
         notesTab?.view?.setOnClickListener {
-            Toast.makeText(this,"Add this book to your library to take notes!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Add this book to your library to take notes!", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 

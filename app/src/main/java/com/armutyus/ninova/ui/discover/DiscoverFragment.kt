@@ -3,7 +3,6 @@ package com.armutyus.ninova.ui.discover
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.armutyus.ninova.R
 import com.armutyus.ninova.databinding.FragmentDiscoverBinding
 import javax.inject.Inject

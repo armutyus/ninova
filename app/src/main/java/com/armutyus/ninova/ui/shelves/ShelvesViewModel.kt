@@ -38,7 +38,7 @@ class ShelvesViewModel @Inject constructor(
     }
 
     fun getShelfList() = viewModelScope.launch {
-            _shelfList.value = shelfRepositoryInterface.getLocalShelves()
+        _shelfList.value = shelfRepositoryInterface.getLocalShelves()
     }
 
     fun insertShelf(localShelf: LocalShelf) = viewModelScope.launch {
@@ -54,19 +54,19 @@ class ShelvesViewModel @Inject constructor(
     }
 
     fun insertBookShelfCrossRef(crossRef: BookShelfCrossRef) = viewModelScope.launch {
-            shelfRepositoryInterface.insertBookShelfCrossRef(crossRef)
+        shelfRepositoryInterface.insertBookShelfCrossRef(crossRef)
     }
 
     fun deleteBookShelfCrossRef(crossRef: BookShelfCrossRef) = viewModelScope.launch {
-            shelfRepositoryInterface.deleteBookShelfCrossRef(crossRef)
+        shelfRepositoryInterface.deleteBookShelfCrossRef(crossRef)
     }
 
     fun searchShelves(searchString: String) = viewModelScope.launch {
-            _searchShelvesList.value = shelfRepositoryInterface.searchLocalShelves(searchString)
+        _searchShelvesList.value = shelfRepositoryInterface.searchLocalShelves(searchString)
     }
 
     fun getShelfWithBookList() = viewModelScope.launch {
-            _shelfWithBooksList.value = shelfRepositoryInterface.getShelfWithBooks()
+        _shelfWithBooksList.value = shelfRepositoryInterface.getShelfWithBooks()
     }
 
 }

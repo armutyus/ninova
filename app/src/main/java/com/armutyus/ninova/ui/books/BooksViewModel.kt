@@ -81,19 +81,22 @@ class BooksViewModel @Inject constructor(
 
     //Firebase Works
 
-    fun collectBooksFromFirestore(onComplete: (Response<List<DataModel.LocalBook>>) -> Unit) = viewModelScope.launch {
-        val response = firebaseRepository.downloadUserBooksFromFirestore()
-        onComplete(response)
-    }
+    fun collectBooksFromFirestore(onComplete: (Response<List<DataModel.LocalBook>>) -> Unit) =
+        viewModelScope.launch {
+            val response = firebaseRepository.downloadUserBooksFromFirestore()
+            onComplete(response)
+        }
 
-    fun collectCrossRefFromFirestore(onComplete: (Response<List<BookShelfCrossRef>>) -> Unit) = viewModelScope.launch {
-        val response = firebaseRepository.downloadUserCrossRefFromFirestore()
-        onComplete(response)
-    }
+    fun collectCrossRefFromFirestore(onComplete: (Response<List<BookShelfCrossRef>>) -> Unit) =
+        viewModelScope.launch {
+            val response = firebaseRepository.downloadUserCrossRefFromFirestore()
+            onComplete(response)
+        }
 
-    fun collectShelvesFromFirestore(onComplete: (Response<List<LocalShelf>>) -> Unit) = viewModelScope.launch {
-        val response = firebaseRepository.downloadUserShelvesFromFirestore()
-        onComplete(response)
-    }
+    fun collectShelvesFromFirestore(onComplete: (Response<List<LocalShelf>>) -> Unit) =
+        viewModelScope.launch {
+            val response = firebaseRepository.downloadUserShelvesFromFirestore()
+            onComplete(response)
+        }
 
 }

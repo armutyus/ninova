@@ -206,7 +206,7 @@ class SettingsFragment @Inject constructor(
         if (localBookList != null) {
             var i = 0
             while (i < localBookList.size) {
-                settingsViewModel.uploadUserBooksToFirestore(localBookList[i]){ response ->
+                settingsViewModel.uploadUserBooksToFirestore(localBookList[i]) { response ->
                     when (response) {
                         is Response.Loading -> Log.i("booksUpload", "Books uploading")
                         is Response.Success -> {

@@ -14,50 +14,57 @@ class LoginViewModel @Inject constructor(
     private val repository: FirebaseRepositoryInterface
 ) : ViewModel() {
 
-    fun signInUser(email: String, password: String, onComplete: (Response<Boolean>) -> Unit) = viewModelScope.launch {
-        val response = repository.signInWithEmailPassword(email, password)
-        onComplete(response)
-    }
+    fun signInUser(email: String, password: String, onComplete: (Response<Boolean>) -> Unit) =
+        viewModelScope.launch {
+            val response = repository.signInWithEmailPassword(email, password)
+            onComplete(response)
+        }
 
     fun signInAnonymously(onComplete: (Response<Boolean>) -> Unit) = viewModelScope.launch {
         val response = repository.signInAnonymous()
         onComplete(response)
     }
 
-    fun signUpUser(email: String, password: String, onComplete: (Response<Boolean>) -> Unit) = viewModelScope.launch {
-        val response = repository.signUpWithEmailPassword(email, password)
-        onComplete(response)
-    }
+    fun signUpUser(email: String, password: String, onComplete: (Response<Boolean>) -> Unit) =
+        viewModelScope.launch {
+            val response = repository.signUpWithEmailPassword(email, password)
+            onComplete(response)
+        }
 
-    fun registerAnonymousUser(credential: AuthCredential, onComplete: (Response<Boolean>) -> Unit) = viewModelScope.launch {
-        val response = repository.anonymousToPermanent(credential)
-        onComplete(response)
-    }
+    fun registerAnonymousUser(credential: AuthCredential, onComplete: (Response<Boolean>) -> Unit) =
+        viewModelScope.launch {
+            val response = repository.anonymousToPermanent(credential)
+            onComplete(response)
+        }
 
     fun createUser(onComplete: (Response<Boolean>) -> Unit) = viewModelScope.launch {
         val response = repository.createUserInFirestore()
         onComplete(response)
     }
 
-    fun reAuthUser(credential: AuthCredential, onComplete: (Response<Boolean>) -> Unit) = viewModelScope.launch {
-        val response = repository.reAuthUser(credential)
-        onComplete(response)
-    }
+    fun reAuthUser(credential: AuthCredential, onComplete: (Response<Boolean>) -> Unit) =
+        viewModelScope.launch {
+            val response = repository.reAuthUser(credential)
+            onComplete(response)
+        }
 
-    fun changeUserEmail(email: String, onComplete: (Response<Boolean>) -> Unit) = viewModelScope.launch {
-        val response = repository.changeUserEmail(email)
-        onComplete(response)
-    }
+    fun changeUserEmail(email: String, onComplete: (Response<Boolean>) -> Unit) =
+        viewModelScope.launch {
+            val response = repository.changeUserEmail(email)
+            onComplete(response)
+        }
 
-    fun changeUserPassword(password: String, onComplete: (Response<Boolean>) -> Unit) = viewModelScope.launch {
-        val response = repository.changeUserPassword(password)
-        onComplete(response)
-    }
+    fun changeUserPassword(password: String, onComplete: (Response<Boolean>) -> Unit) =
+        viewModelScope.launch {
+            val response = repository.changeUserPassword(password)
+            onComplete(response)
+        }
 
-    fun sendPasswordEmail(email: String, onComplete: (Response<Boolean>) -> Unit) = viewModelScope.launch {
-        val response = repository.sendResetPassword(email)
-        onComplete(response)
-    }
+    fun sendPasswordEmail(email: String, onComplete: (Response<Boolean>) -> Unit) =
+        viewModelScope.launch {
+            val response = repository.sendResetPassword(email)
+            onComplete(response)
+        }
 
     fun signOut(onComplete: (Response<Boolean>) -> Unit) = viewModelScope.launch {
         val response = repository.signOut()
