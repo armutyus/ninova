@@ -45,6 +45,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    namespace 'com.armutyus.ninova'
 }
 
 def lottieVersion = "5.0.3"

@@ -122,6 +122,7 @@ class BookDetailsActivity : AppCompatActivity() {
                 supportActionBar?.title = currentBook?.volumeInfo?.title
                 setupBookInfo()
                 isBookAddedCheck()
+                setVisibilitiesForBookRemoved()
 
                 binding.addBookToLibraryButton.setOnClickListener {
                     booksViewModel.insertBook(
@@ -260,8 +261,6 @@ class BookDetailsActivity : AppCompatActivity() {
         binding.removeBookFromLibraryButton.visibility = View.VISIBLE
         val notesTab = binding.bookDetailTabLayout.getTabAt(1)
         notesTab?.view?.isEnabled = true
-        notesTab?.view?.setOnClickListener {
-        }
     }
 
     private fun setVisibilitiesForBookNull() {
@@ -279,10 +278,6 @@ class BookDetailsActivity : AppCompatActivity() {
         binding.removeBookFromLibraryButton.visibility = View.GONE
         val notesTab = binding.bookDetailTabLayout.getTabAt(1)
         notesTab?.view?.isEnabled = false
-        notesTab?.view?.setOnClickListener {
-            Toast.makeText(this, "Add this book to your library to take notes!", Toast.LENGTH_SHORT)
-                .show()
-        }
     }
 
     private fun showAddShelfDialog() {
