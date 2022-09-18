@@ -12,7 +12,7 @@
             app:title="@string/change_password"
             app:allowDividerBelow="true"/>
 
-        <ListPreference
+        <com.armutyus.ninova.ui.settings.CustomListPreference
             app:defaultValue="system"
             app:entries="@array/theme_entries"
             app:entryValues="@array/theme_values"
