@@ -93,6 +93,7 @@ class BookDetailsActivity : AppCompatActivity() {
                 setVisibilitiesForBookAdded()
                 registerLauncher()
                 setupLocalBookInfo()
+                showLocalBookDetails()
 
                 binding.addBookToLibraryButton.setOnClickListener {
                     booksViewModel.insertBook(currentLocalBook!!).invokeOnCompletion {
@@ -161,7 +162,7 @@ class BookDetailsActivity : AppCompatActivity() {
             else -> {}
         }
 
-        shelvesViewModel.getShelfList()
+        shelvesViewModel.loadShelfList()
         observeShelfListChanges()
         observeBookDetailsResponse()
     }
@@ -295,8 +296,6 @@ class BookDetailsActivity : AppCompatActivity() {
         bookToShelfAdapter.setViewModels(shelvesViewModel, booksViewModel)
 
         dialog.show()
-
-
     }
 
     private fun setupBookInfo() {
@@ -332,9 +331,11 @@ class BookDetailsActivity : AppCompatActivity() {
 
                 }
                 is Response.Failure -> {
+                    binding.progressBar.visibility = View.GONE
                     if (type == LOCAL_BOOK_TYPE) {
-                        showLocalBookDetails()
+                        Toast.makeText(this, "Something went wrong! Showing local details.", Toast.LENGTH_SHORT).show()
                     } else {
+                        setVisibilitiesForBookNull()
                         Toast.makeText(this, "Something went wrong!", Toast.LENGTH_SHORT).show()
                     }
                 }

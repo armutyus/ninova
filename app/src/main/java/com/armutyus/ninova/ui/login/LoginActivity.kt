@@ -105,7 +105,6 @@ class LoginActivity : AppCompatActivity() {
                 is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                 is Response.Success -> {
                     createUserProfile()
-                    binding.progressBar.visibility = View.GONE
                 }
                 is Response.Failure -> {
                     Log.e("LoginActivity", "AnonymousSignIn Error: " + response.errorMessage)
@@ -150,7 +149,6 @@ class LoginActivity : AppCompatActivity() {
                 is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                 is Response.Success -> {
                     createUserProfile()
-                    binding.progressBar.visibility = View.GONE
                 }
                 is Response.Failure -> {
                     Log.e("LoginActivity", "SignUp Error: " + response.errorMessage)

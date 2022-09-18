@@ -120,7 +120,6 @@ class RegisterActivity : AppCompatActivity() {
                 is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
                 is Response.Success -> {
                     createUserProfile()
-                    binding.progressBar.visibility = View.GONE
                 }
                 is Response.Failure -> {
                     Log.e("RegisterActivity", "AnonymousSignUp Error: " + response.errorMessage)

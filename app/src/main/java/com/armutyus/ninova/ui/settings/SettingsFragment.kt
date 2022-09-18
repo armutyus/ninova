@@ -36,6 +36,7 @@ import com.armutyus.ninova.constants.Constants.VERSION_NAME
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.shelves.ShelvesViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -119,7 +120,7 @@ class SettingsFragment @Inject constructor(
         privacyPolicy?.onPreferenceClickListener = privacyPolicyListener
 
         val signOutListener = Preference.OnPreferenceClickListener {
-            signOut()
+            showSignOutDialog()
             true
         }
         signOut?.onPreferenceClickListener = signOutListener
@@ -240,7 +241,7 @@ class SettingsFragment @Inject constructor(
     }
 
     private fun uploadShelves() {
-        shelvesViewModel.getShelfList()
+        shelvesViewModel.loadShelfList()
         val localShelfList = shelvesViewModel.shelfList.value
         if (localShelfList != null) {
             var i = 0
@@ -324,6 +325,29 @@ class SettingsFragment @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun showSignOutDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(resources.getString(R.string.sign_out))
+            .setMessage(resources.getString(R.string.upload_library_message))
+            .setNeutralButton(resources.getString(R.string.cancel)) { dialog, _ ->
+                dialog.cancel()
+            }
+            .setNegativeButton(resources.getString(R.string.decline)) { dialog, _ ->
+                signOut()
+                dialog.dismiss()
+            }
+            .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
+                showSuccessToast = true
+                showUploadToast = true
+                uploadBooks()
+                uploadShelves()
+                uploadCrossRefs()
+                signOut()
+                dialog.dismiss()
+            }
+            .show()
     }
 
     private fun clearDatabase() {

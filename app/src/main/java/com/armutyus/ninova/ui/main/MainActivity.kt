@@ -235,7 +235,7 @@ class MainActivity : AppCompatActivity() {
                             val crossRef = firebaseCrossRefList[i]
                             shelvesViewModel.insertBookShelfCrossRef(crossRef)
                                 .invokeOnCompletion {
-                                    shelvesViewModel.getShelfWithBookList()
+                                    shelvesViewModel.loadShelfWithBookList()
                                 }
                             i++
                         }
@@ -269,7 +269,7 @@ class MainActivity : AppCompatActivity() {
                         while (i < firebaseShelvesList.size) {
                             val shelf = firebaseShelvesList[i]
                             shelvesViewModel.insertShelf(shelf).invokeOnCompletion {
-                                shelvesViewModel.getShelfList()
+                                shelvesViewModel.loadShelfList()
                             }
                             i++
                         }

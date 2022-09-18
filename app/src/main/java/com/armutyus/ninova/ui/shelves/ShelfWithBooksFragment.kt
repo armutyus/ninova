@@ -68,7 +68,7 @@ class ShelfWithBooksFragment @Inject constructor(
 
     override fun onResume() {
         super.onResume()
-        shelvesViewModel.getShelfWithBookList()
+        shelvesViewModel.loadShelfWithBookList()
     }
 
     private fun observeBookList() {

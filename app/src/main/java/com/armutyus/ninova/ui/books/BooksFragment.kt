@@ -58,7 +58,7 @@ class BooksFragment @Inject constructor(
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         ItemTouchHelper(swipeCallBack).attachToRecyclerView(recyclerView)
 
-        shelvesViewModel.getShelfWithBookList()
+        shelvesViewModel.loadShelfWithBookList()
         observeBookList()
     }
 

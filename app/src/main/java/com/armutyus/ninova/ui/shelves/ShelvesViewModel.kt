@@ -37,7 +37,7 @@ class ShelvesViewModel @Inject constructor(
         _currentShelfList.value = shelfList
     }
 
-    fun getShelfList() = viewModelScope.launch {
+    fun loadShelfList() = viewModelScope.launch {
         _shelfList.value = shelfRepositoryInterface.getLocalShelves()
     }
 
@@ -65,7 +65,7 @@ class ShelvesViewModel @Inject constructor(
         _searchShelvesList.value = shelfRepositoryInterface.searchLocalShelves(searchString)
     }
 
-    fun getShelfWithBookList() = viewModelScope.launch {
+    fun loadShelfWithBookList() = viewModelScope.launch {
         _shelfWithBooksList.value = shelfRepositoryInterface.getShelfWithBooks()
     }
 

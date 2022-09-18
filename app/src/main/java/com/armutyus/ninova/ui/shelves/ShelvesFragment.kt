@@ -61,10 +61,10 @@ class ShelvesFragment @Inject constructor(
                 )
                     .setAction("UNDO") {
                         shelvesViewModel.insertShelf(swipedShelf).invokeOnCompletion {
-                            shelvesViewModel.getShelfList()
+                            shelvesViewModel.loadShelfList()
                         }
                     }.show()
-                shelvesViewModel.getShelfList()
+                shelvesViewModel.loadShelfList()
             }
         }
 
@@ -124,7 +124,7 @@ class ShelvesFragment @Inject constructor(
                         "",
                     )
                 ).invokeOnCompletion {
-                    shelvesViewModel.getShelfList()
+                    shelvesViewModel.loadShelfList()
                 }
                 dialog.hide()
             }
@@ -134,7 +134,7 @@ class ShelvesFragment @Inject constructor(
 
     override fun onResume() {
         super.onResume()
-        shelvesViewModel.getShelfList()
+        shelvesViewModel.loadShelfList()
     }
 
     private fun observeShelfList() {
@@ -163,7 +163,7 @@ class ShelvesFragment @Inject constructor(
             shelvesViewModel.searchShelves("%$searchQuery%")
 
         } else if (searchQuery.isNullOrBlank()) {
-            shelvesViewModel.getShelfList()
+            shelvesViewModel.loadShelfList()
         }
 
         return true

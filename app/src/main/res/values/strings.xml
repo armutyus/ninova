@@ -81,4 +81,10 @@
     <string name="add_shelves">Add Shelves</string>
     <string name="select_the_shelves_you_want_to_add">Select the shelves you want to add:</string>
     <string name="welcome_to_ninova">WELCOME \n\nTO NINOVA</string>
+    <string name="search_through_all_books">Search through all books</string>
+    <string name="small_case_app_name">ninova</string>
+    <string name="upload_library_message">Do you want to upload your library before you sign out?</string>
+    <string name="cancel">Cancel</string>
+    <string name="decline">Decline</string>
+    <string name="accept">Accept</string>
 </resources>

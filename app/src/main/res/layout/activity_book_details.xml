@@ -12,14 +12,14 @@
     <LinearLayout
         android:id="@+id/progress_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone">
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:visibility="visible">
 
-        <androidx.core.widget.ContentLoadingProgressBar
-            android:layout_width="wrap_content"
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="?android:attr/progressBarStyle" />
+            android:indeterminate="true"/>
     </LinearLayout>
 
     <LinearLayout
