@@ -45,6 +45,7 @@ class BookDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBookDetailsBinding
     private lateinit var bookToShelfBottomSheetBinding: AddBookToShelfBottomSheetBinding
     private lateinit var bookDetails: BookDetailsInfo
+    private var notesTabDisabled = true
     private lateinit var tabLayout: TabLayout
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
@@ -226,9 +227,15 @@ class BookDetailsActivity : AppCompatActivity() {
     private fun setVisibilities(tab: TabLayout.Tab?) {
         when (tab?.text) {
             "NOTES" -> {
-                binding.bookDetailNotesLinearLayout.visibility = View.VISIBLE
-                binding.bookDetailInfoLinearLayout.visibility = View.GONE
-                binding.linearLayoutDetailsError.visibility = View.GONE
+                if (notesTabDisabled) {
+                    binding.bookDetailNotesLinearLayout.visibility = View.GONE
+                    binding.bookDetailInfoLinearLayout.visibility = View.VISIBLE
+                    binding.linearLayoutDetailsError.visibility = View.GONE
+                } else {
+                    binding.bookDetailNotesLinearLayout.visibility = View.VISIBLE
+                    binding.bookDetailInfoLinearLayout.visibility = View.GONE
+                    binding.linearLayoutDetailsError.visibility = View.GONE
+                }
             }
             "INFO" -> {
                 binding.bookDetailNotesLinearLayout.visibility = View.GONE
@@ -259,8 +266,10 @@ class BookDetailsActivity : AppCompatActivity() {
         binding.addBookToLibraryButton.visibility = View.GONE
         binding.bookDetailShelvesTextViews.visibility = View.VISIBLE
         binding.removeBookFromLibraryButton.visibility = View.VISIBLE
+        notesTabDisabled = false
         val notesTab = binding.bookDetailTabLayout.getTabAt(1)
-        notesTab?.view?.isEnabled = true
+        notesTab?.view?.setOnClickListener {
+        }
     }
 
     private fun setVisibilitiesForBookNull() {
@@ -276,8 +285,12 @@ class BookDetailsActivity : AppCompatActivity() {
         binding.addBookToLibraryButton.visibility = View.VISIBLE
         binding.bookDetailShelvesTextViews.visibility = View.GONE
         binding.removeBookFromLibraryButton.visibility = View.GONE
+        notesTabDisabled = true
         val notesTab = binding.bookDetailTabLayout.getTabAt(1)
-        notesTab?.view?.isEnabled = false
+        notesTab?.view?.setOnClickListener {
+            Toast.makeText(this, "Add this book to your library to take notes.", Toast.LENGTH_LONG)
+                .show()
+        }
     }
 
     private fun showAddShelfDialog() {
@@ -328,7 +341,11 @@ class BookDetailsActivity : AppCompatActivity() {
                 is Response.Failure -> {
                     binding.progressBar.visibility = View.GONE
                     if (type == LOCAL_BOOK_TYPE) {
-                        Toast.makeText(this, "Something went wrong! Showing local details.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            "Something went wrong! Showing local details.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
                         setVisibilitiesForBookNull()
                         Toast.makeText(this, "Something went wrong!", Toast.LENGTH_SHORT).show()

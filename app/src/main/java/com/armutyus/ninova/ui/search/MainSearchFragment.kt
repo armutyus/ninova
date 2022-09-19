@@ -88,7 +88,7 @@ class MainSearchFragment @Inject constructor(
             val toggleButtonGroup = binding?.searchButtonToggleGroup
             toggleButtonGroup?.visibility = View.VISIBLE
 
-        } else if (searchQuery.isNullOrBlank()) {
+        } else if (searchQuery.isBlank()) {
             mainSearchViewModel.randomBooksFromApi()
             setVisibilitiesForSearchQueryNull()
         }
