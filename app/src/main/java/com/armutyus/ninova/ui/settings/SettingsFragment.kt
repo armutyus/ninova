@@ -220,9 +220,11 @@ class SettingsFragment @Inject constructor(
                                         showUploadToast = false
                                     }
                                 }
-                                if (i == localBookList.size) {
-                                    Log.i("bookUpload", "Books uploaded")
-                                    uploadShelves()
+                                when (i) {
+                                    localBookList.size -> {
+                                        Log.i("bookUpload", "Books uploaded")
+                                        uploadShelves()
+                                    }
                                 }
                             }
                             is Response.Failure -> {
@@ -255,9 +257,11 @@ class SettingsFragment @Inject constructor(
                             is Response.Loading ->
                                 Log.i("shelvesUpload", "Shelves uploading")
                             is Response.Success -> {
-                                if (i == localShelfList.size) {
-                                    Log.i("shelvesUpload", "Shelves uploaded")
-                                    uploadCrossRefs()
+                                when (i) {
+                                    localShelfList.size -> {
+                                        Log.i("shelvesUpload", "Shelves uploaded")
+                                        uploadCrossRefs()
+                                    }
                                 }
                             }
                             is Response.Failure -> {
@@ -289,30 +293,32 @@ class SettingsFragment @Inject constructor(
                             is Response.Loading ->
                                 Log.i("crossRefsUpload", "CrossRefs uploading")
                             is Response.Success -> {
-                                if (i == localCrossRefList.size) {
-                                    if (shouldUploadBeforeSignOut) {
-                                        if (showSuccessToast) {
-                                            Toast.makeText(
-                                                requireContext(),
-                                                "Library uploaded to: ${user.email}",
-                                                Toast.LENGTH_SHORT
-                                            ).show().also {
-                                                showSuccessToast = false
+                                when (i) {
+                                    localCrossRefList.size -> {
+                                        if (shouldUploadBeforeSignOut) {
+                                            if (showSuccessToast) {
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    "Library uploaded to: ${user.email}",
+                                                    Toast.LENGTH_SHORT
+                                                ).show().also {
+                                                    showSuccessToast = false
+                                                }
+                                                signOut()
                                             }
-                                            signOut()
-                                        }
-                                    } else {
-                                        if (showSuccessToast) {
-                                            Toast.makeText(
-                                                requireContext(),
-                                                "Library uploaded to: ${user.email}",
-                                                Toast.LENGTH_SHORT
-                                            ).show().also {
-                                                showSuccessToast = false
+                                        } else {
+                                            if (showSuccessToast) {
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    "Library uploaded to: ${user.email}",
+                                                    Toast.LENGTH_SHORT
+                                                ).show().also {
+                                                    showSuccessToast = false
+                                                }
                                             }
                                         }
+                                        Log.i("crossRefsUpload", "CrossRefs uploaded")
                                     }
-                                    Log.i("crossRefsUpload", "CrossRefs uploaded")
                                 }
                             }
                             is Response.Failure -> {
