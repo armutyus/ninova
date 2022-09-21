@@ -33,6 +33,7 @@ class AboutActivity : AppCompatActivity() {
         creditsLinkText.applyLinks(getLinks())
 
     }
+
     private fun getLinks(): List<Link> {
 
         val firebaseUrl = Link("Firebase")
@@ -71,7 +72,14 @@ class AboutActivity : AppCompatActivity() {
             .setHighlightAlpha(0f)
             .setOnClickListener { openLink(RETROFIT_URL) }
 
-        return listOf(firebaseUrl, glideUrl, googleBooksApiUrl, linkBuilder, lottieAnimations, retrofitUrl)
+        return listOf(
+            firebaseUrl,
+            glideUrl,
+            googleBooksApiUrl,
+            linkBuilder,
+            lottieAnimations,
+            retrofitUrl
+        )
     }
 
     private fun openLink(link: String) {
