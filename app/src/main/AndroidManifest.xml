@@ -23,6 +23,7 @@
             android:exported="true"
             android:theme="@style/Theme.Ninova"
             android:configChanges="orientation"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity

@@ -32,7 +32,13 @@ object Constants {
     const val BASE_URL = "https://www.googleapis.com/books/v1/"
     const val BOOKS_REF = "Books"
     const val BOOKSHELF_CROSS_REF = "BookShelfCrossRef"
+    const val FIREBASE_URL = "https://firebase.google.com/"
+    const val GLIDE_URL = "https://github.com/bumptech/glide"
+    const val GOOGLE_BOOKS_API_URL = "https://developers.google.com/books"
+    const val LINK_BUILDER_URL = "https://github.com/klinker24/Android-TextView-LinkBuilder"
+    const val LOTTIE_FILES_URL = "https://lottiefiles.com/"
     const val PRIVACY_POLICY_URL = "https://sites.google.com/view/ninova-bookshelf-app"
+    const val RETROFIT_URL = "https://square.github.io/retrofit/"
     const val SHELVES_REF = "Shelves"
     const val USERS_REF = "Users"
 
