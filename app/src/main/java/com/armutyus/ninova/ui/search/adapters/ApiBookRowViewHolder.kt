@@ -14,6 +14,7 @@ import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.search.MainSearchFragment
 import com.bumptech.glide.RequestManager
+import com.google.android.material.progressindicator.CircularProgressIndicator
 
 class ApiBookRowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -31,6 +32,7 @@ class ApiBookRowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val bookReleaseDate = itemView.findViewById<TextView>(R.id.bookReleaseDateText)
         val addButton = itemView.findViewById<ImageButton>(R.id.main_search_add_button)
         val addedButton = itemView.findViewById<ImageButton>(R.id.main_search_add_checked_button)
+        val progressBar = itemView.findViewById<CircularProgressIndicator>(R.id.progress_bar)
 
         if (book.isBookAddedCheck(booksViewModel)) {
             addButton.visibility = View.GONE
@@ -58,16 +60,21 @@ class ApiBookRowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                     book.volumeInfo?.publisher,
                     book.volumeInfo?.subtitle,
                     book.volumeInfo?.title
-                )
+                ),
+                addButton,
+                addedButton,
+                progressBar
             )
             addButton.visibility = View.GONE
-            addedButton.visibility = View.VISIBLE
+            addedButton.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
         }
 
         addedButton?.setOnClickListener {
-            searchFragment.onAddedButtonClick(book.id!!)
-            addButton.visibility = View.VISIBLE
+            searchFragment.onAddedButtonClick(book.id!!, addButton, addedButton, progressBar)
+            addButton.visibility = View.GONE
             addedButton.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
         }
 
         itemView.apply {

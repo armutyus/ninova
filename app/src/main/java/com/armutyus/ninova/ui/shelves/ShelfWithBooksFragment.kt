@@ -22,7 +22,7 @@ class ShelfWithBooksFragment @Inject constructor(
 
     private var fragmentBinding: FragmentShelfWithBooksBinding? = null
     private val shelvesViewModel by activityViewModels<ShelvesViewModel>()
-    private var currentShelfId = 0
+    private var currentShelfId = ""
     private val args: ShelfWithBooksFragmentArgs by navArgs()
     private val swipeCallBack = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
         override fun onMove(

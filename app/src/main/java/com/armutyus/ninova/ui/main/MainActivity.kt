@@ -198,16 +198,15 @@ class MainActivity : AppCompatActivity() {
                 }
                 is Response.Success -> {
                     val firebaseBookList = response.data
-                    var i = 0
                     if (firebaseBookList.isNotEmpty()) {
-                        while (i < firebaseBookList.size) {
-                            val book = firebaseBookList[i]
-                            booksViewModel.insertBook(book).invokeOnCompletion {
+                        firebaseBookList.forEach {
+                            booksViewModel.insertBook(it).invokeOnCompletion {
                                 booksViewModel.loadBookList()
                             }
-                            i++
+                            if (firebaseBookList.indexOf(it) == firebaseBookList.size - 1) {
+                                Log.i("booksDownload", "Books downloaded")
+                            }
                         }
-                        Log.i("booksDownload", "Books downloaded")
                     } else {
                         Log.i("booksDownload", "No books")
                     }
@@ -229,17 +228,16 @@ class MainActivity : AppCompatActivity() {
                 }
                 is Response.Success -> {
                     val firebaseCrossRefList = response.data
-                    var i = 0
                     if (firebaseCrossRefList.isNotEmpty()) {
-                        while (i < firebaseCrossRefList.size) {
-                            val crossRef = firebaseCrossRefList[i]
-                            shelvesViewModel.insertBookShelfCrossRef(crossRef)
+                        firebaseCrossRefList.forEach {
+                            shelvesViewModel.insertBookShelfCrossRef(it)
                                 .invokeOnCompletion {
                                     shelvesViewModel.loadShelfWithBookList()
                                 }
-                            i++
+                            if (firebaseCrossRefList.indexOf(it) == firebaseCrossRefList.size - 1) {
+                                Log.i("crossRefsDownload", "CrossRefs downloaded")
+                            }
                         }
-                        Log.i("crossRefsDownload", "CrossRefs downloaded")
                     } else {
                         Log.i("crossRefsDownload", "No CrossRefs")
                     }
@@ -264,18 +262,21 @@ class MainActivity : AppCompatActivity() {
                 }
                 is Response.Success -> {
                     val firebaseShelvesList = response.data
-                    var i = 0
                     if (firebaseShelvesList.isNotEmpty()) {
-                        while (i < firebaseShelvesList.size) {
-                            val shelf = firebaseShelvesList[i]
-                            shelvesViewModel.insertShelf(shelf).invokeOnCompletion {
+                        firebaseShelvesList.forEach {
+                            shelvesViewModel.insertShelf(it).invokeOnCompletion {
                                 shelvesViewModel.loadShelfList()
                             }
-                            i++
+                            if (firebaseShelvesList.indexOf(it) == firebaseShelvesList.size - 1) {
+                                Log.i("shelvesDownload", "Shelves downloaded")
+                                Toast.makeText(
+                                    this,
+                                    "Library successfully synced..",
+                                    Toast.LENGTH_LONG
+                                )
+                                    .show()
+                            }
                         }
-                        Log.i("shelvesDownload", "Shelves downloaded")
-                        Toast.makeText(this, "Library successfully synced..", Toast.LENGTH_LONG)
-                            .show()
                     } else {
                         Log.i("shelvesDownload", "No shelves")
                     }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -16,6 +17,7 @@ import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.search.adapters.MainSearchRecyclerViewAdapter
 import com.armutyus.ninova.ui.search.listeners.OnBookAddButtonClickListener
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import javax.inject.Inject
 
 class MainSearchFragment @Inject constructor(
@@ -185,12 +187,32 @@ class MainSearchFragment @Inject constructor(
         fragmentBinding = null
     }
 
-    override fun onClick(localBook: DataModel.LocalBook) {
-        mainSearchViewModel.insertBook(localBook)
+    override fun onClick(
+        localBook: DataModel.LocalBook,
+        addButton: ImageButton,
+        addedButton: ImageButton,
+        progressBar: CircularProgressIndicator
+    ) {
+        mainSearchViewModel.insertBook(localBook).invokeOnCompletion {
+            booksViewModel.loadBookList()
+            addButton.visibility = View.GONE
+            addedButton.visibility = View.VISIBLE
+            progressBar.visibility = View.GONE
+        }
     }
 
-    override fun onAddedButtonClick(id: String) {
-        mainSearchViewModel.deleteBookById(id)
+    override fun onAddedButtonClick(
+        id: String,
+        addButton: ImageButton,
+        addedButton: ImageButton,
+        progressBar: CircularProgressIndicator
+    ) {
+        mainSearchViewModel.deleteBookById(id).invokeOnCompletion {
+            booksViewModel.loadBookList()
+            addButton.visibility = View.VISIBLE
+            addedButton.visibility = View.GONE
+            progressBar.visibility = View.GONE
+        }
     }
 
 }

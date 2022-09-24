@@ -81,6 +81,16 @@
 
         </LinearLayout>
 
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress_bar"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_weight="0"
+            android:indeterminate="true"
+            android:visibility="gone"
+            style="@style/Widget.Material3.CircularProgressIndicator.Small" />
+
         <ImageButton
             android:id="@+id/main_search_add_button"
             android:layout_width="wrap_content"

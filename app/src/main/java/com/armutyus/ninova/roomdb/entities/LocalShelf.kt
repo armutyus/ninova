@@ -6,12 +6,12 @@ import com.armutyus.ninova.ui.shelves.ShelvesViewModel
 
 @Entity(tableName = "Shelf")
 data class LocalShelf(
-    @PrimaryKey(autoGenerate = true) var shelfId: Int,
+    @PrimaryKey(autoGenerate = false) var shelfId: String,
     var shelfTitle: String?,
     var createdAt: String?,
     var shelfCover: String?,
 ) {
-    constructor() : this(0, "", "", "")
+    constructor() : this("", "", "", "")
 
     fun getBookCount(shelvesViewModel: ShelvesViewModel): Int {
         return shelvesViewModel.shelfWithBooksList.value?.firstOrNull {

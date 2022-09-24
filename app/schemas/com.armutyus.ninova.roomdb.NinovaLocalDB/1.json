@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5596d5ab992d0560a6ddc0b0f316de91",
+    "identityHash": "f06c040d3004790c1be5368c60a20110",
     "entities": [
       {
         "tableName": "Book",
@@ -92,12 +92,12 @@
       },
       {
         "tableName": "Shelf",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`shelfId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `shelfTitle` TEXT, `createdAt` TEXT, `shelfCover` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`shelfId` TEXT NOT NULL, `shelfTitle` TEXT, `createdAt` TEXT, `shelfCover` TEXT, PRIMARY KEY(`shelfId`))",
         "fields": [
           {
             "fieldPath": "shelfId",
             "columnName": "shelfId",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -123,14 +123,14 @@
           "columnNames": [
             "shelfId"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
       },
       {
         "tableName": "BookShelfCrossRef",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`bookId` TEXT NOT NULL, `shelfId` INTEGER NOT NULL, PRIMARY KEY(`bookId`, `shelfId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`bookId` TEXT NOT NULL, `shelfId` TEXT NOT NULL, PRIMARY KEY(`bookId`, `shelfId`))",
         "fields": [
           {
             "fieldPath": "bookId",
@@ -141,7 +141,7 @@
           {
             "fieldPath": "shelfId",
             "columnName": "shelfId",
-            "affinity": "INTEGER",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -159,7 +159,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5596d5ab992d0560a6ddc0b0f316de91')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f06c040d3004790c1be5368c60a20110')"
     ]
   }
 }

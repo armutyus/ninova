@@ -118,7 +118,7 @@ class ShelvesFragment @Inject constructor(
                     SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(timeStamp)
                 shelvesViewModel.insertShelf(
                     LocalShelf(
-                        0,
+                        UUID.randomUUID().toString(),
                         shelfTitle,
                         formattedDate,
                         "",
@@ -126,7 +126,7 @@ class ShelvesFragment @Inject constructor(
                 ).invokeOnCompletion {
                     shelvesViewModel.loadShelfList()
                 }
-                dialog.hide()
+                dialog.dismiss()
             }
 
         }
