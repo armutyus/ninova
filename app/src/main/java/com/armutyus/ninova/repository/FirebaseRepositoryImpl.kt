@@ -110,13 +110,15 @@ class FirebaseRepositoryImpl @Inject constructor(
         withContext(coroutineContext) {
             try {
                 val uid = auth.currentUser?.uid!!
-                val downloadShelfTask =
+                val querySnapshot: QuerySnapshot =
                     db.collection(USERS_REF).document(uid).collection(SHELVES_REF)
-                        .get().await().toObjects(LocalShelf::class.java)
-                downloadShelfTask.let {
-                    return@let Response.Success(it)
+                        .get().await()
+                val shelfList = querySnapshot.documents.mapNotNull { documentSnapshot ->
+                    documentSnapshot.toObject(LocalShelf::class.java)?.apply {
+                        this.shelfId = documentSnapshot.id
+                    }
                 }
-
+                Response.Success(shelfList)
             } catch (e: Exception) {
                 Response.Failure(e.localizedMessage ?: ERROR_MESSAGE)
             }
@@ -126,13 +128,13 @@ class FirebaseRepositoryImpl @Inject constructor(
         withContext(coroutineContext) {
             try {
                 val uid = auth.currentUser?.uid!!
-                val downloadCrossRefTask =
+                val querySnapshot: QuerySnapshot =
                     db.collection(USERS_REF).document(uid).collection(BOOKSHELF_CROSS_REF)
-                        .get().await().toObjects(BookShelfCrossRef::class.java)
-                downloadCrossRefTask.let {
-                    return@let Response.Success(it)
+                        .get().await()
+                val crossRefList = querySnapshot.documents.mapNotNull { documentSnapshot ->
+                    documentSnapshot.toObject(BookShelfCrossRef::class.java)
                 }
-
+                Response.Success(crossRefList)
             } catch (e: Exception) {
                 Response.Failure(e.localizedMessage ?: ERROR_MESSAGE)
             }
@@ -171,22 +173,29 @@ class FirebaseRepositoryImpl @Inject constructor(
         withContext(coroutineContext) {
             try {
                 val uploadShelves = auth.currentUser?.apply {
-                    db.collection(USERS_REF).document(uid).collection(SHELVES_REF).get()
+                    db.collection(USERS_REF).document(uid).collection(SHELVES_REF)
+                        .document(shelf.shelfId).set(
+                            mapOf(
+                                "shelfTitle" to shelf.shelfTitle,
+                                "createdAt" to shelf.createdAt,
+                                "shelfCover" to shelf.shelfCover
+                            )
+                        ).await()
+                    /*db.collection(USERS_REF).document(uid).collection(SHELVES_REF).get()
                         .continueWith { querySnapshot ->
                             querySnapshot.result.documents.forEach {
                                 it.reference.delete()
                             }
                         }.continueWith {
                             db.collection(USERS_REF).document(uid).collection(SHELVES_REF)
-                                .document(shelf.shelfTitle!!).set(
+                                .document(shelf.shelfId).set(
                                     mapOf(
-                                        "shelfId" to shelf.shelfId,
                                         "shelfTitle" to shelf.shelfTitle,
                                         "createdAt" to shelf.createdAt,
                                         "shelfCover" to shelf.shelfCover
                                     )
                                 )
-                        }.await()
+                        }.await()*/
                 }
                 uploadShelves.let {
                     return@let Response.Success(true)
@@ -203,7 +212,14 @@ class FirebaseRepositoryImpl @Inject constructor(
                     val crossRefDocumentId =
                         db.collection(USERS_REF).document(uid).collection(BOOKSHELF_CROSS_REF)
                             .document().id
-                    db.collection(USERS_REF).document(uid).collection(BOOKSHELF_CROSS_REF).get()
+                    db.collection(USERS_REF).document(uid).collection(BOOKSHELF_CROSS_REF)
+                        .document(crossRefDocumentId).set(
+                            mapOf(
+                                "bookId" to bookShelfCrossRef.bookId,
+                                "shelfId" to bookShelfCrossRef.shelfId
+                            )
+                        ).await()
+                    /*db.collection(USERS_REF).document(uid).collection(BOOKSHELF_CROSS_REF).get()
                         .continueWith { querySnapshot ->
                             querySnapshot.result.documents.forEach {
                                 it.reference.delete()
@@ -216,7 +232,7 @@ class FirebaseRepositoryImpl @Inject constructor(
                                         "shelfId" to bookShelfCrossRef.shelfId
                                     )
                                 )
-                        }.await()
+                        }.await()*/
                 }
                 uploadCrossRef.let {
                     return@let Response.Success(true)

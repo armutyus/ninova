@@ -15,7 +15,6 @@
         android:layout_marginVertical="24dp"
         android:hint="@string/prompt_email"
         app:errorEnabled="false"
-        app:boxStrokeColor="@color/md_theme_light_primary"
         app:startIconDrawable="@drawable/ic_login_email_gray">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -32,7 +31,6 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
         android:layout_marginBottom="24dp"
-        app:boxStrokeColor="@color/md_theme_light_primary"
         android:hint="@string/prompt_password"
         app:errorEnabled="false"
         app:endIconMode="password_toggle"
@@ -52,7 +50,6 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
         android:layout_marginBottom="24dp"
-        app:boxStrokeColor="@color/md_theme_light_primary"
         android:hint="@string/confirm_password"
         app:errorEnabled="false"
         app:endIconMode="password_toggle"

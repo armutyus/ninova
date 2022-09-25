@@ -5,9 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.repository.FirebaseRepositoryInterface
 import com.armutyus.ninova.repository.LocalBooksRepositoryInterface
+import com.armutyus.ninova.repository.ShelfRepositoryInterface
 import com.armutyus.ninova.roomdb.NinovaLocalDB
-import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
-import com.armutyus.ninova.roomdb.entities.LocalShelf
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val booksRepository: LocalBooksRepositoryInterface,
+    private val shelfRepository: ShelfRepositoryInterface,
     private val repository: FirebaseRepositoryInterface,
     private val db: NinovaLocalDB
 ) : ViewModel() {
@@ -32,23 +32,27 @@ class SettingsViewModel @Inject constructor(
                 return@launch
             }
         }
+
+        val localCrossRef = booksRepository.getBookShelfCrossRef()
+        localCrossRef.forEach {
+            val response = repository.uploadUserCrossRefToFirestore(it)
+            if (response is Response.Failure) {
+                onComplete(response)
+                return@launch
+            }
+        }
+
+        val localShelf = shelfRepository.getLocalShelves()
+        localShelf.forEach {
+            val response = repository.uploadUserShelvesToFirestore(it)
+            if (response is Response.Failure) {
+                onComplete(response)
+                return@launch
+            }
+        }
+
         onComplete(Response.Success(true))
     }
-
-    fun uploadUserCrossRefToFirestore(
-        bookShelfCrossRef: BookShelfCrossRef,
-        onComplete: (Response<Boolean>) -> Unit
-    ) =
-        viewModelScope.launch {
-            val response = repository.uploadUserCrossRefToFirestore(bookShelfCrossRef)
-            onComplete(response)
-        }
-
-    fun uploadUserShelvesToFirestore(shelf: LocalShelf, onComplete: (Response<Boolean>) -> Unit) =
-        viewModelScope.launch {
-            val response = repository.uploadUserShelvesToFirestore(shelf)
-            onComplete(response)
-        }
 
     fun signOut(onComplete: (Response<Boolean>) -> Unit) = viewModelScope.launch {
         val response = repository.signOut()

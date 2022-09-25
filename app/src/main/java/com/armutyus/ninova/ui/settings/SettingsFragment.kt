@@ -63,8 +63,6 @@ class SettingsFragment @Inject constructor(
     lateinit var aboutIntent: Intent
 
     private val settingsViewModel by activityViewModels<SettingsViewModel>()
-    private var showSuccessToast = true
-    private var showUploadToast = true
     private val user = auth.currentUser!!
 
     private val sharedPreferences: SharedPreferences
@@ -122,12 +120,7 @@ class SettingsFragment @Inject constructor(
         signOut?.onPreferenceClickListener = signOutListener
 
         val uploadLibraryListener = Preference.OnPreferenceClickListener {
-            showSuccessToast = true
-            showUploadToast = true
-            //shouldUploadBeforeSignOut = false
-            uploadDataAndSignOut()
-            //uploadCrossRefs()
-            //uploadShelves()
+            uploadDataAndSignOut(shouldSignOut = false)
             true
         }
         uploadLibrary?.onPreferenceClickListener = uploadLibraryListener
@@ -198,23 +191,27 @@ class SettingsFragment @Inject constructor(
         }, viewLifecycleOwner, Lifecycle.State.CREATED)
     }
 
-    private fun uploadDataAndSignOut(dialog: DialogInterface? = null) {
+    private fun uploadDataAndSignOut(dialog: DialogInterface? = null, shouldSignOut: Boolean = false) {
         settingsViewModel.uploadUserData { response ->
             when (response) {
-                is Response.Loading -> Log.i("booksUpload", "Books uploading")
+                is Response.Loading -> {
+                    Toast.makeText(
+                        requireContext(),
+                        "Library uploading, please wait..",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Log.i("libraryUpload", "Library uploading")
+                }
                 is Response.Success -> {
-                    if (showUploadToast) {
-                        Toast.makeText(
-                            requireContext(),
-                            "Books uploaded",
-                            Toast.LENGTH_SHORT
-                        ).show().also {
-                            showUploadToast = false
-                        }
-                    }
+                    Toast.makeText(
+                        requireContext(),
+                        "Library uploaded",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Log.i("libraryUpload", "Library uploaded")
                 }
                 is Response.Failure -> {
-                    Log.e("Books Upload Error", response.errorMessage)
+                    Log.e("Library Upload Error", response.errorMessage)
                     Toast.makeText(
                         requireContext(),
                         response.errorMessage,
@@ -224,90 +221,10 @@ class SettingsFragment @Inject constructor(
                 }
             }
         }.invokeOnCompletion {
-            signOut()
+            if (shouldSignOut) { signOut() }
             dialog?.dismiss()
         }
     }
-
-    /*   private fun uploadShelves() {
-           shelvesViewModel.loadShelfList().invokeOnCompletion {
-               val localShelfList = shelvesViewModel.shelfList.value
-               if (localShelfList != null && localShelfList.isNotEmpty()) {
-                   localShelfList.forEach {
-                       settingsViewModel.uploadUserShelvesToFirestore(it) { response ->
-                           when (response) {
-                               is Response.Loading ->
-                                   Log.i("shelvesUpload", "Shelves uploading")
-                               is Response.Success -> {
-                                   if (localShelfList.indexOf(it) == localShelfList.size - 1) {
-                                       Log.i("shelvesUpload", "Shelves uploaded")
-                                   }
-                               }
-                               is Response.Failure -> {
-                                   Log.e("Shelves Upload Error", response.errorMessage)
-                                   Toast.makeText(
-                                       requireContext(),
-                                       response.errorMessage,
-                                       Toast.LENGTH_LONG
-                                   ).show()
-                               }
-                           }
-                       }
-                   }
-               } else {
-                   Log.i("shelvesUpload", "No shelves")
-               }
-           }
-       }
-
-       private fun uploadCrossRefs() {
-           booksViewModel.loadBookShelfCrossRef().invokeOnCompletion {
-               val localCrossRefList = booksViewModel.bookShelfCrossRefList.value
-               if (localCrossRefList != null && localCrossRefList.isNotEmpty()) {
-                   localCrossRefList.forEach {
-                       settingsViewModel.uploadUserCrossRefToFirestore(it) { response ->
-                           when (response) {
-                               is Response.Loading ->
-                                   Log.i("crossRefsUpload", "CrossRefs uploading")
-                               is Response.Success -> {
-                                   if (localCrossRefList.indexOf(it) == localCrossRefList.size - 1) {
-                                       if (showSuccessToast) {
-                                           Toast.makeText(
-                                               requireContext(),
-                                               "Library uploaded to: ${user.email}",
-                                               Toast.LENGTH_SHORT
-                                           ).show().also {
-                                               showSuccessToast = false
-                                           }
-                                       }
-                                       Log.i("crossRefsUpload", "CrossRefs uploaded")
-                                   }
-                               }
-                               is Response.Failure -> {
-                                   Log.e("CrossRefs Upload Error", response.errorMessage)
-                                   Toast.makeText(
-                                       requireContext(),
-                                       response.errorMessage,
-                                       Toast.LENGTH_LONG
-                                   ).show()
-                               }
-                           }
-                       }
-                   }
-               } else {
-                   Log.i("crossRefsUpload", "No crossrefs")
-                   if (showSuccessToast) {
-                       Toast.makeText(
-                           requireContext(),
-                           "Library uploaded to: ${user.email}",
-                           Toast.LENGTH_SHORT
-                       ).show().also {
-                           showSuccessToast = false
-                       }
-                   }
-               }
-           }
-       }*/
 
     private fun signOut() {
         settingsViewModel.signOut { response ->
@@ -341,9 +258,7 @@ class SettingsFragment @Inject constructor(
                 dialog.dismiss()
             }
             .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
-                showSuccessToast = true
-                showUploadToast = true
-                uploadDataAndSignOut(dialog)
+                uploadDataAndSignOut(dialog, true)
             }
             .show()
     }
