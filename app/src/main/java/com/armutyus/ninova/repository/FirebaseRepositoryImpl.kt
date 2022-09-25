@@ -145,7 +145,6 @@ class FirebaseRepositoryImpl @Inject constructor(
                     db.collection(USERS_REF).document(uid).collection(BOOKS_REF)
                         .document(localBook.bookId).set(
                             mapOf(
-                                "bookId" to localBook.bookId,
                                 "bookAuthors" to localBook.bookAuthors,
                                 "bookCategories" to localBook.bookCategories,
                                 "bookCoverSmallThumbnail" to localBook.bookCoverSmallThumbnail,
