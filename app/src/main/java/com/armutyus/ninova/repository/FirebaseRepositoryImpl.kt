@@ -17,6 +17,7 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -91,12 +92,15 @@ class FirebaseRepositoryImpl @Inject constructor(
         withContext(coroutineContext) {
             try {
                 val uid = auth.currentUser?.uid!!
-                val downloadBookTask = db.collection(USERS_REF).document(uid).collection(BOOKS_REF)
-                    .get().await().toObjects(DataModel.LocalBook::class.java)
-                downloadBookTask.let {
-                    return@let Response.Success(it)
+                val querySnapshot: QuerySnapshot =
+                    db.collection(USERS_REF).document(uid).collection(BOOKS_REF)
+                        .get().await()
+                val bookList = querySnapshot.documents.mapNotNull { documentSnapshot ->
+                    documentSnapshot.toObject(DataModel.LocalBook::class.java)?.apply {
+                        this.bookId = documentSnapshot.id
+                    }
                 }
-
+                Response.Success(bookList)
             } catch (e: Exception) {
                 Response.Failure(e.localizedMessage ?: ERROR_MESSAGE)
             }
@@ -138,30 +142,23 @@ class FirebaseRepositoryImpl @Inject constructor(
         withContext(coroutineContext) {
             try {
                 val uploadBooks = auth.currentUser?.apply {
-                    db.collection(USERS_REF).document(uid).collection(BOOKS_REF).get()
-                        .continueWith { querySnapshot ->
-                            querySnapshot.result.documents.forEach {
-                                it.reference.delete()
-                            }
-                        }.continueWith {
-                            db.collection(USERS_REF).document(uid).collection(BOOKS_REF)
-                                .document(localBook.bookTitle!!).set(
-                                    mapOf(
-                                        "bookId" to localBook.bookId,
-                                        "bookAuthors" to localBook.bookAuthors,
-                                        "bookCategories" to localBook.bookCategories,
-                                        "bookCoverSmallThumbnail" to localBook.bookCoverSmallThumbnail,
-                                        "bookCoverThumbnail" to localBook.bookCoverThumbnail,
-                                        "bookDescription" to localBook.bookDescription,
-                                        "bookNotes" to localBook.bookNotes,
-                                        "bookPages" to localBook.bookPages,
-                                        "bookPublishedDate" to localBook.bookPublishedDate,
-                                        "bookPublisher" to localBook.bookPublisher,
-                                        "bookSubtitle" to localBook.bookSubtitle,
-                                        "bookTitle" to localBook.bookTitle
-                                    )
-                                )
-                        }.await()
+                    db.collection(USERS_REF).document(uid).collection(BOOKS_REF)
+                        .document(localBook.bookId).set(
+                            mapOf(
+                                "bookId" to localBook.bookId,
+                                "bookAuthors" to localBook.bookAuthors,
+                                "bookCategories" to localBook.bookCategories,
+                                "bookCoverSmallThumbnail" to localBook.bookCoverSmallThumbnail,
+                                "bookCoverThumbnail" to localBook.bookCoverThumbnail,
+                                "bookDescription" to localBook.bookDescription,
+                                "bookNotes" to localBook.bookNotes,
+                                "bookPages" to localBook.bookPages,
+                                "bookPublishedDate" to localBook.bookPublishedDate,
+                                "bookPublisher" to localBook.bookPublisher,
+                                "bookSubtitle" to localBook.bookSubtitle,
+                                "bookTitle" to localBook.bookTitle
+                            )
+                        ).await()
                 }
                 uploadBooks.let {
                     return@let Response.Success(true)

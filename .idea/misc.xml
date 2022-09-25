@@ -42,18 +42,18 @@
         <entry key="app/src/main/res/layout-w936dp/activity_login.xml" value="0.1437841530054645" />
         <entry key="app/src/main/res/layout/activity_about.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_book_details.xml" value="0.28229166666666666" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/add_book_to_shelf.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/add_book_to_shelf_bottom_sheet.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/add_book_to_shelf_bottom_sheet.xml" value="0.335" />
         <entry key="app/src/main/res/layout/add_book_to_shelf_row.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/add_new_shelf_bottom_sheet.xml" value="0.28125" />
         <entry key="app/src/main/res/layout/books_main_row.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_book_to_shelf.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_book_user_notes.xml" value="0.28229166666666666" />
-        <entry key="app/src/main/res/layout/fragment_books.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_books.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/fragment_books_in_shelf.xml" value="0.2682291666666667" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.19067028985507245" />
         <entry key="app/src/main/res/layout/fragment_discover.xml" value="0.28229166666666666" />
@@ -86,7 +86,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

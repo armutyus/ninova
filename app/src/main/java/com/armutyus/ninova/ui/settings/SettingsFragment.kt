@@ -1,5 +1,6 @@
 package com.armutyus.ninova.ui.settings
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
@@ -34,12 +35,9 @@ import com.armutyus.ninova.constants.Constants.SETTINGS_ACTION_KEY
 import com.armutyus.ninova.constants.Constants.SYSTEM_THEME
 import com.armutyus.ninova.constants.Constants.VERSION_NAME
 import com.armutyus.ninova.constants.Response
-import com.armutyus.ninova.ui.books.BooksViewModel
-import com.armutyus.ninova.ui.shelves.ShelvesViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.*
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -64,9 +62,7 @@ class SettingsFragment @Inject constructor(
     @Inject
     lateinit var aboutIntent: Intent
 
-    private val booksViewModel by activityViewModels<BooksViewModel>()
     private val settingsViewModel by activityViewModels<SettingsViewModel>()
-    private val shelvesViewModel by activityViewModels<ShelvesViewModel>()
     private var showSuccessToast = true
     private var showUploadToast = true
     private val user = auth.currentUser!!
@@ -129,9 +125,9 @@ class SettingsFragment @Inject constructor(
             showSuccessToast = true
             showUploadToast = true
             //shouldUploadBeforeSignOut = false
-            uploadBooks()
-            uploadCrossRefs()
-            uploadShelves()
+            uploadDataAndSignOut()
+            //uploadCrossRefs()
+            //uploadShelves()
             true
         }
         uploadLibrary?.onPreferenceClickListener = uploadLibraryListener
@@ -201,134 +197,117 @@ class SettingsFragment @Inject constructor(
             }
         }, viewLifecycleOwner, Lifecycle.State.CREATED)
     }
-    private fun uploadBooks() {
-        booksViewModel.loadBookList().invokeOnCompletion {
-            val localBookList = booksViewModel.localBookList.value
-            if (localBookList != null && localBookList.isNotEmpty()) {
-                localBookList.forEach {
-                    settingsViewModel.uploadUserBooksToFirestore(it) { response ->
-                        when (response) {
-                            is Response.Loading -> Log.i("booksUpload", "Books uploading")
-                            is Response.Success -> {
-                                if (showUploadToast) {
-                                    Toast.makeText(
-                                        requireContext(),
-                                        "Uploading library..",
-                                        Toast.LENGTH_SHORT
-                                    ).show().also {
-                                        showUploadToast = false
-                                    }
-                                }
-                                if (localBookList.indexOf(it) == localBookList.size - 1) {
-                                    Log.i("bookUpload", "Books uploaded")
-                                }
-                            }
-                            is Response.Failure -> {
-                                Log.e("Books Upload Error", response.errorMessage)
-                                Toast.makeText(
-                                    requireContext(),
-                                    response.errorMessage,
-                                    Toast.LENGTH_LONG
-                                )
-                                    .show()
-                            }
+
+    private fun uploadDataAndSignOut(dialog: DialogInterface? = null) {
+        settingsViewModel.uploadUserData { response ->
+            when (response) {
+                is Response.Loading -> Log.i("booksUpload", "Books uploading")
+                is Response.Success -> {
+                    if (showUploadToast) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Books uploaded",
+                            Toast.LENGTH_SHORT
+                        ).show().also {
+                            showUploadToast = false
                         }
                     }
                 }
-            } else {
-                Log.i("bookUpload", "No books in library")
-                if (showUploadToast) {
+                is Response.Failure -> {
+                    Log.e("Books Upload Error", response.errorMessage)
                     Toast.makeText(
                         requireContext(),
-                        "Uploading library..",
-                        Toast.LENGTH_SHORT
-                    ).show().also {
-                        showUploadToast = false
-                    }
+                        response.errorMessage,
+                        Toast.LENGTH_LONG
+                    )
+                        .show()
                 }
             }
+        }.invokeOnCompletion {
+            signOut()
+            dialog?.dismiss()
         }
     }
 
-    private fun uploadShelves() {
-        shelvesViewModel.loadShelfList().invokeOnCompletion {
-            val localShelfList = shelvesViewModel.shelfList.value
-            if (localShelfList != null && localShelfList.isNotEmpty()) {
-                localShelfList.forEach {
-                    settingsViewModel.uploadUserShelvesToFirestore(it) { response ->
-                        when (response) {
-                            is Response.Loading ->
-                                Log.i("shelvesUpload", "Shelves uploading")
-                            is Response.Success -> {
-                                if (localShelfList.indexOf(it) == localShelfList.size - 1) {
-                                    Log.i("shelvesUpload", "Shelves uploaded")
-                                }
-                            }
-                            is Response.Failure -> {
-                                Log.e("Shelves Upload Error", response.errorMessage)
-                                Toast.makeText(
-                                    requireContext(),
-                                    response.errorMessage,
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
-                        }
-                    }
-                }
-            } else {
-                Log.i("shelvesUpload", "No shelves")
-            }
-        }
-    }
+    /*   private fun uploadShelves() {
+           shelvesViewModel.loadShelfList().invokeOnCompletion {
+               val localShelfList = shelvesViewModel.shelfList.value
+               if (localShelfList != null && localShelfList.isNotEmpty()) {
+                   localShelfList.forEach {
+                       settingsViewModel.uploadUserShelvesToFirestore(it) { response ->
+                           when (response) {
+                               is Response.Loading ->
+                                   Log.i("shelvesUpload", "Shelves uploading")
+                               is Response.Success -> {
+                                   if (localShelfList.indexOf(it) == localShelfList.size - 1) {
+                                       Log.i("shelvesUpload", "Shelves uploaded")
+                                   }
+                               }
+                               is Response.Failure -> {
+                                   Log.e("Shelves Upload Error", response.errorMessage)
+                                   Toast.makeText(
+                                       requireContext(),
+                                       response.errorMessage,
+                                       Toast.LENGTH_LONG
+                                   ).show()
+                               }
+                           }
+                       }
+                   }
+               } else {
+                   Log.i("shelvesUpload", "No shelves")
+               }
+           }
+       }
 
-    private fun uploadCrossRefs() {
-        booksViewModel.loadBookShelfCrossRef().invokeOnCompletion {
-            val localCrossRefList = booksViewModel.bookShelfCrossRefList.value
-            if (localCrossRefList != null && localCrossRefList.isNotEmpty()) {
-                localCrossRefList.forEach {
-                    settingsViewModel.uploadUserCrossRefToFirestore(it) { response ->
-                        when (response) {
-                            is Response.Loading ->
-                                Log.i("crossRefsUpload", "CrossRefs uploading")
-                            is Response.Success -> {
-                                if (localCrossRefList.indexOf(it) == localCrossRefList.size - 1) {
-                                    if (showSuccessToast) {
-                                        Toast.makeText(
-                                            requireContext(),
-                                            "Library uploaded to: ${user.email}",
-                                            Toast.LENGTH_SHORT
-                                        ).show().also {
-                                            showSuccessToast = false
-                                        }
-                                    }
-                                    Log.i("crossRefsUpload", "CrossRefs uploaded")
-                                }
-                            }
-                            is Response.Failure -> {
-                                Log.e("CrossRefs Upload Error", response.errorMessage)
-                                Toast.makeText(
-                                    requireContext(),
-                                    response.errorMessage,
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
-                        }
-                    }
-                }
-            } else {
-                Log.i("crossRefsUpload", "No crossrefs")
-                if (showSuccessToast) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Library uploaded to: ${user.email}",
-                        Toast.LENGTH_SHORT
-                    ).show().also {
-                        showSuccessToast = false
-                    }
-                }
-            }
-        }
-    }
+       private fun uploadCrossRefs() {
+           booksViewModel.loadBookShelfCrossRef().invokeOnCompletion {
+               val localCrossRefList = booksViewModel.bookShelfCrossRefList.value
+               if (localCrossRefList != null && localCrossRefList.isNotEmpty()) {
+                   localCrossRefList.forEach {
+                       settingsViewModel.uploadUserCrossRefToFirestore(it) { response ->
+                           when (response) {
+                               is Response.Loading ->
+                                   Log.i("crossRefsUpload", "CrossRefs uploading")
+                               is Response.Success -> {
+                                   if (localCrossRefList.indexOf(it) == localCrossRefList.size - 1) {
+                                       if (showSuccessToast) {
+                                           Toast.makeText(
+                                               requireContext(),
+                                               "Library uploaded to: ${user.email}",
+                                               Toast.LENGTH_SHORT
+                                           ).show().also {
+                                               showSuccessToast = false
+                                           }
+                                       }
+                                       Log.i("crossRefsUpload", "CrossRefs uploaded")
+                                   }
+                               }
+                               is Response.Failure -> {
+                                   Log.e("CrossRefs Upload Error", response.errorMessage)
+                                   Toast.makeText(
+                                       requireContext(),
+                                       response.errorMessage,
+                                       Toast.LENGTH_LONG
+                                   ).show()
+                               }
+                           }
+                       }
+                   }
+               } else {
+                   Log.i("crossRefsUpload", "No crossrefs")
+                   if (showSuccessToast) {
+                       Toast.makeText(
+                           requireContext(),
+                           "Library uploaded to: ${user.email}",
+                           Toast.LENGTH_SHORT
+                       ).show().also {
+                           showSuccessToast = false
+                       }
+                   }
+               }
+           }
+       }*/
 
     private fun signOut() {
         settingsViewModel.signOut { response ->
@@ -364,21 +343,9 @@ class SettingsFragment @Inject constructor(
             .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
                 showSuccessToast = true
                 showUploadToast = true
-                runBlocking {
-                    signOutWithUpload().join()
-                    signOut()
-                }
-                dialog.dismiss()
+                uploadDataAndSignOut(dialog)
             }
             .show()
-    }
-
-    private suspend fun signOutWithUpload() = coroutineScope {
-        launch {
-            uploadBooks()
-            uploadCrossRefs()
-            uploadShelves()
-        }
     }
 
     private fun clearDatabase() {

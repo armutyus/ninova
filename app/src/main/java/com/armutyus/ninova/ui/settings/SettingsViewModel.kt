@@ -3,8 +3,8 @@ package com.armutyus.ninova.ui.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.armutyus.ninova.constants.Response
-import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.repository.FirebaseRepositoryInterface
+import com.armutyus.ninova.repository.LocalBooksRepositoryInterface
 import com.armutyus.ninova.roomdb.NinovaLocalDB
 import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.LocalShelf
@@ -16,16 +16,23 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
+    private val booksRepository: LocalBooksRepositoryInterface,
     private val repository: FirebaseRepositoryInterface,
     private val db: NinovaLocalDB
 ) : ViewModel() {
 
-    fun uploadUserBooksToFirestore(
-        localBook: DataModel.LocalBook,
+    fun uploadUserData(
         onComplete: (Response<Boolean>) -> Unit
     ) = viewModelScope.launch {
-        val response = repository.uploadUserBooksToFirestore(localBook)
-        onComplete(response)
+        val localBooks = booksRepository.getLocalBooks()
+        localBooks.forEach {
+            val response = repository.uploadUserBooksToFirestore(it)
+            if (response is Response.Failure) {
+                onComplete(response)
+                return@launch
+            }
+        }
+        onComplete(Response.Success(true))
     }
 
     fun uploadUserCrossRefToFirestore(
