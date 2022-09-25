@@ -16,7 +16,6 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
@@ -40,9 +39,7 @@ import com.armutyus.ninova.ui.shelves.ShelvesViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -70,10 +67,6 @@ class SettingsFragment @Inject constructor(
     private val booksViewModel by activityViewModels<BooksViewModel>()
     private val settingsViewModel by activityViewModels<SettingsViewModel>()
     private val shelvesViewModel by activityViewModels<ShelvesViewModel>()
-    private var shouldUploadBeforeSignOut = false
-    private var booksUploadedBeforeSignOut = false
-    private var crossRefsUploadedBeforeSignOut = false
-    private var shelvesUploadedBeforeSignOut = false
     private var showSuccessToast = true
     private var showUploadToast = true
     private val user = auth.currentUser!!
@@ -88,7 +81,6 @@ class SettingsFragment @Inject constructor(
         } else {
             setPreferencesFromResource(R.xml.root_preferences, "root_preference")
         }
-
 
         val aboutNinova = findPreference<Preference>("about_ninova")
         val changeEmail = findPreference<Preference>("change_email")
@@ -136,10 +128,7 @@ class SettingsFragment @Inject constructor(
         val uploadLibraryListener = Preference.OnPreferenceClickListener {
             showSuccessToast = true
             showUploadToast = true
-            shouldUploadBeforeSignOut = false
-            booksUploadedBeforeSignOut = false
-            crossRefsUploadedBeforeSignOut = false
-            shelvesUploadedBeforeSignOut = false
+            //shouldUploadBeforeSignOut = false
             uploadBooks()
             uploadCrossRefs()
             uploadShelves()
@@ -212,8 +201,7 @@ class SettingsFragment @Inject constructor(
             }
         }, viewLifecycleOwner, Lifecycle.State.CREATED)
     }
-
-    private fun uploadBooks(): Boolean {
+    private fun uploadBooks() {
         booksViewModel.loadBookList().invokeOnCompletion {
             val localBookList = booksViewModel.localBookList.value
             if (localBookList != null && localBookList.isNotEmpty()) {
@@ -233,9 +221,6 @@ class SettingsFragment @Inject constructor(
                                 }
                                 if (localBookList.indexOf(it) == localBookList.size - 1) {
                                     Log.i("bookUpload", "Books uploaded")
-                                    if (shouldUploadBeforeSignOut) {
-                                        booksUploadedBeforeSignOut = true
-                                    }
                                 }
                             }
                             is Response.Failure -> {
@@ -261,15 +246,11 @@ class SettingsFragment @Inject constructor(
                         showUploadToast = false
                     }
                 }
-                if (shouldUploadBeforeSignOut) {
-                    booksUploadedBeforeSignOut = true
-                }
             }
         }
-        return booksUploadedBeforeSignOut
     }
 
-    private fun uploadShelves(): Boolean {
+    private fun uploadShelves() {
         shelvesViewModel.loadShelfList().invokeOnCompletion {
             val localShelfList = shelvesViewModel.shelfList.value
             if (localShelfList != null && localShelfList.isNotEmpty()) {
@@ -281,9 +262,6 @@ class SettingsFragment @Inject constructor(
                             is Response.Success -> {
                                 if (localShelfList.indexOf(it) == localShelfList.size - 1) {
                                     Log.i("shelvesUpload", "Shelves uploaded")
-                                    if (shouldUploadBeforeSignOut) {
-                                        shelvesUploadedBeforeSignOut = true
-                                    }
                                 }
                             }
                             is Response.Failure -> {
@@ -299,15 +277,11 @@ class SettingsFragment @Inject constructor(
                 }
             } else {
                 Log.i("shelvesUpload", "No shelves")
-                if (shouldUploadBeforeSignOut) {
-                    shelvesUploadedBeforeSignOut = true
-                }
             }
         }
-        return shelvesUploadedBeforeSignOut
     }
 
-    private fun uploadCrossRefs(): Boolean {
+    private fun uploadCrossRefs() {
         booksViewModel.loadBookShelfCrossRef().invokeOnCompletion {
             val localCrossRefList = booksViewModel.bookShelfCrossRefList.value
             if (localCrossRefList != null && localCrossRefList.isNotEmpty()) {
@@ -326,9 +300,6 @@ class SettingsFragment @Inject constructor(
                                         ).show().also {
                                             showSuccessToast = false
                                         }
-                                    }
-                                    if (shouldUploadBeforeSignOut) {
-                                        crossRefsUploadedBeforeSignOut = true
                                     }
                                     Log.i("crossRefsUpload", "CrossRefs uploaded")
                                 }
@@ -355,12 +326,8 @@ class SettingsFragment @Inject constructor(
                         showSuccessToast = false
                     }
                 }
-                if (shouldUploadBeforeSignOut) {
-                    crossRefsUploadedBeforeSignOut = true
-                }
             }
         }
-        return crossRefsUploadedBeforeSignOut
     }
 
     private fun signOut() {
@@ -370,6 +337,7 @@ class SettingsFragment @Inject constructor(
                     Toast.makeText(requireContext(), "Please wait..", Toast.LENGTH_SHORT).show()
                 is Response.Success -> {
                     Toast.makeText(requireContext(), "Signed out!", Toast.LENGTH_SHORT).show()
+                    Log.i("signOut", "Signed out successfully")
                     clearDatabase()
                     goToLogInActivity()
                 }
@@ -396,29 +364,20 @@ class SettingsFragment @Inject constructor(
             .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
                 showSuccessToast = true
                 showUploadToast = true
-                shouldUploadBeforeSignOut = true
                 runBlocking {
-                    signOutWithUpload()
+                    signOutWithUpload().join()
+                    signOut()
                 }
                 dialog.dismiss()
             }
             .show()
     }
 
-    private suspend fun signOutWithUpload() {
-        lifecycleScope.launch {
-            val booksUpload = lifecycleScope.async {
-                uploadBooks()
-            }
-            val crossRefsUpload = lifecycleScope.async {
-                uploadCrossRefs()
-            }
-            val shelvesUpload = lifecycleScope.async {
-                uploadShelves()
-            }
-            if (booksUpload.await() && crossRefsUpload.await() && shelvesUpload.await()) {
-                signOut()
-            }
+    private suspend fun signOutWithUpload() = coroutineScope {
+        launch {
+            uploadBooks()
+            uploadCrossRefs()
+            uploadShelves()
         }
     }
 
