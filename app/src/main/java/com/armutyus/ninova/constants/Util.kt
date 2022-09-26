@@ -22,7 +22,7 @@ class Util {
         fun View.fadeIn(durationMillis: Long) {
             this.startAnimation(AlphaAnimation(0F, 1F).apply {
                 duration = durationMillis
-                fillAfter = true
+                fillAfter = false
             })
         }
     }

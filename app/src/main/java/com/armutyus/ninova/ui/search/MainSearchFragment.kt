@@ -226,7 +226,7 @@ class MainSearchFragment @Inject constructor(
             booksViewModel.loadBookList()
             addButton.visibility = View.GONE
             addedButton.visibility = View.VISIBLE
-            addedButton.fadeIn(1500)
+            addedButton.fadeIn(1000)
             progressBar.visibility = View.GONE
         }
     }
@@ -241,7 +241,7 @@ class MainSearchFragment @Inject constructor(
             deleteBookFromFirestore(id)
             booksViewModel.loadBookList()
             addButton.visibility = View.VISIBLE
-            addButton.fadeIn(1500)
+            addButton.fadeIn(1000)
             addedButton.visibility = View.GONE
             progressBar.visibility = View.GONE
         }
