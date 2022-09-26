@@ -1,6 +1,7 @@
 package com.armutyus.ninova.ui.search
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Cache
 import com.armutyus.ninova.constants.Response
+import com.armutyus.ninova.constants.Util.Companion.fadeIn
 import com.armutyus.ninova.databinding.FragmentMainSearchBinding
 import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.ui.books.BooksViewModel
@@ -158,6 +160,32 @@ class MainSearchFragment @Inject constructor(
         }
     }
 
+    private fun deleteBookFromFirestore(bookId: String) {
+        booksViewModel.deleteBookFromFirestore(bookId) { response ->
+            when (response) {
+                is Response.Loading ->
+                    Log.i("bookDelete", "Deleting from firestore")
+                is Response.Success ->
+                    Log.i("bookDelete", "Deleted from firestore")
+                is Response.Failure ->
+                    Log.e("bookDelete", response.errorMessage)
+            }
+        }
+    }
+
+    private fun uploadBookToFirestore(localBook: DataModel.LocalBook) {
+        booksViewModel.uploadBookToFirestore(localBook) { response ->
+            when (response) {
+                is Response.Loading ->
+                    Log.i("bookUpload", "Uploading to firestore")
+                is Response.Success ->
+                    Log.i("bookUpload", "Uploaded to firestore")
+                is Response.Failure ->
+                    Log.e("bookUpload", response.errorMessage)
+            }
+        }
+    }
+
     private fun setVisibilities(bookList: List<DataModel>) {
         if (bookList.isEmpty()) {
             binding?.linearLayoutSearchError?.visibility = View.VISIBLE
@@ -187,16 +215,18 @@ class MainSearchFragment @Inject constructor(
         fragmentBinding = null
     }
 
-    override fun onClick(
+    override fun onAddButtonClick(
         localBook: DataModel.LocalBook,
         addButton: ImageButton,
         addedButton: ImageButton,
         progressBar: CircularProgressIndicator
     ) {
         mainSearchViewModel.insertBook(localBook).invokeOnCompletion {
+            uploadBookToFirestore(localBook)
             booksViewModel.loadBookList()
             addButton.visibility = View.GONE
             addedButton.visibility = View.VISIBLE
+            addedButton.fadeIn(1500)
             progressBar.visibility = View.GONE
         }
     }
@@ -208,8 +238,10 @@ class MainSearchFragment @Inject constructor(
         progressBar: CircularProgressIndicator
     ) {
         mainSearchViewModel.deleteBookById(id).invokeOnCompletion {
+            deleteBookFromFirestore(id)
             booksViewModel.loadBookList()
             addButton.visibility = View.VISIBLE
+            addButton.fadeIn(1500)
             addedButton.visibility = View.GONE
             progressBar.visibility = View.GONE
         }

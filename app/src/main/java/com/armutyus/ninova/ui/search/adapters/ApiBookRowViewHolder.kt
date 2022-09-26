@@ -43,7 +43,7 @@ class ApiBookRowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
 
         addButton?.setOnClickListener {
-            searchFragment.onClick(
+            searchFragment.onAddButtonClick(
                 DataModel.LocalBook(
                     book.id!!,
                     book.volumeInfo?.authors ?: listOf(),

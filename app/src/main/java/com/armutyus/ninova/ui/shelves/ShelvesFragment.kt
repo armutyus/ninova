@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Cache.currentShelf
+import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.AddNewShelfBottomSheetBinding
 import com.armutyus.ninova.databinding.FragmentShelvesBinding
 import com.armutyus.ninova.roomdb.entities.LocalShelf
@@ -61,9 +63,11 @@ class ShelvesFragment @Inject constructor(
                 )
                     .setAction("UNDO") {
                         shelvesViewModel.insertShelf(swipedShelf).invokeOnCompletion {
+                            uploadShelfToFirestore(swipedShelf)
                             shelvesViewModel.loadShelfList()
                         }
                     }.show()
+                deleteShelfFromFirestore(swipedShelf.shelfId)
                 shelvesViewModel.loadShelfList()
             }
         }
@@ -116,14 +120,15 @@ class ShelvesFragment @Inject constructor(
                 val timeStamp = Date().time
                 val formattedDate =
                     SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(timeStamp)
-                shelvesViewModel.insertShelf(
+                val shelf =
                     LocalShelf(
                         UUID.randomUUID().toString(),
                         shelfTitle,
                         formattedDate,
                         "",
                     )
-                ).invokeOnCompletion {
+                shelvesViewModel.insertShelf(shelf).invokeOnCompletion {
+                    uploadShelfToFirestore(shelf)
                     shelvesViewModel.loadShelfList()
                 }
                 dialog.dismiss()
@@ -162,7 +167,7 @@ class ShelvesFragment @Inject constructor(
             fragmentBinding?.mainShelvesRecyclerView?.visibility = View.GONE
             shelvesViewModel.searchShelves("%$searchQuery%")
 
-        } else if (searchQuery.isNullOrBlank()) {
+        } else if (searchQuery.isBlank()) {
             shelvesViewModel.loadShelfList()
         }
 
@@ -183,6 +188,32 @@ class ShelvesFragment @Inject constructor(
             fragmentBinding?.linearLayoutShelvesError?.visibility = View.GONE
             fragmentBinding?.progressBar?.visibility = View.GONE
             fragmentBinding?.mainShelvesRecyclerView?.visibility = View.VISIBLE
+        }
+    }
+
+    private fun deleteShelfFromFirestore(shelfId: String) {
+        shelvesViewModel.deleteShelfFromFirestore(shelfId) { response ->
+            when (response) {
+                is Response.Loading ->
+                    Log.i("shelfDelete", "Deleting from firestore")
+                is Response.Success ->
+                    Log.i("shelfDelete", "Deleted from firestore")
+                is Response.Failure ->
+                    Log.e("shelfDelete", response.errorMessage)
+            }
+        }
+    }
+
+    private fun uploadShelfToFirestore(localShelf: LocalShelf) {
+        shelvesViewModel.uploadShelfToFirestore(localShelf) { response ->
+            when (response) {
+                is Response.Loading ->
+                    Log.i("shelfUpload", "Uploading to firestore")
+                is Response.Success ->
+                    Log.i("shelfUpload", "Uploaded to firestore")
+                is Response.Failure ->
+                    Log.e("shelfUpload", response.errorMessage)
+            }
         }
     }
 
@@ -225,6 +256,7 @@ class ShelvesFragment @Inject constructor(
                     currentShelf?.shelfCover = intentFromResult.toString()
                     shelvesViewModel.updateShelf(currentShelf!!)
                     shelvesAdapter.notifyDataSetChanged()
+                    uploadShelfToFirestore(currentShelf!!)
                 }
             }
         }

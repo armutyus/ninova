@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.armutyus.ninova.constants.Response
+import com.armutyus.ninova.repository.FirebaseRepositoryInterface
 import com.armutyus.ninova.repository.ShelfRepositoryInterface
 import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.LocalShelf
@@ -14,8 +16,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShelvesViewModel @Inject constructor(
-    private val shelfRepositoryInterface: ShelfRepositoryInterface
+    private val shelfRepositoryInterface: ShelfRepositoryInterface,
+    private val firebaseRepository: FirebaseRepositoryInterface
 ) : ViewModel() {
+    //Local Shelf Works
 
     private val _currentShelfList = MutableLiveData<List<LocalShelf>>()
     val currentShelfList: LiveData<List<LocalShelf>>
@@ -68,5 +72,33 @@ class ShelvesViewModel @Inject constructor(
     fun loadShelfWithBookList() = viewModelScope.launch {
         _shelfWithBooksList.value = shelfRepositoryInterface.getShelfWithBooks()
     }
+
+    // Firebase Works
+
+    fun deleteCrossRefFromFirestore(crossRefId: String, onComplete: (Response<Boolean>) -> Unit) =
+        viewModelScope.launch {
+            val response = firebaseRepository.deleteUserCrossRefFromFirestore(crossRefId)
+            onComplete(response)
+        }
+
+    fun deleteShelfFromFirestore(shelfId: String, onComplete: (Response<Boolean>) -> Unit) =
+        viewModelScope.launch {
+            val response = firebaseRepository.deleteUserShelfFromFirestore(shelfId)
+            onComplete(response)
+        }
+
+    fun uploadShelfToFirestore(localShelf: LocalShelf,
+                              onComplete: (Response<Boolean>) -> Unit) =
+        viewModelScope.launch {
+            val response = firebaseRepository.uploadUserShelvesToFirestore(localShelf)
+            onComplete(response)
+        }
+
+    fun uploadCrossRefToFirestore(crossRef: BookShelfCrossRef,
+                               onComplete: (Response<Boolean>) -> Unit) =
+        viewModelScope.launch {
+            val response = firebaseRepository.uploadUserCrossRefToFirestore(crossRef)
+            onComplete(response)
+        }
 
 }

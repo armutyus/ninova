@@ -99,4 +99,16 @@ class BooksViewModel @Inject constructor(
             onComplete(response)
         }
 
+    fun deleteBookFromFirestore(bookId: String, onComplete: (Response<Boolean>) -> Unit) =
+        viewModelScope.launch {
+            val response = firebaseRepository.deleteUserBookFromFirestore(bookId)
+            onComplete(response)
+        }
+
+    fun uploadBookToFirestore(localBook: DataModel.LocalBook,
+                              onComplete: (Response<Boolean>) -> Unit) =
+        viewModelScope.launch {
+        val response = firebaseRepository.uploadUserBooksToFirestore(localBook)
+        onComplete(response)
+    }
 }

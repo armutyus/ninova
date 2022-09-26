@@ -1,6 +1,7 @@
 package com.armutyus.ninova.ui.books
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -8,7 +9,9 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.FragmentBooksBinding
+import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.ui.books.adapters.BooksRecyclerViewAdapter
 import com.armutyus.ninova.ui.shelves.ShelvesViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -39,9 +42,11 @@ class BooksFragment @Inject constructor(
                 Snackbar.make(requireView(), "Book deleted from your library", Snackbar.LENGTH_LONG)
                     .setAction("UNDO") {
                         booksViewModel.insertBook(swipedBook).invokeOnCompletion {
+                            uploadBookToFirestore(swipedBook)
                             booksViewModel.loadBookList()
                         }
                     }.show()
+                deleteBookFromFirestore(swipedBook.bookId)
                 booksViewModel.loadBookList()
             }
         }
@@ -76,6 +81,32 @@ class BooksFragment @Inject constructor(
                 fragmentBinding?.linearLayoutBooksError?.visibility = View.GONE
                 fragmentBinding?.mainBooksRecyclerView?.visibility = View.VISIBLE
                 booksAdapter.mainBooksList = localBookList
+            }
+        }
+    }
+
+    private fun deleteBookFromFirestore(bookId: String) {
+        booksViewModel.deleteBookFromFirestore(bookId) { response ->
+            when (response) {
+                is Response.Loading ->
+                    Log.i("bookDelete", "Deleting from firestore")
+                is Response.Success ->
+                    Log.i("bookDelete", "Deleted from firestore")
+                is Response.Failure ->
+                    Log.e("bookDelete", response.errorMessage)
+            }
+        }
+    }
+
+    private fun uploadBookToFirestore(localBook: DataModel.LocalBook) {
+        booksViewModel.uploadBookToFirestore(localBook) { response ->
+            when (response) {
+                is Response.Loading ->
+                    Log.i("bookUpload", "Uploading to firestore")
+                is Response.Success ->
+                    Log.i("bookUpload", "Uploaded to firestore")
+                is Response.Failure ->
+                    Log.e("bookUpload", response.errorMessage)
             }
         }
     }

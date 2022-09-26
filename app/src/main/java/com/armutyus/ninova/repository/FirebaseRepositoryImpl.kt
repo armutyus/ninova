@@ -35,6 +35,7 @@ class FirebaseRepositoryImpl @Inject constructor(
         password: String
     ): Response<Boolean> = withContext(coroutineContext) {
         try {
+            Response.Loading
             val authResult = auth.signInWithEmailAndPassword(email, password).await()
             authResult.let {
                 return@let Response.Success(true)
@@ -47,6 +48,7 @@ class FirebaseRepositoryImpl @Inject constructor(
     override suspend fun anonymousToPermanent(credential: AuthCredential): Response<Boolean> =
         withContext(coroutineContext) {
             try {
+                Response.Loading
                 val authResult = auth.currentUser!!.linkWithCredential(credential).await()
                 authResult.let {
                     return@let Response.Success(true)
@@ -58,6 +60,7 @@ class FirebaseRepositoryImpl @Inject constructor(
 
     override suspend fun signInAnonymous(): Response<Boolean> = withContext(coroutineContext) {
         try {
+            Response.Loading
             val authResult = auth.signInAnonymously().await()
             authResult.let {
                 return@let Response.Success(true)
@@ -70,6 +73,7 @@ class FirebaseRepositoryImpl @Inject constructor(
     override suspend fun createUserInFirestore(): Response<Boolean> =
         withContext(coroutineContext) {
             try {
+                Response.Loading
                 val createUser = auth.currentUser?.apply {
                     db.collection(USERS_REF).document(uid).set(
                         mapOf(
@@ -88,9 +92,46 @@ class FirebaseRepositoryImpl @Inject constructor(
             }
         }
 
+    override suspend fun deleteUserBookFromFirestore(bookId: String): Response<Boolean> =
+        withContext(coroutineContext) {
+            try {
+                Response.Loading
+                val uid = auth.currentUser?.uid!!
+                db.collection(USERS_REF).document(uid).collection(BOOKS_REF).document(bookId).delete()
+                Response.Success(true)
+            } catch (e: Exception) {
+                Response.Failure(e.localizedMessage ?: ERROR_MESSAGE)
+            }
+        }
+
+    override suspend fun deleteUserCrossRefFromFirestore(crossRefId: String): Response<Boolean> =
+        withContext(coroutineContext) {
+            try {
+                Response.Loading
+                val uid = auth.currentUser?.uid!!
+                db.collection(USERS_REF).document(uid).collection(BOOKSHELF_CROSS_REF).document(crossRefId).delete()
+                Response.Success(true)
+            } catch (e: Exception) {
+                Response.Failure(e.localizedMessage ?: ERROR_MESSAGE)
+            }
+        }
+
+    override suspend fun deleteUserShelfFromFirestore(shelfId: String): Response<Boolean> =
+        withContext(coroutineContext) {
+            try {
+                Response.Loading
+                val uid = auth.currentUser?.uid!!
+                db.collection(USERS_REF).document(uid).collection(SHELVES_REF).document(shelfId).delete()
+                Response.Success(true)
+            } catch (e: Exception) {
+                Response.Failure(e.localizedMessage ?: ERROR_MESSAGE)
+            }
+        }
+
     override suspend fun downloadUserBooksFromFirestore(): Response<List<DataModel.LocalBook>> =
         withContext(coroutineContext) {
             try {
+                Response.Loading
                 val uid = auth.currentUser?.uid!!
                 val querySnapshot: QuerySnapshot =
                     db.collection(USERS_REF).document(uid).collection(BOOKS_REF)
@@ -109,6 +150,7 @@ class FirebaseRepositoryImpl @Inject constructor(
     override suspend fun downloadUserShelvesFromFirestore(): Response<List<LocalShelf>> =
         withContext(coroutineContext) {
             try {
+                Response.Loading
                 val uid = auth.currentUser?.uid!!
                 val querySnapshot: QuerySnapshot =
                     db.collection(USERS_REF).document(uid).collection(SHELVES_REF)
@@ -127,6 +169,7 @@ class FirebaseRepositoryImpl @Inject constructor(
     override suspend fun downloadUserCrossRefFromFirestore(): Response<List<BookShelfCrossRef>> =
         withContext(coroutineContext) {
             try {
+                Response.Loading
                 val uid = auth.currentUser?.uid!!
                 val querySnapshot: QuerySnapshot =
                     db.collection(USERS_REF).document(uid).collection(BOOKSHELF_CROSS_REF)
@@ -143,6 +186,7 @@ class FirebaseRepositoryImpl @Inject constructor(
     override suspend fun uploadUserBooksToFirestore(localBook: DataModel.LocalBook): Response<Boolean> =
         withContext(coroutineContext) {
             try {
+                Response.Loading
                 val uploadBooks = auth.currentUser?.apply {
                     db.collection(USERS_REF).document(uid).collection(BOOKS_REF)
                         .document(localBook.bookId).set(
@@ -172,6 +216,7 @@ class FirebaseRepositoryImpl @Inject constructor(
     override suspend fun uploadUserShelvesToFirestore(shelf: LocalShelf): Response<Boolean> =
         withContext(coroutineContext) {
             try {
+                Response.Loading
                 val uploadShelves = auth.currentUser?.apply {
                     db.collection(USERS_REF).document(uid).collection(SHELVES_REF)
                         .document(shelf.shelfId).set(
@@ -181,21 +226,6 @@ class FirebaseRepositoryImpl @Inject constructor(
                                 "shelfCover" to shelf.shelfCover
                             )
                         ).await()
-                    /*db.collection(USERS_REF).document(uid).collection(SHELVES_REF).get()
-                        .continueWith { querySnapshot ->
-                            querySnapshot.result.documents.forEach {
-                                it.reference.delete()
-                            }
-                        }.continueWith {
-                            db.collection(USERS_REF).document(uid).collection(SHELVES_REF)
-                                .document(shelf.shelfId).set(
-                                    mapOf(
-                                        "shelfTitle" to shelf.shelfTitle,
-                                        "createdAt" to shelf.createdAt,
-                                        "shelfCover" to shelf.shelfCover
-                                    )
-                                )
-                        }.await()*/
                 }
                 uploadShelves.let {
                     return@let Response.Success(true)
@@ -208,31 +238,15 @@ class FirebaseRepositoryImpl @Inject constructor(
     override suspend fun uploadUserCrossRefToFirestore(bookShelfCrossRef: BookShelfCrossRef): Response<Boolean> =
         withContext(coroutineContext) {
             try {
+                Response.Loading
                 val uploadCrossRef = auth.currentUser?.apply {
-                    val crossRefDocumentId =
-                        db.collection(USERS_REF).document(uid).collection(BOOKSHELF_CROSS_REF)
-                            .document().id
                     db.collection(USERS_REF).document(uid).collection(BOOKSHELF_CROSS_REF)
-                        .document(crossRefDocumentId).set(
+                        .document(bookShelfCrossRef.bookId + bookShelfCrossRef.shelfId).set(
                             mapOf(
                                 "bookId" to bookShelfCrossRef.bookId,
                                 "shelfId" to bookShelfCrossRef.shelfId
                             )
                         ).await()
-                    /*db.collection(USERS_REF).document(uid).collection(BOOKSHELF_CROSS_REF).get()
-                        .continueWith { querySnapshot ->
-                            querySnapshot.result.documents.forEach {
-                                it.reference.delete()
-                            }
-                        }.continueWith {
-                            db.collection(USERS_REF).document(uid).collection(BOOKSHELF_CROSS_REF)
-                                .document(crossRefDocumentId).set(
-                                    mapOf(
-                                        "bookId" to bookShelfCrossRef.bookId,
-                                        "shelfId" to bookShelfCrossRef.shelfId
-                                    )
-                                )
-                        }.await()*/
                 }
                 uploadCrossRef.let {
                     return@let Response.Success(true)
@@ -247,6 +261,7 @@ class FirebaseRepositoryImpl @Inject constructor(
         password: String
     ): Response<Boolean> = withContext(coroutineContext) {
         try {
+            Response.Loading
             val authResult = auth.createUserWithEmailAndPassword(email, password).await()
             authResult.let {
                 return@let Response.Success(true)
@@ -258,6 +273,7 @@ class FirebaseRepositoryImpl @Inject constructor(
 
     override suspend fun signOut(): Response<Boolean> = withContext(coroutineContext) {
         try {
+            Response.Loading
             auth.signOut().let {
                 return@let Response.Success(true)
             }
@@ -269,6 +285,7 @@ class FirebaseRepositoryImpl @Inject constructor(
     override suspend fun reAuthUser(credential: AuthCredential): Response<Boolean> =
         withContext(coroutineContext) {
             try {
+                Response.Loading
                 val reAuthResult = auth.currentUser!!.reauthenticate(credential).await()
                 reAuthResult.let {
                     return@let Response.Success(true)
@@ -281,6 +298,7 @@ class FirebaseRepositoryImpl @Inject constructor(
     override suspend fun changeUserEmail(email: String): Response<Boolean> =
         withContext(coroutineContext) {
             try {
+                Response.Loading
                 val reAuthResult = auth.currentUser!!.updateEmail(email).await()
                 reAuthResult.let {
                     return@let Response.Success(true)
@@ -293,6 +311,7 @@ class FirebaseRepositoryImpl @Inject constructor(
     override suspend fun changeUserPassword(password: String): Response<Boolean> =
         withContext(coroutineContext) {
             try {
+                Response.Loading
                 val reAuthResult = auth.currentUser!!.updatePassword(password).await()
                 reAuthResult.let {
                     return@let Response.Success(true)
@@ -305,6 +324,7 @@ class FirebaseRepositoryImpl @Inject constructor(
     override suspend fun sendResetPassword(email: String): Response<Boolean> =
         withContext(coroutineContext) {
             try {
+                Response.Loading
                 val reAuthResult = auth.sendPasswordResetEmail(email).await()
                 reAuthResult.let {
                     return@let Response.Success(true)

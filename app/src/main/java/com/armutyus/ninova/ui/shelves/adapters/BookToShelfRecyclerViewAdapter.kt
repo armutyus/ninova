@@ -1,5 +1,6 @@
 package com.armutyus.ninova.ui.shelves.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Cache.currentBookIdExtra
+import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.LocalShelf
 import com.armutyus.ninova.ui.books.BooksViewModel
@@ -63,10 +65,12 @@ class BookToShelfRecyclerViewAdapter @Inject constructor(
             val crossRef = BookShelfCrossRef(currentBookIdExtra!!, shelf.shelfId)
             if (isChecked) {
                 shelvesViewModel.insertBookShelfCrossRef(crossRef).invokeOnCompletion {
+                    uploadCrossRefToFirestore(crossRef)
                     booksViewModel.loadBookWithShelves(currentBookIdExtra!!)
                 }
             } else {
                 shelvesViewModel.deleteBookShelfCrossRef(crossRef).invokeOnCompletion {
+                    deleteCrossRefFromFirestore(crossRef.bookId + crossRef.shelfId)
                     booksViewModel.loadBookWithShelves(currentBookIdExtra!!)
                 }
             }
@@ -75,6 +79,32 @@ class BookToShelfRecyclerViewAdapter @Inject constructor(
 
     override fun getItemCount(): Int {
         return bookToShelfList.size
+    }
+
+    private fun deleteCrossRefFromFirestore(crossRefId: String) {
+        shelvesViewModel.deleteCrossRefFromFirestore(crossRefId) { response ->
+            when (response) {
+                is Response.Loading ->
+                    Log.i("crossRefDelete", "Deleting from firestore")
+                is Response.Success ->
+                    Log.i("crossRefDelete", "Deleted from firestore")
+                is Response.Failure ->
+                    Log.e("crossRefDelete", response.errorMessage)
+            }
+        }
+    }
+
+    private fun uploadCrossRefToFirestore(crossRef: BookShelfCrossRef) {
+        shelvesViewModel.uploadCrossRefToFirestore(crossRef) { response ->
+            when (response) {
+                is Response.Loading ->
+                    Log.i("crossRefUpload", "Uploading to firestore")
+                is Response.Success ->
+                    Log.i("crossRefUpload", "Uploaded to firestore")
+                is Response.Failure ->
+                    Log.e("crossRefUpload", response.errorMessage)
+            }
+        }
     }
 
     fun setViewModels(shelvesViewModel: ShelvesViewModel, booksViewModel: BooksViewModel) {

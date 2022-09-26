@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Html
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -98,6 +99,7 @@ class BookDetailsActivity : AppCompatActivity() {
 
                 binding.addBookToLibraryButton.setOnClickListener {
                     booksViewModel.insertBook(currentLocalBook!!).invokeOnCompletion {
+                        uploadBookToFirestore(currentLocalBook!!)
                         setVisibilitiesForBookAdded()
                         booksViewModel.loadBookList()
                     }
@@ -109,6 +111,7 @@ class BookDetailsActivity : AppCompatActivity() {
 
                 binding.removeBookFromLibraryButton.setOnClickListener {
                     booksViewModel.deleteBook(currentLocalBook!!).invokeOnCompletion {
+                        deleteBookFromFirestore(currentLocalBook?.bookId!!)
                         setVisibilitiesForBookRemoved()
                     }
                 }
@@ -126,7 +129,7 @@ class BookDetailsActivity : AppCompatActivity() {
                 setVisibilitiesForBookRemoved()
 
                 binding.addBookToLibraryButton.setOnClickListener {
-                    booksViewModel.insertBook(
+                    val book =
                         DataModel.LocalBook(
                             currentBook?.id!!,
                             bookDetails.authors ?: listOf(),
@@ -144,7 +147,8 @@ class BookDetailsActivity : AppCompatActivity() {
                             bookDetails.subtitle,
                             bookDetails.title
                         )
-                    ).invokeOnCompletion {
+                    booksViewModel.insertBook(book).invokeOnCompletion {
+                        uploadBookToFirestore(book)
                         setVisibilitiesForBookAdded()
                         booksViewModel.loadBookList()
                     }
@@ -152,6 +156,7 @@ class BookDetailsActivity : AppCompatActivity() {
 
                 binding.removeBookFromLibraryButton.setOnClickListener {
                     booksViewModel.deleteBookById(currentBook?.id!!).invokeOnCompletion {
+                        deleteBookFromFirestore(currentBook?.id!!)
                         setVisibilitiesForBookRemoved()
                     }
                 }
@@ -201,6 +206,7 @@ class BookDetailsActivity : AppCompatActivity() {
     private fun saveUserNotes() {
         currentLocalBook!!.bookNotes = binding.userBookNotesEditText.text.toString()
         booksViewModel.updateBook(currentLocalBook!!)
+        uploadBookToFirestore(currentLocalBook!!)
     }
 
     private var currentShelvesList = mutableListOf<String?>()
@@ -355,6 +361,32 @@ class BookDetailsActivity : AppCompatActivity() {
         }
     }
 
+    private fun deleteBookFromFirestore(bookId: String) {
+        booksViewModel.deleteBookFromFirestore(bookId) { response ->
+            when (response) {
+                is Response.Loading ->
+                    Log.i("bookDelete", "Deleting from firestore")
+                is Response.Success ->
+                    Log.i("bookDelete", "Deleted from firestore")
+                is Response.Failure ->
+                    Log.e("bookDelete", response.errorMessage)
+            }
+        }
+    }
+
+    private fun uploadBookToFirestore(localBook: DataModel.LocalBook) {
+        booksViewModel.uploadBookToFirestore(localBook) { response ->
+            when (response) {
+                is Response.Loading ->
+                    Log.i("bookUpload", "Uploading to firestore")
+                is Response.Success ->
+                    Log.i("bookUpload", "Uploaded to firestore")
+                is Response.Failure ->
+                    Log.e("bookUpload", response.errorMessage)
+            }
+        }
+    }
+
     private fun applyBookDetailChanges(bookDetails: BookDetailsInfo) {
         glide
             .load(
@@ -488,7 +520,7 @@ class BookDetailsActivity : AppCompatActivity() {
         }
 
         booksViewModel.updateBook(currentLocalBook!!)
-
+        uploadBookToFirestore(currentLocalBook!!)
     }
 
     private fun onBookCoverClicked(view: View) {
@@ -526,6 +558,7 @@ class BookDetailsActivity : AppCompatActivity() {
                     glide.load(intentFromResult).centerCrop().into(binding.bookCoverImageView)
                     currentLocalBook?.bookCoverSmallThumbnail = intentFromResult.toString()
                     booksViewModel.updateBook(currentLocalBook!!)
+                    uploadBookToFirestore(currentLocalBook!!)
                 }
             }
         }

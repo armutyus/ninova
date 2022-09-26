@@ -5,7 +5,7 @@ import com.armutyus.ninova.model.DataModel
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
 interface OnBookAddButtonClickListener {
-    fun onClick(
+    fun onAddButtonClick(
         localBook: DataModel.LocalBook,
         addButton: ImageButton,
         addedButton: ImageButton,

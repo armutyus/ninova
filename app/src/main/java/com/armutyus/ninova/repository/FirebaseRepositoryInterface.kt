@@ -18,6 +18,12 @@ interface FirebaseRepositoryInterface {
 
     suspend fun createUserInFirestore(): Response<Boolean>
 
+    suspend fun deleteUserBookFromFirestore(bookId: String): Response<Boolean>
+
+    suspend fun deleteUserCrossRefFromFirestore(crossRefId: String): Response<Boolean>
+
+    suspend fun deleteUserShelfFromFirestore(shelfId: String): Response<Boolean>
+
     suspend fun downloadUserBooksFromFirestore(): Response<List<DataModel.LocalBook>>
 
     suspend fun downloadUserShelvesFromFirestore(): Response<List<LocalShelf>>
