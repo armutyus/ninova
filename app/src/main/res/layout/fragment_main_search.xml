@@ -37,22 +37,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:text="@string/your_library"
             android:textSize="14sp"
-            app:cornerRadius="10dp"
-            app:strokeColor="@color/seed" />
+            app:cornerRadius="10dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/apiSearchButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:text="@string/from_ninova"
             android:textSize="14sp"
-            app:cornerRadius="10dp"
-            app:strokeColor="@color/seed" />
+            app:cornerRadius="10dp" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <androidx.recyclerview.widget.RecyclerView

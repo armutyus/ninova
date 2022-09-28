@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
-        android:backgroundTint="@color/seed"
         android:iconifiedByDefault="false"
         android:keyboardNavigationCluster="true"
         android:paddingStart="4dp"
