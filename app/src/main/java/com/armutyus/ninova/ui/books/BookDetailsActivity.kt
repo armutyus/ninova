@@ -77,15 +77,20 @@ class BookDetailsActivity : AppCompatActivity() {
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                setVisibilities(tab)
+                if (notesTabDisabled) {
+                    tabLayout.getTabAt(0)?.select()
+                    tabLayout.getTabAt(1)?.view?.isFocusable = false
+                    setTabVisibilitiesForBookRemoved(tab)
+                } else {
+                    tabLayout.getTabAt(1)?.view?.isFocusable = true
+                    setTabVisibilitiesForBookAdded(tab)
+                }
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
-                setVisibilities(tab)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
-                setVisibilities(tab)
             }
         })
 
@@ -230,18 +235,12 @@ class BookDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun setVisibilities(tab: TabLayout.Tab?) {
+    private fun setTabVisibilitiesForBookAdded(tab: TabLayout.Tab?) {
         when (tab?.text) {
             "NOTES" -> {
-                if (notesTabDisabled) {
-                    binding.bookDetailNotesLinearLayout.visibility = View.GONE
-                    binding.bookDetailInfoLinearLayout.visibility = View.VISIBLE
-                    binding.linearLayoutDetailsError.visibility = View.GONE
-                } else {
-                    binding.bookDetailNotesLinearLayout.visibility = View.VISIBLE
-                    binding.bookDetailInfoLinearLayout.visibility = View.GONE
-                    binding.linearLayoutDetailsError.visibility = View.GONE
-                }
+                binding.bookDetailNotesLinearLayout.visibility = View.VISIBLE
+                binding.bookDetailInfoLinearLayout.visibility = View.GONE
+                binding.linearLayoutDetailsError.visibility = View.GONE
             }
             "INFO" -> {
                 binding.bookDetailNotesLinearLayout.visibility = View.GONE
@@ -253,9 +252,25 @@ class BookDetailsActivity : AppCompatActivity() {
                 binding.bookDetailInfoLinearLayout.visibility = View.VISIBLE
                 binding.linearLayoutDetailsError.visibility = View.GONE
             }
-
         }
+    }
 
+    private fun setTabVisibilitiesForBookRemoved(tab: TabLayout.Tab?) {
+        when (tab?.text) {
+            "NOTES" -> {
+                Toast.makeText(this, "Add this book to your library to take notes.", Toast.LENGTH_LONG).show()
+            }
+            "INFO" -> {
+                binding.bookDetailNotesLinearLayout.visibility = View.GONE
+                binding.bookDetailInfoLinearLayout.visibility = View.VISIBLE
+                binding.linearLayoutDetailsError.visibility = View.GONE
+            }
+            else -> {
+                binding.bookDetailNotesLinearLayout.visibility = View.GONE
+                binding.bookDetailInfoLinearLayout.visibility = View.VISIBLE
+                binding.linearLayoutDetailsError.visibility = View.GONE
+            }
+        }
     }
 
     private fun isBookAddedCheck() {
@@ -273,9 +288,6 @@ class BookDetailsActivity : AppCompatActivity() {
         binding.bookDetailShelvesTextViews.visibility = View.VISIBLE
         binding.removeBookFromLibraryButton.visibility = View.VISIBLE
         notesTabDisabled = false
-        val notesTab = binding.bookDetailTabLayout.getTabAt(1)
-        notesTab?.view?.setOnClickListener {
-        }
     }
 
     private fun setVisibilitiesForBookNull() {
@@ -292,11 +304,7 @@ class BookDetailsActivity : AppCompatActivity() {
         binding.bookDetailShelvesTextViews.visibility = View.GONE
         binding.removeBookFromLibraryButton.visibility = View.GONE
         notesTabDisabled = true
-        val notesTab = binding.bookDetailTabLayout.getTabAt(1)
-        notesTab?.view?.setOnClickListener {
-            Toast.makeText(this, "Add this book to your library to take notes.", Toast.LENGTH_LONG)
-                .show()
-        }
+        tabLayout.getTabAt(0)?.select()
     }
 
     private fun showAddShelfDialog() {
