@@ -87,15 +87,19 @@ class ShelvesViewModel @Inject constructor(
             onComplete(response)
         }
 
-    fun uploadShelfToFirestore(localShelf: LocalShelf,
-                              onComplete: (Response<Boolean>) -> Unit) =
+    fun uploadShelfToFirestore(
+        localShelf: LocalShelf,
+        onComplete: (Response<Boolean>) -> Unit
+    ) =
         viewModelScope.launch {
             val response = firebaseRepository.uploadUserShelvesToFirestore(localShelf)
             onComplete(response)
         }
 
-    fun uploadCrossRefToFirestore(crossRef: BookShelfCrossRef,
-                               onComplete: (Response<Boolean>) -> Unit) =
+    fun uploadCrossRefToFirestore(
+        crossRef: BookShelfCrossRef,
+        onComplete: (Response<Boolean>) -> Unit
+    ) =
         viewModelScope.launch {
             val response = firebaseRepository.uploadUserCrossRefToFirestore(crossRef)
             onComplete(response)

@@ -97,7 +97,8 @@ class FirebaseRepositoryImpl @Inject constructor(
             try {
                 Response.Loading
                 val uid = auth.currentUser?.uid!!
-                db.collection(USERS_REF).document(uid).collection(BOOKS_REF).document(bookId).delete()
+                db.collection(USERS_REF).document(uid).collection(BOOKS_REF).document(bookId)
+                    .delete()
                 Response.Success(true)
             } catch (e: Exception) {
                 Response.Failure(e.localizedMessage ?: ERROR_MESSAGE)
@@ -109,7 +110,8 @@ class FirebaseRepositoryImpl @Inject constructor(
             try {
                 Response.Loading
                 val uid = auth.currentUser?.uid!!
-                db.collection(USERS_REF).document(uid).collection(BOOKSHELF_CROSS_REF).document(crossRefId).delete()
+                db.collection(USERS_REF).document(uid).collection(BOOKSHELF_CROSS_REF)
+                    .document(crossRefId).delete()
                 Response.Success(true)
             } catch (e: Exception) {
                 Response.Failure(e.localizedMessage ?: ERROR_MESSAGE)
@@ -121,7 +123,8 @@ class FirebaseRepositoryImpl @Inject constructor(
             try {
                 Response.Loading
                 val uid = auth.currentUser?.uid!!
-                db.collection(USERS_REF).document(uid).collection(SHELVES_REF).document(shelfId).delete()
+                db.collection(USERS_REF).document(uid).collection(SHELVES_REF).document(shelfId)
+                    .delete()
                 Response.Success(true)
             } catch (e: Exception) {
                 Response.Failure(e.localizedMessage ?: ERROR_MESSAGE)

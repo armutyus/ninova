@@ -191,7 +191,10 @@ class SettingsFragment @Inject constructor(
         }, viewLifecycleOwner, Lifecycle.State.CREATED)
     }
 
-    private fun uploadDataAndSignOut(dialog: DialogInterface? = null, shouldSignOut: Boolean = false) {
+    private fun uploadDataAndSignOut(
+        dialog: DialogInterface? = null,
+        shouldSignOut: Boolean = false
+    ) {
         settingsViewModel.uploadUserData { response ->
             when (response) {
                 is Response.Loading -> {
@@ -221,7 +224,9 @@ class SettingsFragment @Inject constructor(
                 }
             }
         }.invokeOnCompletion {
-            if (shouldSignOut) { signOut() }
+            if (shouldSignOut) {
+                signOut()
+            }
             dialog?.dismiss()
         }
     }

@@ -3,7 +3,6 @@ package com.armutyus.ninova.ui.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.armutyus.ninova.constants.Response
-import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.repository.FirebaseRepositoryInterface
 import com.armutyus.ninova.repository.LocalBooksRepositoryInterface
 import com.armutyus.ninova.repository.ShelfRepositoryInterface
