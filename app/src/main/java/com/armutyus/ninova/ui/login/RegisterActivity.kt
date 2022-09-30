@@ -57,16 +57,12 @@ class RegisterActivity : AppCompatActivity() {
 
         binding.changeEmailButton.setOnClickListener {
             password = binding.reAuthPasswordText.text.toString().trim()
-            reAuthUser().also {
-                updateUserEmail()
-            }
+            reAuthUserAndChangeEmail()
         }
 
         binding.changePasswordButton.setOnClickListener {
             password = binding.userCurrentPasswordText.text.toString().trim()
-            reAuthUser().also {
-                updateUserPassword()
-            }
+            reAuthUserAndChangePassword()
         }
 
         binding.sendResetPasswordButton.setOnClickListener {
@@ -77,26 +73,69 @@ class RegisterActivity : AppCompatActivity() {
     private var email = ""
     private var password = ""
 
-    private fun reAuthUser() {
-        if (password.isNotEmpty()) {
-            val credential = EmailAuthProvider.getCredential(auth.currentUser!!.email!!, password)
-            viewModel.reAuthUser(credential) { response ->
-                when (response) {
-                    is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
-                    is Response.Success -> {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(this, "Account confirmed.", Toast.LENGTH_LONG).show()
-                    }
-                    is Response.Failure -> {
-                        Log.e("RegisterActivity", "ReAuth Error: " + response.errorMessage)
-                        Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG).show()
-                        binding.progressBar.visibility = View.GONE
-                    }
-                }
-            }
-        } else {
+    private fun reAuthUserAndChangeEmail() {
+        email = binding.changeEmailText.text.toString().trim()
+        if (email.isEmpty()) {
             Toast.makeText(this, "Please enter your information correctly!", Toast.LENGTH_LONG)
                 .show()
+        } else {
+            if (password.isNotEmpty()) {
+                val credential = EmailAuthProvider.getCredential(auth.currentUser!!.email!!, password)
+                viewModel.reAuthUserAndChangeEmail(credential, email) { response ->
+                    when (response) {
+                        is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
+                        is Response.Success -> {
+                            binding.progressBar.visibility = View.GONE
+                            Toast.makeText(this, "E-mail updated successfully.", Toast.LENGTH_LONG).show()
+                        }
+                        is Response.Failure -> {
+                            Log.e("RegisterActivity", "ReAuth & Change E-mail Error: " + response.errorMessage)
+                            Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG).show()
+                            binding.progressBar.visibility = View.GONE
+                        }
+                    }
+                }
+            } else {
+                Toast.makeText(this, "Please enter your information correctly!", Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
+    }
+
+    private fun reAuthUserAndChangePassword() {
+        val newPassword = binding.newPasswordText.text.toString().trim()
+        val confirmNewPassword = binding.confirmNewPasswordText.text.toString().trim()
+
+        if (newPassword.isEmpty() || confirmNewPassword.isEmpty() || newPassword != confirmNewPassword) {
+            Toast.makeText(this, "Please enter your information correctly!", Toast.LENGTH_LONG)
+                .show()
+        } else {
+            if (password.isNotEmpty()) {
+                val credential = EmailAuthProvider.getCredential(auth.currentUser!!.email!!, password)
+                viewModel.reAuthUserAndChangePassword(credential, newPassword) { response ->
+                    when (response) {
+                        is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
+                        is Response.Success -> {
+                            binding.progressBar.visibility = View.GONE
+                            Toast.makeText(
+                                this,
+                                "Password changed, please login again.",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            signOut()
+                        }
+                        is Response.Failure -> {
+                            Log.e("RegisterActivity", "ReAuth & Change Password Error: " + response.errorMessage)
+                            Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG).show()
+                            binding.progressBar.visibility = View.GONE
+                        }
+                    }
+                }
+            } else {
+                Toast.makeText(this, "Please enter your information correctly!", Toast.LENGTH_LONG)
+                    .show()
+            }
         }
     }
 
@@ -148,68 +187,6 @@ class RegisterActivity : AppCompatActivity() {
                     Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
                         .show()
                     binding.progressBar.visibility = View.GONE
-                }
-            }
-        }
-    }
-
-    private fun updateUserEmail() {
-        email = binding.changeEmailText.text.toString().trim()
-
-        if (email.isEmpty()) {
-            Toast.makeText(this, "Please enter your information correctly!", Toast.LENGTH_LONG)
-                .show()
-        } else {
-            viewModel.changeUserEmail(email) { response ->
-                when (response) {
-                    is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
-                    is Response.Success -> {
-                        Toast.makeText(this, "E-mail updated.", Toast.LENGTH_LONG)
-                            .show()
-                        binding.progressBar.visibility = View.GONE
-                        goToMainActivity()
-                    }
-                    is Response.Failure -> {
-                        Log.e("RegisterActivity", "UpdateEmail Error: " + response.errorMessage)
-                        Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
-                            .show()
-                        binding.progressBar.visibility = View.GONE
-                    }
-                }
-            }
-        }
-
-    }
-
-    private fun updateUserPassword() {
-        val newPassword = binding.newPasswordText.text.toString().trim()
-        val confirmNewPassword = binding.confirmNewPasswordText.text.toString().trim()
-
-        if (newPassword.isEmpty() || confirmNewPassword.isEmpty() || newPassword != confirmNewPassword) {
-            Toast.makeText(this, "Please enter your information correctly!", Toast.LENGTH_LONG)
-                .show()
-        } else {
-            viewModel.changeUserPassword(newPassword) { response ->
-                when (response) {
-                    is Response.Loading -> binding.progressBar.visibility = View.VISIBLE
-                    is Response.Success -> {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(
-                            this,
-                            "Password changed, please login again.",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        signOut()
-                    }
-                    is Response.Failure -> {
-                        Log.e(
-                            "RegisterActivity",
-                            "UpdatePassword Error: " + response.errorMessage
-                        )
-                        Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG).show()
-                        binding.progressBar.visibility = View.GONE
-                    }
                 }
             }
         }

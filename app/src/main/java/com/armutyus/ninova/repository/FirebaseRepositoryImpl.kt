@@ -304,6 +304,9 @@ class FirebaseRepositoryImpl @Inject constructor(
                 Response.Loading
                 val reAuthResult = auth.currentUser!!.updateEmail(email).await()
                 reAuthResult.let {
+                    auth.currentUser!!.apply {
+                        db.collection(USERS_REF).document(uid).update("email", email)
+                    }
                     return@let Response.Success(true)
                 }
             } catch (e: Exception) {

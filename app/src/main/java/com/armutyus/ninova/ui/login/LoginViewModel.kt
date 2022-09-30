@@ -42,22 +42,36 @@ class LoginViewModel @Inject constructor(
         onComplete(response)
     }
 
-    fun reAuthUser(credential: AuthCredential, onComplete: (Response<Boolean>) -> Unit) =
+    fun reAuthUserAndChangeEmail(credential: AuthCredential, email: String, onComplete: (Response<Boolean>) -> Unit) =
         viewModelScope.launch {
-            val response = repository.reAuthUser(credential)
-            onComplete(response)
+            val reAuthResponse = repository.reAuthUser(credential)
+            if (reAuthResponse is Response.Failure) {
+                onComplete(reAuthResponse)
+                return@launch
+            }
+
+            val emailResponse = repository.changeUserEmail(email)
+            if (emailResponse is Response.Failure) {
+                onComplete(emailResponse)
+                return@launch
+            }
+            onComplete(Response.Success(true))
         }
 
-    fun changeUserEmail(email: String, onComplete: (Response<Boolean>) -> Unit) =
+    fun reAuthUserAndChangePassword(credential: AuthCredential, password: String, onComplete: (Response<Boolean>) -> Unit) =
         viewModelScope.launch {
-            val response = repository.changeUserEmail(email)
-            onComplete(response)
-        }
+            val reAuthResponse = repository.reAuthUser(credential)
+            if (reAuthResponse is Response.Failure) {
+                onComplete(reAuthResponse)
+                return@launch
+            }
 
-    fun changeUserPassword(password: String, onComplete: (Response<Boolean>) -> Unit) =
-        viewModelScope.launch {
-            val response = repository.changeUserPassword(password)
-            onComplete(response)
+            val emailResponse = repository.changeUserPassword(password)
+            if (emailResponse is Response.Failure) {
+                onComplete(emailResponse)
+                return@launch
+            }
+            onComplete(Response.Success(true))
         }
 
     fun sendPasswordEmail(email: String, onComplete: (Response<Boolean>) -> Unit) =
