@@ -79,6 +79,7 @@ class SettingsFragment @Inject constructor(
         val aboutNinova = findPreference<Preference>("about_ninova")
         val changeEmail = findPreference<Preference>("change_email")
         val changePassword = findPreference<Preference>("change_password")
+        val deleteAccount = findPreference<Preference>("delete_account")
         val privacyPolicy = findPreference<Preference>("privacy_policy")
         val register = findPreference<Preference>("register")
         val signOut = findPreference<Preference>("sign_out")
@@ -104,7 +105,7 @@ class SettingsFragment @Inject constructor(
             true
         }
         aboutNinova?.onPreferenceClickListener = aboutNinovaListener
-        aboutNinova?.summary = "Version: $VERSION_NAME"
+        aboutNinova?.summary = context?.getString(R.string.app_version, VERSION_NAME)
 
         val privacyPolicyListener = Preference.OnPreferenceClickListener {
             val privacyPolicyIntent = Intent(Intent.ACTION_VIEW, Uri.parse(PRIVACY_POLICY_URL))
@@ -112,6 +113,12 @@ class SettingsFragment @Inject constructor(
             true
         }
         privacyPolicy?.onPreferenceClickListener = privacyPolicyListener
+
+        val deleteAccountListener = Preference.OnPreferenceClickListener {
+            showDeleteAccountDialog()
+            true
+        }
+        deleteAccount?.onPreferenceClickListener = deleteAccountListener
 
         val signOutListener = Preference.OnPreferenceClickListener {
             showSignOutDialog()
@@ -124,7 +131,7 @@ class SettingsFragment @Inject constructor(
             true
         }
         uploadLibrary?.onPreferenceClickListener = uploadLibraryListener
-        uploadLibrary?.summary = "Link your library with your account: ${user.email}"
+        uploadLibrary?.summary = context?.getString(R.string.link_your_library, user.email)
 
         val registerListener = Preference.OnPreferenceClickListener {
             registerIntent.putExtra(SETTINGS_ACTION_KEY, REGISTER)
@@ -200,7 +207,7 @@ class SettingsFragment @Inject constructor(
                 is Response.Loading -> {
                     Toast.makeText(
                         requireContext(),
-                        "Library uploading, please wait..",
+                        R.string.library_uploading,
                         Toast.LENGTH_SHORT
                     ).show()
                     Log.i("libraryUpload", "Library uploading")
@@ -208,7 +215,7 @@ class SettingsFragment @Inject constructor(
                 is Response.Success -> {
                     Toast.makeText(
                         requireContext(),
-                        "Library uploaded",
+                        R.string.library_uploaded,
                         Toast.LENGTH_SHORT
                     ).show()
                     Log.i("libraryUpload", "Library uploaded")
@@ -235,9 +242,9 @@ class SettingsFragment @Inject constructor(
         settingsViewModel.signOut { response ->
             when (response) {
                 is Response.Loading ->
-                    Toast.makeText(requireContext(), "Please wait..", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), R.string.please_wait, Toast.LENGTH_SHORT).show()
                 is Response.Success -> {
-                    Toast.makeText(requireContext(), "Signed out!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), R.string.signed_out, Toast.LENGTH_SHORT).show()
                     Log.i("signOut", "Signed out successfully")
                     clearDatabase()
                     goToLogInActivity()
@@ -249,6 +256,19 @@ class SettingsFragment @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun showDeleteAccountDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(resources.getString(R.string.delete_account))
+            .setMessage(resources.getString(R.string.delete_account_warning))
+            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, _ ->
+                dialog.cancel()
+            }
+            .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
+                //delete account and restart app
+            }
+            .show()
     }
 
     private fun showSignOutDialog() {

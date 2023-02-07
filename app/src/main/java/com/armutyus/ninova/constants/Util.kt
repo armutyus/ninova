@@ -5,10 +5,14 @@ import android.view.View
 import android.view.animation.AlphaAnimation
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.armutyus.ninova.R
+import javax.inject.Inject
 
 class Util {
 
     companion object {
+        @Inject
+        lateinit var appContext: Context
+
         fun progressDrawable(context: Context): CircularProgressDrawable {
             val circularProgressDrawable = CircularProgressDrawable(context)
             circularProgressDrawable.strokeWidth = 5f
@@ -25,6 +29,8 @@ class Util {
                 fillAfter = false
             })
         }
+
+        fun Int.toLocalizedString(arg: Any? = null): String = appContext.resources.getString(this, arg)
     }
 
 }

@@ -39,8 +39,8 @@ class BooksFragment @Inject constructor(
             val layoutPosition = viewHolder.layoutPosition
             val swipedBook = booksAdapter.mainBooksList[layoutPosition]
             booksViewModel.deleteBook(swipedBook).invokeOnCompletion {
-                Snackbar.make(requireView(), "Book deleted from your library", Snackbar.LENGTH_LONG)
-                    .setAction("UNDO") {
+                Snackbar.make(requireView(), R.string.book_deleted, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.undo) {
                         booksViewModel.insertBook(swipedBook).invokeOnCompletion {
                             uploadBookToFirestore(swipedBook)
                             booksViewModel.loadBookList()
