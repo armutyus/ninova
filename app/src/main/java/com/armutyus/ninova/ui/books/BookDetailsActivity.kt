@@ -330,7 +330,8 @@ class BookDetailsActivity : AppCompatActivity() {
         val addToShelfButton = bookToShelfBottomSheetBinding.addShelfButton
         addToShelfButton.setOnClickListener {
             var shelfTitle: String
-            customDialogEditTextLayoutBinding = CustomDialogEditTextLayoutBinding.inflate(layoutInflater)
+            customDialogEditTextLayoutBinding =
+                CustomDialogEditTextLayoutBinding.inflate(layoutInflater)
             val editTextInputField = customDialogEditTextLayoutBinding.customDialogShelfTitleText
             shelfTitle = editTextInputField.text.toString()
             val builder =
@@ -345,7 +346,8 @@ class BookDetailsActivity : AppCompatActivity() {
             val createShelfDialog = builder.create()
             editTextInputField.doAfterTextChanged {
                 shelfTitle = editTextInputField.text.toString()
-                createShelfDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = shelfTitle.isNotEmpty()
+                createShelfDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled =
+                    shelfTitle.isNotEmpty()
             }
             createShelfDialog.setCanceledOnTouchOutside(false)
             createShelfDialog.show()
@@ -397,7 +399,8 @@ class BookDetailsActivity : AppCompatActivity() {
                         ).show()
                     } else {
                         setVisibilitiesForBookNull()
-                        Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }
             }

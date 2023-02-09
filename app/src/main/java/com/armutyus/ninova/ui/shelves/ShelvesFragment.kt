@@ -115,7 +115,8 @@ class ShelvesFragment @Inject constructor(
             val shelfTitle = bottomSheetBinding.shelfTitleText.text.toString()
 
             if (shelfTitle.isEmpty()) {
-                Toast.makeText(requireContext(), R.string.title_cannot_empty, Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), R.string.title_cannot_empty, Toast.LENGTH_LONG)
+                    .show()
             } else {
                 val timeStamp = Date().time
                 val formattedDate =
@@ -268,7 +269,8 @@ class ShelvesFragment @Inject constructor(
                     Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                 activityResultLauncher.launch(galleryIntent)
             } else {
-                Toast.makeText(requireContext(), R.string.permission_needed, Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), R.string.permission_needed, Toast.LENGTH_LONG)
+                    .show()
             }
         }
     }

@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -248,7 +247,8 @@ class SettingsFragment @Inject constructor(
         settingsViewModel.signOut { response ->
             when (response) {
                 is Response.Loading ->
-                    Toast.makeText(requireContext(), R.string.please_wait, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), R.string.please_wait, Toast.LENGTH_SHORT)
+                        .show()
                 is Response.Success -> {
                     Toast.makeText(requireContext(), R.string.signed_out, Toast.LENGTH_SHORT).show()
                     Log.i("signOut", "Signed out successfully")
@@ -268,7 +268,11 @@ class SettingsFragment @Inject constructor(
         val credential = EmailAuthProvider.getCredential(user.email!!, password)
         settingsViewModel.deleteUserPermanently(credential) { response ->
             when (response) {
-                is Response.Loading -> Toast.makeText(requireContext(), R.string.please_wait, Toast.LENGTH_SHORT).show()
+                is Response.Loading -> Toast.makeText(
+                    requireContext(),
+                    R.string.please_wait,
+                    Toast.LENGTH_SHORT
+                ).show()
                 is Response.Success -> {
                     Log.i("User Deleted", "User deleted successfully")
                     Toast.makeText(
@@ -282,7 +286,8 @@ class SettingsFragment @Inject constructor(
                 }
                 is Response.Failure -> {
                     Log.e("SettingsFragment", "Delete User Error: " + response.errorMessage)
-                    Toast.makeText(requireContext(), response.errorMessage, Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), response.errorMessage, Toast.LENGTH_LONG)
+                        .show()
                 }
             }
         }
@@ -290,7 +295,8 @@ class SettingsFragment @Inject constructor(
 
     private fun showDeleteAccountDialog() {
         var password: String
-        customDialogPasswordLayoutBinding = CustomDialogPasswordLayoutBinding.inflate(layoutInflater)
+        customDialogPasswordLayoutBinding =
+            CustomDialogPasswordLayoutBinding.inflate(layoutInflater)
         val passwordTextField = customDialogPasswordLayoutBinding.customDialogPasswordText
         password = passwordTextField.text.toString()
         val builder =
@@ -307,7 +313,8 @@ class SettingsFragment @Inject constructor(
         val createShelfDialog = builder.create()
         passwordTextField.doAfterTextChanged {
             password = passwordTextField.text.toString()
-            createShelfDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = password.isNotEmpty()
+            createShelfDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled =
+                password.isNotEmpty()
         }
         createShelfDialog.setCanceledOnTouchOutside(false)
         createShelfDialog.show()

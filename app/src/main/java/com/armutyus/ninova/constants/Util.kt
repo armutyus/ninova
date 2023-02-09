@@ -27,7 +27,9 @@ class Util {
                 fillAfter = false
             })
         }
-        fun Int.toLocalizedString(vararg formatArgs: Any? = emptyArray()): String = NinovaApplication.instance.getString(this, *formatArgs)
+
+        fun Int.toLocalizedString(vararg formatArgs: Any? = emptyArray()): String =
+            NinovaApplication.instance.getString(this, *formatArgs)
     }
 
 }

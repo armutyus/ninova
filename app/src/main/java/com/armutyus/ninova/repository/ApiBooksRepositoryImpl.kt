@@ -27,7 +27,8 @@ class ApiBooksRepositoryImpl @Inject constructor(
                     if (response.isSuccessful) {
                         response.body()?.let {
                             return@let emit(Response.Success(it))
-                        } ?: emit(Response.Failure(R.string.something_went_wrong.toLocalizedString()))
+                        }
+                            ?: emit(Response.Failure(R.string.something_went_wrong.toLocalizedString()))
                     } else {
                         emit(Response.Failure(R.string.something_went_wrong.toLocalizedString()))
                     }
@@ -46,7 +47,8 @@ class ApiBooksRepositoryImpl @Inject constructor(
                     if (response.isSuccessful) {
                         response.body()?.let {
                             return@let emit(Response.Success(it))
-                        } ?: emit(Response.Failure(R.string.something_went_wrong.toLocalizedString()))
+                        }
+                            ?: emit(Response.Failure(R.string.something_went_wrong.toLocalizedString()))
                     } else {
                         emit(Response.Failure(R.string.something_went_wrong.toLocalizedString()))
                     }

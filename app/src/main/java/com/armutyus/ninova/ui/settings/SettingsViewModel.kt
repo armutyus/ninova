@@ -54,20 +54,21 @@ class SettingsViewModel @Inject constructor(
         onComplete(Response.Success(true))
     }
 
-    fun deleteUserPermanently(credential: AuthCredential, onComplete: (Response<Boolean>) -> Unit) = viewModelScope.launch {
-        val reAuthResponse = firebaseRepository.reAuthUser(credential)
-        if (reAuthResponse is Response.Failure) {
-            onComplete(reAuthResponse)
-            return@launch
-        }
+    fun deleteUserPermanently(credential: AuthCredential, onComplete: (Response<Boolean>) -> Unit) =
+        viewModelScope.launch {
+            val reAuthResponse = firebaseRepository.reAuthUser(credential)
+            if (reAuthResponse is Response.Failure) {
+                onComplete(reAuthResponse)
+                return@launch
+            }
 
-        val emailResponse = firebaseRepository.deleteUserPermanently()
-        if (emailResponse is Response.Failure) {
-            onComplete(emailResponse)
-            return@launch
+            val emailResponse = firebaseRepository.deleteUserPermanently()
+            if (emailResponse is Response.Failure) {
+                onComplete(emailResponse)
+                return@launch
+            }
+            onComplete(Response.Success(true))
         }
-        onComplete(Response.Success(true))
-    }
 
     fun signOut(onComplete: (Response<Boolean>) -> Unit) = viewModelScope.launch {
         val response = firebaseRepository.signOut()
