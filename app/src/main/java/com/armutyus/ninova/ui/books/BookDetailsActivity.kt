@@ -246,12 +246,12 @@ class BookDetailsActivity : AppCompatActivity() {
 
     private fun setTabVisibilitiesForBookAdded(tab: TabLayout.Tab?) {
         when (tab?.text) {
-            "NOTES" -> {
+            getString(R.string.notes) -> {
                 binding.bookDetailNotesLinearLayout.visibility = View.VISIBLE
                 binding.bookDetailInfoLinearLayout.visibility = View.GONE
                 binding.linearLayoutDetailsError.visibility = View.GONE
             }
-            "INFO" -> {
+            getString(R.string.info) -> {
                 binding.bookDetailNotesLinearLayout.visibility = View.GONE
                 binding.bookDetailInfoLinearLayout.visibility = View.VISIBLE
                 binding.linearLayoutDetailsError.visibility = View.GONE
@@ -266,10 +266,10 @@ class BookDetailsActivity : AppCompatActivity() {
 
     private fun setTabVisibilitiesForBookRemoved(tab: TabLayout.Tab?) {
         when (tab?.text) {
-            "NOTES" -> {
+            getString(R.string.notes) -> {
                 Toast.makeText(this, R.string.book_edit_warning, Toast.LENGTH_LONG).show()
             }
-            "INFO" -> {
+            getString(R.string.info) -> {
                 binding.bookDetailNotesLinearLayout.visibility = View.GONE
                 binding.bookDetailInfoLinearLayout.visibility = View.VISIBLE
                 binding.linearLayoutDetailsError.visibility = View.GONE

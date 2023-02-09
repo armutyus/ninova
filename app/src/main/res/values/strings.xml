@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ninova</string>
+    <string name="app_name" translatable="false">Ninova</string>
     <string name="title_books">Books</string>
     <string name="title_discover">Discover</string>
     <string name="title_shelves">Shelves</string>
@@ -26,8 +26,8 @@
     <string name="dusty_shelves">Dusty Shelves</string>
     <string name="name_of_the_book">Name of the Book</string>
     <string name="author_of_the_book">Author of the Book</string>
-    <string name="page_number">320</string>
-    <string name="release_date">01.01.2010</string>
+    <string name="page_number" translatable="false">320</string>
+    <string name="release_date" translatable="false">01.01.2010</string>
     <string name="register">Register</string>
     <string name="sign_out">Sign Out</string>
     <string name="privacy_policy">Privacy Policy</string>
@@ -68,14 +68,14 @@
     <string name="notes">NOTES</string>
     <string name="first_second_third">First, Second, Third</string>
     <string name="your_notes">Your Notes</string>
-    <string name="lorem_ipsum">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
+    <string name="lorem_ipsum" translatable="false">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</string>
     <string name="pages">Pages</string>
     <string name="categories">Categories</string>
     <string name="action_comedy_horror">Action, Comedy, Horror</string>
     <string name="publisher">Publisher</string>
-    <string name="awesome_inc">Awesome Inc.</string>
+    <string name="awesome_inc" translatable="false">Awesome Inc.</string>
     <string name="published_date">Published Date</string>
-    <string name="_01_01_0001">01.01.0001</string>
+    <string name="_01_01_0001" translatable="false">01.01.0001</string>
     <string name="description">Description</string>
     <string name="something_went_wrong">Something went wrong..</string>
     <string name="add_your_notes_here">Add your notes here</string>
@@ -100,7 +100,7 @@
     <string name="title_cannot_empty">Title cannot be empty!</string>
     <string name="welcome_to_ninova">WELCOME \n\nTO NINOVA</string>
     <string name="search_through_all_books">Search through all books</string>
-    <string name="small_case_app_name">ninova</string>
+    <string name="small_case_app_name" translatable="false">ninova</string>
     <string name="delete_account_warning">Are you sure you want to delete your account? Account deletion is permanent and cannot be recovered later. Please, enter your current password to delete your account.</string>
     <string name="upload_library_message">Do you want to upload your library before you sign out?</string>
     <string name="wrong_information">Please enter your information correctly!</string>
@@ -117,6 +117,10 @@
     <string name="unexpected_error">Unexpected error!</string>
     <string name="about_page_text">Hello everyone! \n\nI am very happy to be able to deliver this application to you as a result of long-term studies. I tried to develop an application that can help anyone who loves books. And I want it to become even more useful by adding new features over time. The application is completely free and ad-free. And I plan to always stay that way -but you never know what future brings-. \n\nEndless thanks to my wife Sümeyra, my brothers Fatih, Ahmet Haşim and my sister Eda, my mom Fatma and my dad Namık who have always supported me and believed in me throughout this process and of course my son Selim for always giving me strength and joy in life. \n\nThanks to Atıl Samancıoğlu, Akın Kaldıroğlu and Philipp Lackner, from whom I learned and understood a lot with his lectures, videos and articles during the software learning and development process -probably they don’t know about it though-. \n\nThanks also to the amazing people on Youtube and StackOverFlow whose names I can\'t remember. \n\nSpecial thanks to my brother Ahmet Haşim, who was my mentor throughout this whole process. \n\nI hope you like the application. You can always reach me at ofdelibas@gmail.com for complaints, requests, bug reports and similar things.</string>
     <string name="credits">CREDITS</string>
-    <string name="credits_links">Firebase \nGlide Library \nGoogle Books API \nLink Builder \nLottie Animations \nRetrofit</string>
-    <string name="empty_text">-</string>
+    <string name="credits_links" translatable="false">Firebase \nGlide Library \nGoogle Books API \nLink Builder \nLottie Animations \nRetrofit</string>
+    <string name="empty_text" translatable="false">-</string>
+    <string name="or">or</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="system">System</string>
 </resources>
