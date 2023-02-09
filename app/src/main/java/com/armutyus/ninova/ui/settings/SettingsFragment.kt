@@ -9,12 +9,15 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.preference.Preference
@@ -35,7 +38,9 @@ import com.armutyus.ninova.constants.Constants.SETTINGS_ACTION_KEY
 import com.armutyus.ninova.constants.Constants.SYSTEM_THEME
 import com.armutyus.ninova.constants.Constants.VERSION_NAME
 import com.armutyus.ninova.constants.Response
+import com.armutyus.ninova.databinding.CustomDialogPasswordLayoutBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -64,6 +69,7 @@ class SettingsFragment @Inject constructor(
 
     private val settingsViewModel by activityViewModels<SettingsViewModel>()
     private val user = auth.currentUser!!
+    private lateinit var customDialogPasswordLayoutBinding: CustomDialogPasswordLayoutBinding
 
     private val sharedPreferences: SharedPreferences
         get() = PreferenceManager.getDefaultSharedPreferences(requireContext())
@@ -258,17 +264,54 @@ class SettingsFragment @Inject constructor(
         }
     }
 
+    private fun deleteAccountPermanently(password: String) {
+        val credential = EmailAuthProvider.getCredential(user.email!!, password)
+        settingsViewModel.deleteUserPermanently(credential) { response ->
+            when (response) {
+                is Response.Loading -> Toast.makeText(requireContext(), R.string.please_wait, Toast.LENGTH_SHORT).show()
+                is Response.Success -> {
+                    Log.i("User Deleted", "User deleted successfully")
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.account_deleted,
+                        Toast.LENGTH_LONG
+                    ).show()
+                    loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    clearDatabase()
+                    goToLogInActivity()
+                }
+                is Response.Failure -> {
+                    Log.e("SettingsFragment", "Delete User Error: " + response.errorMessage)
+                    Toast.makeText(requireContext(), response.errorMessage, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
     private fun showDeleteAccountDialog() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(resources.getString(R.string.delete_account))
-            .setMessage(resources.getString(R.string.delete_account_warning))
-            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, _ ->
-                dialog.cancel()
-            }
-            .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
-                //delete account and restart app
-            }
-            .show()
+        var password: String
+        customDialogPasswordLayoutBinding = CustomDialogPasswordLayoutBinding.inflate(layoutInflater)
+        val passwordTextField = customDialogPasswordLayoutBinding.customDialogPasswordText
+        password = passwordTextField.text.toString()
+        val builder =
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(resources.getString(R.string.delete_account))
+                .setMessage(resources.getString(R.string.delete_account_warning))
+                .setView(customDialogPasswordLayoutBinding.root)
+                .setNegativeButton(resources.getString(R.string.cancel)) { dialog, _ ->
+                    dialog.cancel()
+                }
+                .setPositiveButton(resources.getString(R.string.accept)) { _, _ ->
+                    deleteAccountPermanently(password)
+                }
+        val createShelfDialog = builder.create()
+        passwordTextField.doAfterTextChanged {
+            password = passwordTextField.text.toString()
+            createShelfDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = password.isNotEmpty()
+        }
+        createShelfDialog.setCanceledOnTouchOutside(false)
+        createShelfDialog.show()
+        createShelfDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
     }
 
     private fun showSignOutDialog() {

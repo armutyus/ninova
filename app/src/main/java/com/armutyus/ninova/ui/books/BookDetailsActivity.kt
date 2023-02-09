@@ -8,15 +8,16 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Html
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Cache.currentBook
@@ -29,6 +30,7 @@ import com.armutyus.ninova.constants.Constants.MAIN_INTENT
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.ActivityBookDetailsBinding
 import com.armutyus.ninova.databinding.AddBookToShelfBottomSheetBinding
+import com.armutyus.ninova.databinding.CustomDialogEditTextLayoutBinding
 import com.armutyus.ninova.model.BookDetailsInfo
 import com.armutyus.ninova.model.DataModel
 import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
@@ -40,7 +42,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
-import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
@@ -52,6 +53,7 @@ class BookDetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBookDetailsBinding
     private lateinit var bookToShelfBottomSheetBinding: AddBookToShelfBottomSheetBinding
+    private lateinit var customDialogEditTextLayoutBinding: CustomDialogEditTextLayoutBinding
     private lateinit var bookDetails: BookDetailsInfo
     private var notesTabDisabled = true
     private lateinit var tabLayout: TabLayout
@@ -327,22 +329,27 @@ class BookDetailsActivity : AppCompatActivity() {
 
         val addToShelfButton = bookToShelfBottomSheetBinding.addShelfButton
         addToShelfButton.setOnClickListener {
-            val editTextLayout = LayoutInflater.from(this).inflate(R.layout.custom_dialog_edit_text_layout,null, false)
-            val editTextInputField = editTextLayout.findViewById<TextInputLayout>(R.id.custom_dialog_shelf_title_til)
+            var shelfTitle: String
+            customDialogEditTextLayoutBinding = CustomDialogEditTextLayoutBinding.inflate(layoutInflater)
+            val editTextInputField = customDialogEditTextLayoutBinding.customDialogShelfTitleText
+            shelfTitle = editTextInputField.text.toString()
             val builder =
                 MaterialAlertDialogBuilder(this)
                     .setTitle(title)
                     .setMessage(R.string.create_shelf_and_add_book)
-                    .setView(editTextLayout)
+                    .setView(customDialogEditTextLayoutBinding.root)
                     .setPositiveButton(R.string.create) { shelfDialog, _ ->
-                        val shelfTitle = editTextInputField.editText?.text.toString()
                         launchCreateShelfDialog(shelfTitle, shelfDialog)
                     }
                     .setNegativeButton(R.string.cancelCaps, null)
-
             val createShelfDialog = builder.create()
+            editTextInputField.doAfterTextChanged {
+                shelfTitle = editTextInputField.text.toString()
+                createShelfDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = shelfTitle.isNotEmpty()
+            }
             createShelfDialog.setCanceledOnTouchOutside(false)
             createShelfDialog.show()
+            createShelfDialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
         }
 
         dialog.show()
@@ -450,28 +457,24 @@ class BookDetailsActivity : AppCompatActivity() {
     }
 
     private fun launchCreateShelfDialog(shelfTitle: String, shelfDialog: DialogInterface) {
-        if (shelfTitle.isEmpty()) {
-            Toast.makeText(this,R.string.title_cannot_empty,Toast.LENGTH_LONG).show()
-        } else {
-            val timeStamp = Date().time
-            val formattedDate =
-                SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(timeStamp)
-            val shelf =
-                LocalShelf(
-                    UUID.randomUUID().toString(),
-                    shelfTitle,
-                    formattedDate,
-                    "",
-                )
-            shelvesViewModel.insertShelf(shelf).invokeOnCompletion {
-                val crossRef = BookShelfCrossRef(currentBookIdExtra!!, shelf.shelfId)
-                uploadShelfToFirestore(shelf)
-                shelvesViewModel.loadShelfList()
-                shelvesViewModel.insertBookShelfCrossRef(crossRef).invokeOnCompletion {
-                    uploadCrossRefToFirestore(crossRef)
-                    booksViewModel.loadBookWithShelves(currentBookIdExtra!!)
-                    shelfDialog.dismiss()
-                }
+        val timeStamp = Date().time
+        val formattedDate =
+            SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(timeStamp)
+        val shelf =
+            LocalShelf(
+                UUID.randomUUID().toString(),
+                shelfTitle,
+                formattedDate,
+                "",
+            )
+        shelvesViewModel.insertShelf(shelf).invokeOnCompletion {
+            val crossRef = BookShelfCrossRef(currentBookIdExtra!!, shelf.shelfId)
+            uploadShelfToFirestore(shelf)
+            shelvesViewModel.loadShelfList()
+            shelvesViewModel.insertBookShelfCrossRef(crossRef).invokeOnCompletion {
+                uploadCrossRefToFirestore(crossRef)
+                booksViewModel.loadBookWithShelves(currentBookIdExtra!!)
+                shelfDialog.dismiss()
             }
         }
     }

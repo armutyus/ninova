@@ -101,12 +101,13 @@
     <string name="welcome_to_ninova">WELCOME \n\nTO NINOVA</string>
     <string name="search_through_all_books">Search through all books</string>
     <string name="small_case_app_name">ninova</string>
-    <string name="delete_account_warning">Are you sure you want to delete your account? Account deletion is permanent and cannot be recovered later.</string>
+    <string name="delete_account_warning">Are you sure you want to delete your account? Account deletion is permanent and cannot be recovered later. Please, enter your current password to delete your account.</string>
     <string name="upload_library_message">Do you want to upload your library before you sign out?</string>
     <string name="wrong_information">Please enter your information correctly!</string>
     <string name="successful_email_update">E-mail updated successfully.</string>
     <string name="password_changed_login">Password changed, please login again.</string>
     <string name="reset_email_sent">Reset password e-mail sent.</string>
+    <string name="account_deleted">Account deleted.</string>
     <string name="cancelCaps">CANCEL</string>
     <string name="undo">UNDO</string>
     <string name="app_version">Version: %s</string>

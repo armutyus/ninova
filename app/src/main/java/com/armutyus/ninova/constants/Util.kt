@@ -4,14 +4,12 @@ import android.content.Context
 import android.view.View
 import android.view.animation.AlphaAnimation
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import com.armutyus.ninova.NinovaApplication
 import com.armutyus.ninova.R
-import javax.inject.Inject
 
 class Util {
 
     companion object {
-        @Inject
-        lateinit var appContext: Context
 
         fun progressDrawable(context: Context): CircularProgressDrawable {
             val circularProgressDrawable = CircularProgressDrawable(context)
@@ -29,8 +27,7 @@ class Util {
                 fillAfter = false
             })
         }
-
-        fun Int.toLocalizedString(arg: Any? = null): String = appContext.resources.getString(this, arg)
+        fun Int.toLocalizedString(vararg formatArgs: Any? = emptyArray()): String = NinovaApplication.instance.getString(this, *formatArgs)
     }
 
 }
