@@ -26,7 +26,7 @@ class ShelfRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getLocalShelves(): List<LocalShelf> = withContext(coroutineContext) {
-        ninovaDao.getLocalShelves()
+        ninovaDao.getLocalShelves().sortedBy { it.createdAt }
     }
 
     override suspend fun searchLocalShelves(searchString: String): List<LocalShelf> =

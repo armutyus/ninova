@@ -3,6 +3,11 @@ package com.armutyus.ninova.ui.shelves
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -11,6 +16,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -43,13 +49,64 @@ class ShelvesFragment @Inject constructor(
     private lateinit var bottomSheetBinding: AddNewShelfBottomSheetBinding
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
+
     private val swipeCallBack = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
         override fun onMove(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder,
             target: RecyclerView.ViewHolder
         ): Boolean {
             return true
+        }
+
+        override fun onChildDraw(
+            c: Canvas,
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            dX: Float,
+            dY: Float,
+            actionState: Int,
+            isCurrentlyActive: Boolean
+        ) {
+
+            val deleteIcon = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_delete_account)
+            val intrinsicWidth = deleteIcon!!.intrinsicWidth
+            val intrinsicHeight = deleteIcon.intrinsicHeight
+            val swipeBackground = ColorDrawable()
+            val swipeBackgroundColor = R.color.md_theme_dark_errorContainer
+            val deleteIconColor = R.color.md_theme_dark_onErrorContainer
+            val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.DARKEN) }
+            val itemView = viewHolder.itemView
+            val itemHeight = itemView.bottom - itemView.top
+            val isCanceled = dX == 0f || !isCurrentlyActive
+
+            if (isCanceled) {
+                c.drawRect(itemView.right + dX, itemView.top.toFloat() - 44, itemView.right.toFloat(), itemView.bottom.toFloat() - 44, clearPaint)
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                return
+            }
+
+            swipeBackground.color = resources.getColor(swipeBackgroundColor, context!!.theme)
+            swipeBackground.setBounds(
+                itemView.right + dX.toInt(),
+                itemView.top - 44,
+                itemView.right,
+                itemView.bottom - 44
+            )
+            swipeBackground.draw(c)
+
+            val iconMargin = (itemHeight - intrinsicHeight) / 2
+            val iconTop = itemView.top - ((itemHeight / 2.2) - (intrinsicHeight*2.5))
+            val iconLeft = itemView.right - intrinsicWidth - (iconMargin / 2)
+            val iconRight = itemView.right - (iconMargin / 3)
+            val iconBottom = itemView.bottom - ((itemHeight * 0.7) - (intrinsicHeight))
+
+            deleteIcon.setBounds(iconLeft, iconTop.toInt(), iconRight, iconBottom.toInt())
+            deleteIcon.setTint(resources.getColor(deleteIconColor, context!!.theme))
+            deleteIcon.draw(c)
+            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+
         }
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
