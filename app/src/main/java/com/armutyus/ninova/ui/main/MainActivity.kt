@@ -17,6 +17,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.MenuProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.navOptions
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
@@ -134,6 +135,7 @@ class MainActivity : AppCompatActivity() {
     private fun bottomNavItemChangeListener(navView: BottomNavigationView) {
         navView.setOnItemSelectedListener { item ->
             if (item.itemId != navView.selectedItemId) {
+                navController.popBackStack(item.itemId, inclusive = true, saveState = false)
                 navController.navigate(item.itemId)
             }
             true
@@ -292,7 +294,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp()
+        return navController.popBackStack()
                 || super.onSupportNavigateUp()
     }
 

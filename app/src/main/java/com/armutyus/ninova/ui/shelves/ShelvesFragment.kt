@@ -11,7 +11,9 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -45,6 +47,7 @@ class ShelvesFragment @Inject constructor(
 ) : Fragment(R.layout.fragment_shelves), SearchView.OnQueryTextListener, OnShelfCoverClickListener {
 
     private var fragmentBinding: FragmentShelvesBinding? = null
+    private val binding get() = fragmentBinding
     private val shelvesViewModel by activityViewModels<ShelvesViewModel>()
     private lateinit var bottomSheetBinding: AddNewShelfBottomSheetBinding
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
@@ -136,29 +139,31 @@ class ShelvesFragment @Inject constructor(
         registerLauncher()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        fragmentBinding = FragmentShelvesBinding.inflate(inflater, container, false)
 
-        val binding = FragmentShelvesBinding.bind(view)
-        fragmentBinding = binding
+        val searchView = binding?.shelvesSearch
+        searchView?.setOnQueryTextListener(this)
+        searchView?.setIconifiedByDefault(false)
 
-        val recyclerView = binding.mainShelvesRecyclerView
-        recyclerView.adapter = shelvesAdapter
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        val recyclerView = binding?.mainShelvesRecyclerView
+        recyclerView?.adapter = shelvesAdapter
+        recyclerView?.layoutManager = LinearLayoutManager(requireContext())
         shelvesAdapter.setViewModel(shelvesViewModel)
         shelvesAdapter.setFragment(this)
         ItemTouchHelper(swipeCallBack).attachToRecyclerView(recyclerView)
 
-        val searchView = binding.shelvesSearch
-        searchView.setOnQueryTextListener(this)
-        searchView.setIconifiedByDefault(false)
-
-        binding.mainShelvesFab.setOnClickListener {
+        binding?.mainShelvesFab?.setOnClickListener {
             showAddShelfDialog()
         }
-
+        shelvesViewModel.loadShelfWithBookList()
         observeShelfList()
 
+        return binding?.root
     }
 
     private fun showAddShelfDialog() {
@@ -177,7 +182,7 @@ class ShelvesFragment @Inject constructor(
             } else {
                 val timeStamp = Date().time
                 val formattedDate =
-                    SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(timeStamp)
+                    SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.getDefault()).format(timeStamp)
                 val shelf =
                     LocalShelf(
                         UUID.randomUUID().toString(),
@@ -191,7 +196,6 @@ class ShelvesFragment @Inject constructor(
                 }
                 dialog.dismiss()
             }
-
         }
     }
 
@@ -239,13 +243,13 @@ class ShelvesFragment @Inject constructor(
 
     private fun setVisibilities(shelfList: List<LocalShelf>) {
         if (shelfList.isEmpty()) {
-            fragmentBinding?.linearLayoutShelvesError?.visibility = View.VISIBLE
-            fragmentBinding?.progressBar?.visibility = View.GONE
-            fragmentBinding?.mainShelvesRecyclerView?.visibility = View.GONE
+            binding?.linearLayoutShelvesError?.visibility = View.VISIBLE
+            binding?.progressBar?.visibility = View.GONE
+            binding?.mainShelvesRecyclerView?.visibility = View.GONE
         } else {
-            fragmentBinding?.linearLayoutShelvesError?.visibility = View.GONE
-            fragmentBinding?.progressBar?.visibility = View.GONE
-            fragmentBinding?.mainShelvesRecyclerView?.visibility = View.VISIBLE
+            binding?.linearLayoutShelvesError?.visibility = View.GONE
+            binding?.progressBar?.visibility = View.GONE
+            binding?.mainShelvesRecyclerView?.visibility = View.VISIBLE
         }
     }
 
