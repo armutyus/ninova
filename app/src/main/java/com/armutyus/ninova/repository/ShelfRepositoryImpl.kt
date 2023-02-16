@@ -32,7 +32,8 @@ class ShelfRepositoryImpl @Inject constructor(
             if (it.createdAt!!.length > 10) {
                 it.createdAt
             } else {
-                val inputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse(it.createdAt!!)
+                val inputFormat =
+                    SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).parse(it.createdAt!!)
                 val outputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 outputFormat.format(inputFormat!!)
             }

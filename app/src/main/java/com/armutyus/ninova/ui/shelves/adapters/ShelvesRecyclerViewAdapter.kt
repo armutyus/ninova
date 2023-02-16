@@ -72,7 +72,10 @@ class ShelvesRecyclerViewAdapter @Inject constructor(
             shelfTitle.text = shelf.shelfTitle
             shelfCreatedDate.text = if (shelf.createdAt!!.length > 10) {
                 val shelfCreatedDateText = shelf.createdAt?.substring(0..9)
-                val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(shelfCreatedDateText!!)
+                val inputFormat = SimpleDateFormat(
+                    "yyyy-MM-dd",
+                    Locale.getDefault()
+                ).parse(shelfCreatedDateText!!)
                 val outputFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
                 outputFormat.format(inputFormat!!)
             } else {

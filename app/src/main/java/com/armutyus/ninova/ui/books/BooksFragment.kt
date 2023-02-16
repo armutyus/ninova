@@ -51,7 +51,8 @@ class BooksFragment @Inject constructor(
             isCurrentlyActive: Boolean
         ) {
 
-            val deleteIcon = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_delete_account)
+            val deleteIcon =
+                AppCompatResources.getDrawable(requireContext(), R.drawable.ic_delete_account)
             val intrinsicWidth = deleteIcon!!.intrinsicWidth
             val intrinsicHeight = deleteIcon.intrinsicHeight
             val swipeBackground = ColorDrawable()
@@ -63,8 +64,22 @@ class BooksFragment @Inject constructor(
             val isCanceled = dX == 0f || !isCurrentlyActive
 
             if (isCanceled) {
-                c.drawRect(itemView.right + dX, itemView.top.toFloat() - 44, itemView.right.toFloat(), itemView.bottom.toFloat() - 44, clearPaint)
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                c.drawRect(
+                    itemView.right + dX,
+                    itemView.top.toFloat() - 44,
+                    itemView.right.toFloat(),
+                    itemView.bottom.toFloat() - 44,
+                    clearPaint
+                )
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
                 return
             }
 
@@ -78,7 +93,7 @@ class BooksFragment @Inject constructor(
             swipeBackground.draw(c)
 
             val iconMargin = (itemHeight - intrinsicHeight) / 2
-            val iconTop = itemView.top - ((itemHeight / 2.5) - (intrinsicHeight*3))
+            val iconTop = itemView.top - ((itemHeight / 2.5) - (intrinsicHeight * 3))
             val iconLeft = itemView.right - intrinsicWidth - (iconMargin / 2)
             val iconRight = itemView.right - (iconMargin / 3)
             val iconBottom = itemView.bottom - ((itemHeight * 0.7) - (intrinsicHeight))

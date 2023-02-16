@@ -73,7 +73,8 @@ class ShelvesFragment @Inject constructor(
             isCurrentlyActive: Boolean
         ) {
 
-            val deleteIcon = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_delete_account)
+            val deleteIcon =
+                AppCompatResources.getDrawable(requireContext(), R.drawable.ic_delete_account)
             val intrinsicWidth = deleteIcon!!.intrinsicWidth
             val intrinsicHeight = deleteIcon.intrinsicHeight
             val swipeBackground = ColorDrawable()
@@ -85,8 +86,22 @@ class ShelvesFragment @Inject constructor(
             val isCanceled = dX == 0f || !isCurrentlyActive
 
             if (isCanceled) {
-                c.drawRect(itemView.right + dX, itemView.top.toFloat() - 44, itemView.right.toFloat(), itemView.bottom.toFloat() - 44, clearPaint)
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                c.drawRect(
+                    itemView.right + dX,
+                    itemView.top.toFloat() - 44,
+                    itemView.right.toFloat(),
+                    itemView.bottom.toFloat() - 44,
+                    clearPaint
+                )
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
                 return
             }
 
@@ -100,7 +115,7 @@ class ShelvesFragment @Inject constructor(
             swipeBackground.draw(c)
 
             val iconMargin = (itemHeight - intrinsicHeight) / 2
-            val iconTop = itemView.top - ((itemHeight / 2.2) - (intrinsicHeight*2.5))
+            val iconTop = itemView.top - ((itemHeight / 2.2) - (intrinsicHeight * 2.5))
             val iconLeft = itemView.right - intrinsicWidth - (iconMargin / 2)
             val iconRight = itemView.right - (iconMargin / 3)
             val iconBottom = itemView.bottom - ((itemHeight * 0.7) - (intrinsicHeight))
@@ -182,7 +197,9 @@ class ShelvesFragment @Inject constructor(
             } else {
                 val timeStamp = Date().time
                 val formattedDate =
-                    SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.getDefault()).format(timeStamp)
+                    SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.getDefault()).format(
+                        timeStamp
+                    )
                 val shelf =
                     LocalShelf(
                         UUID.randomUUID().toString(),
