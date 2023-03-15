@@ -106,6 +106,10 @@ class BookDetailsActivity : AppCompatActivity() {
             }
         })
 
+        shelvesViewModel.loadShelfList()
+        observeShelfListChanges()
+        observeBookDetailsResponse()
+
         when (type) {
             LOCAL_BOOK_TYPE -> {
                 supportActionBar?.title = currentLocalBook?.bookTitle
@@ -127,9 +131,11 @@ class BookDetailsActivity : AppCompatActivity() {
                 }
 
                 binding.removeBookFromLibraryButton.setOnClickListener {
-                    booksViewModel.deleteBook(currentLocalBook!!).invokeOnCompletion {
-                        deleteBookFromFirestore(currentLocalBook?.bookId!!)
-                        setVisibilitiesForBookRemoved()
+                    if (currentLocalBook != null) {
+                        booksViewModel.deleteBook(currentLocalBook!!).invokeOnCompletion {
+                            deleteBookFromFirestore(currentLocalBook?.bookId!!)
+                            setVisibilitiesForBookRemoved()
+                        }
                     }
                 }
 
@@ -146,28 +152,32 @@ class BookDetailsActivity : AppCompatActivity() {
                 setVisibilitiesForBookRemoved()
 
                 binding.addBookToLibraryButton.setOnClickListener {
-                    val book =
-                        DataModel.LocalBook(
-                            currentBook?.id!!,
-                            bookDetails.authors ?: listOf(),
-                            bookDetails.categories ?: listOf(),
-                            bookDetails.imageLinks?.smallThumbnail,
-                            bookDetails.imageLinks?.thumbnail,
-                            Html.fromHtml(
-                                bookDetails.description ?: "",
-                                Html.FROM_HTML_OPTION_USE_CSS_COLORS
-                            ).toString(),
-                            "",
-                            bookDetails.pageCount.toString(),
-                            bookDetails.publishedDate,
-                            bookDetails.publisher,
-                            bookDetails.subtitle,
-                            bookDetails.title
-                        )
-                    booksViewModel.insertBook(book).invokeOnCompletion {
-                        uploadBookToFirestore(book)
-                        setVisibilitiesForBookAdded()
-                        booksViewModel.loadBookList()
+                    if (this::bookDetails.isInitialized) {
+                        val book =
+                            DataModel.LocalBook(
+                                currentBook?.id!!,
+                                bookDetails.authors ?: listOf(),
+                                bookDetails.categories ?: listOf(),
+                                bookDetails.imageLinks?.smallThumbnail,
+                                bookDetails.imageLinks?.thumbnail,
+                                Html.fromHtml(
+                                    bookDetails.description ?: "",
+                                    Html.FROM_HTML_OPTION_USE_CSS_COLORS
+                                ).toString(),
+                                "",
+                                bookDetails.pageCount.toString(),
+                                bookDetails.publishedDate,
+                                bookDetails.publisher,
+                                bookDetails.subtitle,
+                                bookDetails.title
+                            )
+                        booksViewModel.insertBook(book).invokeOnCompletion {
+                            uploadBookToFirestore(book)
+                            setVisibilitiesForBookAdded()
+                            booksViewModel.loadBookList()
+                        }
+                    } else {
+                        Log.i("bookDetails", "bookDetails not initialized.")
                     }
                 }
 
@@ -186,9 +196,6 @@ class BookDetailsActivity : AppCompatActivity() {
             else -> {}
         }
 
-        shelvesViewModel.loadShelfList()
-        observeShelfListChanges()
-        observeBookDetailsResponse()
     }
 
     override fun onResume() {
