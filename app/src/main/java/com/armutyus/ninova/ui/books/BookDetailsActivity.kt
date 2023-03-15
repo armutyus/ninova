@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -422,6 +423,24 @@ class BookDetailsActivity : AppCompatActivity() {
         }
     }
 
+    private fun uploadCustomBookCoverToFirestore(uri: Uri) {
+        booksViewModel.uploadCustomBookCoverToFirestore(uri) { response ->
+            when (response) {
+                is Response.Loading ->
+                    Log.i("bookCoverUpload", "Uploading to firestore")
+                is Response.Success -> {
+                    val downloadUrl = response.data.toString()
+                    currentLocalBook?.bookCoverSmallThumbnail = downloadUrl
+                    booksViewModel.updateBook(currentLocalBook!!)
+                    uploadBookToFirestore(currentLocalBook!!)
+                    Log.i("bookCoverUpload", "Uploaded to firestore")
+                }
+                is Response.Failure ->
+                    Log.e("bookCoverUpload", response.errorMessage)
+            }
+        }
+    }
+
     private fun uploadBookToFirestore(localBook: DataModel.LocalBook) {
         booksViewModel.uploadBookToFirestore(localBook) { response ->
             when (response) {
@@ -663,9 +682,7 @@ class BookDetailsActivity : AppCompatActivity() {
                 val uri = result.data?.data
                 if (uri != null) {
                     glide.load(uri).centerCrop().into(binding.bookCoverImageView)
-                    currentLocalBook?.bookCoverSmallThumbnail = uri.toString()
-                    booksViewModel.updateBook(currentLocalBook!!)
-                    uploadBookToFirestore(currentLocalBook!!)
+                    uploadCustomBookCoverToFirestore(uri)
                 }
             }
         }
@@ -686,9 +703,7 @@ class BookDetailsActivity : AppCompatActivity() {
                 val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
                 this.contentResolver.takePersistableUriPermission(uri, flag)
                 glide.load(uri).centerCrop().into(binding.bookCoverImageView)
-                currentLocalBook?.bookCoverSmallThumbnail = uri.toString()
-                booksViewModel.updateBook(currentLocalBook!!)
-                uploadBookToFirestore(currentLocalBook!!)
+                uploadCustomBookCoverToFirestore(uri)
             } else {
                 Log.d("PhotoPicker", "No media selected")
             }
