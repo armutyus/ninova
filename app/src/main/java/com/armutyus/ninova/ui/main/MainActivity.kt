@@ -128,7 +128,6 @@ class MainActivity : AppCompatActivity() {
             finish()
         }
 
-
     }
 
     private fun bottomNavItemChangeListener(navView: BottomNavigationView) {
