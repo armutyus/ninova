@@ -57,7 +57,7 @@ class BookToShelfRecyclerViewAdapter @Inject constructor(
             shelfRow.text = shelf.shelfTitle
             val checkedShelfList =
                 booksViewModel.bookWithShelvesList.value?.firstOrNull { it.shelfList.contains(shelf) }?.shelfList
-            shelfRow.isChecked = checkedShelfList != null && checkedShelfList.isNotEmpty()
+            shelfRow.isChecked = !checkedShelfList.isNullOrEmpty()
         }
 
         shelfRow.setOnCheckedChangeListener { _, isChecked ->
