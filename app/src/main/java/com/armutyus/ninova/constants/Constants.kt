@@ -31,7 +31,8 @@ object Constants {
 
 
     //References
-    const val BASE_URL = "https://www.googleapis.com/books/v1/"
+    const val GOOGLE_BOOKS_BASE_URL = "https://www.googleapis.com/books/v1/"
+    const val OPEN_LIBRARY_BASE_URL = "https://openlibrary.org/"
     const val BOOKS_REF = "Books"
     const val BOOKSHELF_CROSS_REF = "BookShelfCrossRef"
     const val FIREBASE_URL = "https://firebase.google.com/"

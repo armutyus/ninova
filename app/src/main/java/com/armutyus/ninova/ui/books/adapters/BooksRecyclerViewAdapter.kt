@@ -15,7 +15,7 @@ import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.constants.Constants.BOOK_DETAILS_INTENT
 import com.armutyus.ninova.constants.Constants.BOOK_TYPE_FOR_DETAILS
 import com.armutyus.ninova.constants.Constants.LOCAL_BOOK_TYPE
-import com.armutyus.ninova.model.DataModel
+import com.armutyus.ninova.model.googlebooksmodel.DataModel
 import com.bumptech.glide.RequestManager
 import javax.inject.Inject
 import javax.inject.Named

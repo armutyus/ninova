@@ -88,6 +88,7 @@ class LoginActivity : AppCompatActivity() {
                         goToMainActivity()
                         binding.progressBar.visibility = View.GONE
                     }
+
                     is Response.Failure -> {
                         Log.e("LoginActivity", "SignIn Error: " + response.errorMessage)
                         Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
@@ -106,6 +107,7 @@ class LoginActivity : AppCompatActivity() {
                 is Response.Success -> {
                     createUserProfile()
                 }
+
                 is Response.Failure -> {
                     Log.e("LoginActivity", "AnonymousSignIn Error: " + response.errorMessage)
                     Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
@@ -150,6 +152,7 @@ class LoginActivity : AppCompatActivity() {
                 is Response.Success -> {
                     createUserProfile()
                 }
+
                 is Response.Failure -> {
                     Log.e("LoginActivity", "SignUp Error: " + response.errorMessage)
                     Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
@@ -168,6 +171,7 @@ class LoginActivity : AppCompatActivity() {
                     goToMainActivity()
                     binding.progressBar.visibility = View.GONE
                 }
+
                 is Response.Failure -> {
                     Log.e("LoginActivity", "CreateProfile Error: " + response.errorMessage)
                     Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)

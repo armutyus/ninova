@@ -94,6 +94,7 @@ class RegisterActivity : AppCompatActivity() {
                                 Toast.LENGTH_LONG
                             ).show()
                         }
+
                         is Response.Failure -> {
                             Log.e(
                                 "RegisterActivity",
@@ -135,6 +136,7 @@ class RegisterActivity : AppCompatActivity() {
                             loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                             signOut()
                         }
+
                         is Response.Failure -> {
                             Log.e(
                                 "RegisterActivity",
@@ -173,6 +175,7 @@ class RegisterActivity : AppCompatActivity() {
                 is Response.Success -> {
                     createUserProfile()
                 }
+
                 is Response.Failure -> {
                     Log.e("RegisterActivity", "AnonymousSignUp Error: " + response.errorMessage)
                     Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG).show()
@@ -195,6 +198,7 @@ class RegisterActivity : AppCompatActivity() {
                     goToMainActivity()
                     binding.progressBar.visibility = View.GONE
                 }
+
                 is Response.Failure -> {
                     Log.e("RegisterActivity", "CreateProfile Error: " + response.errorMessage)
                     Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
@@ -218,6 +222,7 @@ class RegisterActivity : AppCompatActivity() {
                         binding.progressBar.visibility = View.GONE
                         goToLogInActivity()
                     }
+
                     is Response.Failure -> {
                         Log.e(
                             "RegisterActivity",

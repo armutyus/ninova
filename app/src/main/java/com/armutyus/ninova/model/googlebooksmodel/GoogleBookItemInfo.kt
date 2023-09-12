@@ -1,4 +1,4 @@
-package com.armutyus.ninova.model
+package com.armutyus.ninova.model.googlebooksmodel
 
 data class GoogleBookItemInfo(
     val authors: List<String>?,

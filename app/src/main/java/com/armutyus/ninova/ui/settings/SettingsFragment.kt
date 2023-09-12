@@ -217,6 +217,7 @@ class SettingsFragment @Inject constructor(
                     ).show()
                     Log.i("libraryUpload", "Library uploading")
                 }
+
                 is Response.Success -> {
                     Toast.makeText(
                         requireContext(),
@@ -225,6 +226,7 @@ class SettingsFragment @Inject constructor(
                     ).show()
                     Log.i("libraryUpload", "Library uploaded")
                 }
+
                 is Response.Failure -> {
                     Log.e("Library Upload Error", response.errorMessage)
                     Toast.makeText(
@@ -249,12 +251,14 @@ class SettingsFragment @Inject constructor(
                 is Response.Loading ->
                     Toast.makeText(requireContext(), R.string.please_wait, Toast.LENGTH_SHORT)
                         .show()
+
                 is Response.Success -> {
                     Toast.makeText(requireContext(), R.string.signed_out, Toast.LENGTH_SHORT).show()
                     Log.i("signOut", "Signed out successfully")
                     clearDatabase()
                     goToLogInActivity()
                 }
+
                 is Response.Failure -> {
                     Log.e("Sign Out Error", response.errorMessage)
                     Toast.makeText(requireContext(), response.errorMessage, Toast.LENGTH_LONG)
@@ -273,6 +277,7 @@ class SettingsFragment @Inject constructor(
                     R.string.please_wait,
                     Toast.LENGTH_SHORT
                 ).show()
+
                 is Response.Success -> {
                     Log.i("User Deleted", "User deleted successfully")
                     Toast.makeText(
@@ -284,6 +289,7 @@ class SettingsFragment @Inject constructor(
                     clearDatabase()
                     goToLogInActivity()
                 }
+
                 is Response.Failure -> {
                     Log.e("SettingsFragment", "Delete User Error: " + response.errorMessage)
                     Toast.makeText(requireContext(), response.errorMessage, Toast.LENGTH_LONG)

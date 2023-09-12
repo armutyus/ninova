@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:theme="@style/Theme.Ninova"
-    android:gravity="center"
     tools:context=".ui.discover.DiscoverFragment">
 
     <TextView
@@ -16,22 +15,32 @@
         android:layout_height="wrap_content"
         android:text="@string/small_case_app_name"
         android:fontFamily="@font/arista_pro_alternate_regular"
-        android:gravity="center"
-        android:layout_marginBottom="24dp"
+        android:gravity="top|center"
+        android:layout_marginVertical="16dp"
         android:textSize="32sp"/>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/discoverSearchButton"
-        style="@style/Widget.Material3.Button.OutlinedButton"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mainSearchRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:enabled="true"
-        android:text="@string/search_through_all_books"
-        android:textAlignment="textStart"
-        app:icon="@drawable/ic_search"
-        app:iconGravity="textStart"
-        app:iconPadding="8dp"/>
+        android:padding="16dp"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            style="@style/Widget.Material3.CircularProgressIndicator.Small" />
+    </LinearLayout>
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animationView"

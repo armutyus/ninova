@@ -3,7 +3,6 @@ package com.armutyus.ninova.ui.discover
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Util.Companion.fadeIn
 import com.armutyus.ninova.databinding.FragmentDiscoverBinding
@@ -21,9 +20,6 @@ class DiscoverFragment @Inject constructor(
         fragmentBinding = binding
 
         binding.appNameTextView.fadeIn(1000)
-        binding.discoverSearchButton.setOnClickListener {
-            findNavController().navigate(R.id.action_main_to_search)
-        }
 
     }
 

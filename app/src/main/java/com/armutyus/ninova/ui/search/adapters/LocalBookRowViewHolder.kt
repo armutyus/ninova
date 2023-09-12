@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Cache
 import com.armutyus.ninova.constants.Constants
-import com.armutyus.ninova.model.DataModel
+import com.armutyus.ninova.model.googlebooksmodel.DataModel
 import com.bumptech.glide.RequestManager
 
 class LocalBookRowViewHolder(view: View) : RecyclerView.ViewHolder(view) {

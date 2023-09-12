@@ -196,6 +196,7 @@ class MainActivity : AppCompatActivity() {
                     ).show()
                     Log.i("booksDownload", "Books downloading")
                 }
+
                 is Response.Success -> {
                     val firebaseBookList = response.data
                     if (firebaseBookList.isNotEmpty()) {
@@ -211,6 +212,7 @@ class MainActivity : AppCompatActivity() {
                         Log.i("booksDownload", "No books")
                     }
                 }
+
                 is Response.Failure -> {
                     Log.e("Firebase Fetch Books Error:", response.errorMessage)
                     Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
@@ -226,6 +228,7 @@ class MainActivity : AppCompatActivity() {
                 is Response.Loading -> {
                     Log.i("crossRefsDownload", "CrossRefs downloading")
                 }
+
                 is Response.Success -> {
                     val firebaseCrossRefList = response.data
                     if (firebaseCrossRefList.isNotEmpty()) {
@@ -245,6 +248,7 @@ class MainActivity : AppCompatActivity() {
                         putBoolean("first_time", false).apply()
                     }
                 }
+
                 is Response.Failure -> {
                     Log.e("Firebase Fetch CrossRefs Error:", response.errorMessage)
                     Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)
@@ -260,6 +264,7 @@ class MainActivity : AppCompatActivity() {
                 is Response.Loading -> {
                     Log.i("shelvesDownload", "Shelves downloading")
                 }
+
                 is Response.Success -> {
                     val firebaseShelvesList = response.data
                     if (firebaseShelvesList.isNotEmpty()) {
@@ -282,6 +287,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                 }
+
                 is Response.Failure -> {
                     Log.e("Firebase Fetch CrossRefs Error:", response.errorMessage)
                     Toast.makeText(this, response.errorMessage, Toast.LENGTH_LONG)

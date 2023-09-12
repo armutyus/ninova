@@ -34,8 +34,8 @@ import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.ActivityBookDetailsBinding
 import com.armutyus.ninova.databinding.AddBookToShelfBottomSheetBinding
 import com.armutyus.ninova.databinding.CustomDialogEditTextLayoutBinding
-import com.armutyus.ninova.model.BookDetailsInfo
-import com.armutyus.ninova.model.DataModel
+import com.armutyus.ninova.model.googlebooksmodel.BookDetailsInfo
+import com.armutyus.ninova.model.googlebooksmodel.DataModel
 import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.LocalShelf
 import com.armutyus.ninova.ui.shelves.ShelvesViewModel
@@ -193,6 +193,7 @@ class BookDetailsActivity : AppCompatActivity() {
                     showAddShelfDialog()
                 }
             }
+
             else -> {}
         }
 
@@ -228,9 +229,11 @@ class BookDetailsActivity : AppCompatActivity() {
     }
 
     private fun saveUserNotes() {
-        currentLocalBook!!.bookNotes = binding.userBookNotesEditText.text.toString()
-        booksViewModel.updateBook(currentLocalBook!!)
-        uploadBookToFirestore(currentLocalBook!!)
+        currentLocalBook?.let {
+            it.bookNotes = binding.userBookNotesEditText.text.toString()
+            booksViewModel.updateBook(it)
+            uploadBookToFirestore(it)
+        }
     }
 
     private var currentShelvesList = mutableListOf<String?>()
@@ -261,11 +264,13 @@ class BookDetailsActivity : AppCompatActivity() {
                 binding.bookDetailInfoLinearLayout.visibility = View.GONE
                 binding.linearLayoutDetailsError.visibility = View.GONE
             }
+
             getString(R.string.info) -> {
                 binding.bookDetailNotesLinearLayout.visibility = View.GONE
                 binding.bookDetailInfoLinearLayout.visibility = View.VISIBLE
                 binding.linearLayoutDetailsError.visibility = View.GONE
             }
+
             else -> {
                 binding.bookDetailNotesLinearLayout.visibility = View.GONE
                 binding.bookDetailInfoLinearLayout.visibility = View.VISIBLE
@@ -279,11 +284,13 @@ class BookDetailsActivity : AppCompatActivity() {
             getString(R.string.notes) -> {
                 Toast.makeText(this, R.string.book_edit_warning, Toast.LENGTH_LONG).show()
             }
+
             getString(R.string.info) -> {
                 binding.bookDetailNotesLinearLayout.visibility = View.GONE
                 binding.bookDetailInfoLinearLayout.visibility = View.VISIBLE
                 binding.linearLayoutDetailsError.visibility = View.GONE
             }
+
             else -> {
                 binding.bookDetailNotesLinearLayout.visibility = View.GONE
                 binding.bookDetailInfoLinearLayout.visibility = View.VISIBLE
@@ -389,6 +396,7 @@ class BookDetailsActivity : AppCompatActivity() {
                 is Response.Loading -> {
                     binding.progressBar.visibility = View.VISIBLE
                 }
+
                 is Response.Success -> {
                     binding.progressBar.visibility = View.GONE
                     bookDetails = response.data.volumeInfo
@@ -399,6 +407,7 @@ class BookDetailsActivity : AppCompatActivity() {
                     }
 
                 }
+
                 is Response.Failure -> {
                     binding.progressBar.visibility = View.GONE
                     if (type == LOCAL_BOOK_TYPE) {
@@ -422,8 +431,10 @@ class BookDetailsActivity : AppCompatActivity() {
             when (response) {
                 is Response.Loading ->
                     Log.i("bookDelete", "Deleting from firestore")
+
                 is Response.Success ->
                     Log.i("bookDelete", "Deleted from firestore")
+
                 is Response.Failure ->
                     Log.e("bookDelete", response.errorMessage)
             }
@@ -435,6 +446,7 @@ class BookDetailsActivity : AppCompatActivity() {
             when (response) {
                 is Response.Loading ->
                     Log.i("bookCoverUpload", "Uploading to firestore")
+
                 is Response.Success -> {
                     val downloadUrl = response.data.toString()
                     currentLocalBook?.bookCoverSmallThumbnail = downloadUrl
@@ -442,6 +454,7 @@ class BookDetailsActivity : AppCompatActivity() {
                     uploadBookToFirestore(currentLocalBook!!)
                     Log.i("bookCoverUpload", "Uploaded to firestore")
                 }
+
                 is Response.Failure ->
                     Log.e("bookCoverUpload", response.errorMessage)
             }
@@ -453,8 +466,10 @@ class BookDetailsActivity : AppCompatActivity() {
             when (response) {
                 is Response.Loading ->
                     Log.i("bookUpload", "Uploading to firestore")
+
                 is Response.Success ->
                     Log.i("bookUpload", "Uploaded to firestore")
+
                 is Response.Failure ->
                     Log.e("bookUpload", response.errorMessage)
             }
@@ -466,8 +481,10 @@ class BookDetailsActivity : AppCompatActivity() {
             when (response) {
                 is Response.Loading ->
                     Log.i("shelfUpload", "Uploading to firestore")
+
                 is Response.Success ->
                     Log.i("shelfUpload", "Uploaded to firestore")
+
                 is Response.Failure ->
                     Log.e("shelfUpload", response.errorMessage)
             }
@@ -479,8 +496,10 @@ class BookDetailsActivity : AppCompatActivity() {
             when (response) {
                 is Response.Loading ->
                     Log.i("crossRefUpload", "Uploading to firestore")
+
                 is Response.Success ->
                     Log.i("crossRefUpload", "Uploaded to firestore")
+
                 is Response.Failure ->
                     Log.e("crossRefUpload", response.errorMessage)
             }

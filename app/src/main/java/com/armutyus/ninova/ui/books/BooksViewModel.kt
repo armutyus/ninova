@@ -6,8 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.armutyus.ninova.constants.Response
-import com.armutyus.ninova.model.BookDetails
-import com.armutyus.ninova.model.DataModel
+import com.armutyus.ninova.model.googlebooksmodel.BookDetails
+import com.armutyus.ninova.model.googlebooksmodel.DataModel
 import com.armutyus.ninova.repository.ApiBooksRepositoryInterface
 import com.armutyus.ninova.repository.FirebaseRepositoryInterface
 import com.armutyus.ninova.repository.LocalBooksRepositoryInterface

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Cache
 import com.armutyus.ninova.constants.Constants
-import com.armutyus.ninova.model.DataModel
+import com.armutyus.ninova.model.googlebooksmodel.DataModel
 import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.search.MainSearchFragment
 import com.bumptech.glide.RequestManager

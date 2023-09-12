@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.armutyus.ninova.constants.Constants.randomWordList
 import com.armutyus.ninova.constants.Response
-import com.armutyus.ninova.model.DataModel
-import com.armutyus.ninova.model.GoogleApiBooks
+import com.armutyus.ninova.model.googlebooksmodel.DataModel
+import com.armutyus.ninova.model.googlebooksmodel.GoogleApiBooks
 import com.armutyus.ninova.repository.ApiBooksRepositoryInterface
 import com.armutyus.ninova.repository.LocalBooksRepositoryInterface
 import dagger.hilt.android.lifecycle.HiltViewModel

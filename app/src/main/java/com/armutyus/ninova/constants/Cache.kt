@@ -1,6 +1,6 @@
 package com.armutyus.ninova.constants
 
-import com.armutyus.ninova.model.DataModel
+import com.armutyus.ninova.model.googlebooksmodel.DataModel
 import com.armutyus.ninova.roomdb.entities.LocalShelf
 
 object Cache {

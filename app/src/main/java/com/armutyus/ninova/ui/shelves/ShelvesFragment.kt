@@ -42,7 +42,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.UUID
 import javax.inject.Inject
 
 class ShelvesFragment @Inject constructor(
@@ -279,8 +281,10 @@ class ShelvesFragment @Inject constructor(
             when (response) {
                 is Response.Loading ->
                     Log.i("shelfDelete", "Deleting from firestore")
+
                 is Response.Success ->
                     Log.i("shelfDelete", "Deleted from firestore")
+
                 is Response.Failure ->
                     Log.e("shelfDelete", response.errorMessage)
             }
@@ -292,6 +296,7 @@ class ShelvesFragment @Inject constructor(
             when (response) {
                 is Response.Loading ->
                     Log.i("shelfCoverUpload", "Uploading to firestore")
+
                 is Response.Success -> {
                     val downloadUrl = response.data.toString()
                     currentShelf?.shelfCover = downloadUrl
@@ -300,6 +305,7 @@ class ShelvesFragment @Inject constructor(
                     uploadShelfToFirestore(currentShelf!!)
                     Log.i("shelfCoverUpload", "Uploaded to firestore")
                 }
+
                 is Response.Failure ->
                     Log.e("shelfCoverUpload", response.errorMessage)
             }
@@ -311,8 +317,10 @@ class ShelvesFragment @Inject constructor(
             when (response) {
                 is Response.Loading ->
                     Log.i("shelfUpload", "Uploading to firestore")
+
                 is Response.Success ->
                     Log.i("shelfUpload", "Uploaded to firestore")
+
                 is Response.Failure ->
                     Log.e("shelfUpload", response.errorMessage)
             }

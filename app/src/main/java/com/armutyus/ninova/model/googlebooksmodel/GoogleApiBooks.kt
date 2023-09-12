@@ -1,4 +1,4 @@
-package com.armutyus.ninova.model
+package com.armutyus.ninova.model.googlebooksmodel
 
 data class GoogleApiBooks(
     val items: List<DataModel.GoogleBookItem>?,

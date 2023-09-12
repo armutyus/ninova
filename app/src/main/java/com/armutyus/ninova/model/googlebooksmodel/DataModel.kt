@@ -1,4 +1,4 @@
-package com.armutyus.ninova.model
+package com.armutyus.ninova.model.googlebooksmodel
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -3,8 +3,8 @@ package com.armutyus.ninova.repository
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.constants.Util.Companion.toLocalizedString
-import com.armutyus.ninova.model.BookDetails
-import com.armutyus.ninova.model.GoogleApiBooks
+import com.armutyus.ninova.model.googlebooksmodel.BookDetails
+import com.armutyus.ninova.model.googlebooksmodel.GoogleApiBooks
 import com.armutyus.ninova.service.GoogleBooksApiService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

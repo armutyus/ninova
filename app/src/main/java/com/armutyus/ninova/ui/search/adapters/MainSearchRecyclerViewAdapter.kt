@@ -8,7 +8,7 @@ import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.constants.Constants.GOOGLE_BOOK_TYPE
 import com.armutyus.ninova.constants.Constants.LOCAL_BOOK_TYPE
-import com.armutyus.ninova.model.DataModel
+import com.armutyus.ninova.model.googlebooksmodel.DataModel
 import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.search.MainSearchFragment
 import com.bumptech.glide.RequestManager
@@ -46,6 +46,7 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
                     false
                 )
             )
+
             LOCAL_BOOK_TYPE -> LocalBookRowViewHolder(
                 layoutInflater.inflate(
                     R.layout.search_local_book_row,
@@ -53,6 +54,7 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
                     false
                 )
             )
+
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
