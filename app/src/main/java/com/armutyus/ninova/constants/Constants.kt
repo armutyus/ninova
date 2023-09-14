@@ -56,6 +56,54 @@ object Constants {
     const val GOOGLE_BOOK_TYPE = 0
     const val LOCAL_BOOK_TYPE = 1
 
+    //DiscoverScreenCategories
+    val discoverScreenCategories = listOf(
+        "Drama",
+        "Fantasy",
+        "Historical Fiction",
+        "Horror",
+        "Humor",
+        "Literature",
+        "Magic",
+        "Mystery and Detective Stories",
+        "Plays",
+        "Poetry",
+        "Romance",
+        "Science Fiction",
+        "Short Stories",
+        "Thriller",
+        "Young Adult Fiction",
+        "Science",
+        "Business",
+        "Cooking",
+        "Cookbooks",
+        "Mental Health",
+        "Exercise",
+        "Nutrition",
+        "Self-help",
+        "History",
+        "Anthropology",
+        "Religion",
+        "Political Science",
+        "Psychology",
+        "Biography",
+        "Architecture",
+        "Art & Art Instruction",
+        "Art History",
+        "Dance",
+        "Design",
+        "Fashion",
+        "Film",
+        "Graphic Design",
+        "Music",
+        "Music Theory",
+        "Painting",
+        "Photography",
+        "Bedtime",
+        "Children"
+
+    )
+
     //RandomWordsList
     val randomWordList = listOf(
         "William",
