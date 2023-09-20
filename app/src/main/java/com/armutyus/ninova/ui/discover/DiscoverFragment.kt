@@ -1,9 +1,12 @@
 package com.armutyus.ninova.ui.discover
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Util.Companion.fadeIn
 import com.armutyus.ninova.databinding.FragmentDiscoverBinding
@@ -27,6 +30,17 @@ class DiscoverFragment @Inject constructor(
         recyclerView.adapter = discoverAdapter
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 4)
         recyclerView.visibility = View.VISIBLE
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (!recyclerView.canScrollVertically(-1)) {
+                    (requireActivity() as AppCompatActivity).supportActionBar?.show()
+                } else {
+                    (requireActivity() as AppCompatActivity).supportActionBar?.hide()
+                }
+            }
+        })
     }
 
     override fun onDestroyView() {
