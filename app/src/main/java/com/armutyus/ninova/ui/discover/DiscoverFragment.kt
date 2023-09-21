@@ -1,10 +1,10 @@
 package com.armutyus.ninova.ui.discover
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
@@ -16,7 +16,10 @@ import javax.inject.Inject
 class DiscoverFragment @Inject constructor(
     private val discoverAdapter: DiscoverRecyclerViewAdapter
 ) : Fragment(R.layout.fragment_discover) {
+
     private var fragmentBinding: FragmentDiscoverBinding? = null
+
+    private val discoverViewModel by activityViewModels<DiscoverViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -30,6 +33,7 @@ class DiscoverFragment @Inject constructor(
         recyclerView.adapter = discoverAdapter
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 4)
         recyclerView.visibility = View.VISIBLE
+        discoverAdapter.setViewModel(discoverViewModel)
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -41,10 +45,12 @@ class DiscoverFragment @Inject constructor(
                 }
             }
         })
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         fragmentBinding = null
     }
+
 }

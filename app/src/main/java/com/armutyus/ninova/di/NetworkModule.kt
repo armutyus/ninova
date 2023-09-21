@@ -77,6 +77,11 @@ object NetworkModule {
 
     @Singleton
     @Provides
+    fun provideOpenLibRepository(openLibraryApiService: OpenLibraryApiService) =
+        OpenLibRepositoryImpl(openLibraryApiService) as OpenLibRepositoryInterface
+
+    @Singleton
+    @Provides
     fun provideShelfRepository(ninovaDao: NinovaDao) =
         ShelfRepositoryImpl(ninovaDao) as ShelfRepositoryInterface
 
