@@ -40,6 +40,8 @@ object Constants {
     const val GOOGLE_BOOKS_API_URL = "https://developers.google.com/books"
     const val LINK_BUILDER_URL = "https://github.com/klinker24/Android-TextView-LinkBuilder"
     const val LOTTIE_FILES_URL = "https://lottiefiles.com/"
+    const val NINOVA_LOGO_URL =
+        "https://play-lh.googleusercontent.com/ZeOfg2rgd6wCdWDlBjepSHK4dLenmvSd0wQz0mNIZmRXie95GIhNLWZhKm3iU81xww=w480-h960-rw"
     const val PRIVACY_POLICY_URL = "https://sites.google.com/view/ninova-bookshelf-app"
     const val RETROFIT_URL = "https://square.github.io/retrofit/"
     const val SHELVES_REF = "Shelves"

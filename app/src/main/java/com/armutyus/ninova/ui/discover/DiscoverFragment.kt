@@ -33,7 +33,6 @@ class DiscoverFragment @Inject constructor(
         recyclerView.adapter = discoverAdapter
         recyclerView.layoutManager = GridLayoutManager(requireContext(), 4)
         recyclerView.visibility = View.VISIBLE
-        discoverAdapter.setViewModel(discoverViewModel)
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -46,11 +45,20 @@ class DiscoverFragment @Inject constructor(
             }
         })
 
+        runObservers()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         fragmentBinding = null
+    }
+
+    private fun runObservers() {
+        discoverViewModel.categoryCoverId.observe(viewLifecycleOwner) {
+            if (it != null) {
+                discoverAdapter.updateData(it)
+            }
+        }
     }
 
 }

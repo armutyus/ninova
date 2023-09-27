@@ -5,7 +5,16 @@ import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Constants.GOOGLE_BOOKS_BASE_URL
 import com.armutyus.ninova.constants.Constants.OPEN_LIBRARY_BASE_URL
 import com.armutyus.ninova.constants.Util
-import com.armutyus.ninova.repository.*
+import com.armutyus.ninova.repository.FirebaseRepositoryImpl
+import com.armutyus.ninova.repository.FirebaseRepositoryInterface
+import com.armutyus.ninova.repository.GoogleBooksRepositoryImpl
+import com.armutyus.ninova.repository.GoogleBooksRepositoryInterface
+import com.armutyus.ninova.repository.LocalBooksRepositoryImpl
+import com.armutyus.ninova.repository.LocalBooksRepositoryInterface
+import com.armutyus.ninova.repository.OpenLibRepositoryImpl
+import com.armutyus.ninova.repository.OpenLibRepositoryInterface
+import com.armutyus.ninova.repository.ShelfRepositoryImpl
+import com.armutyus.ninova.repository.ShelfRepositoryInterface
 import com.armutyus.ninova.roomdb.NinovaDao
 import com.armutyus.ninova.service.GoogleBooksApiService
 import com.armutyus.ninova.service.OpenLibraryApiService
@@ -68,7 +77,7 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideApiBooksRepository(googleBooksApiService: GoogleBooksApiService) =
-        ApiBooksRepositoryImpl(googleBooksApiService) as ApiBooksRepositoryInterface
+        GoogleBooksRepositoryImpl(googleBooksApiService) as GoogleBooksRepositoryInterface
 
     @Singleton
     @Provides

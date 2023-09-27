@@ -13,10 +13,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class ApiBooksRepositoryImpl @Inject constructor(
+class GoogleBooksRepositoryImpl @Inject constructor(
     private val googleBooksApiService: GoogleBooksApiService,
     private val coroutineContext: CoroutineDispatcher = Dispatchers.IO
-) : ApiBooksRepositoryInterface {
+) : GoogleBooksRepositoryInterface {
 
     override suspend fun getBookDetails(bookId: String): Flow<Response<BookDetails>> =
         withContext(coroutineContext) {

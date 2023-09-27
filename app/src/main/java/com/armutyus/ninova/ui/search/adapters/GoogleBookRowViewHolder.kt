@@ -16,9 +16,9 @@ import com.armutyus.ninova.ui.search.MainSearchFragment
 import com.bumptech.glide.RequestManager
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
-class ApiBookRowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class GoogleBookRowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-    fun bindApiBook(
+    fun bindGoogleBook(
         book: DataModel.GoogleBookItem,
         glide: RequestManager,
         searchFragment: MainSearchFragment,

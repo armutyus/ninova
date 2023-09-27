@@ -1,15 +1,16 @@
 package com.armutyus.ninova.ui.discover.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Constants.NINOVA_LOGO_URL
 import com.armutyus.ninova.constants.Constants.discoverScreenCategories
-import com.armutyus.ninova.ui.discover.DiscoverViewModel
+import com.armutyus.ninova.ui.discover.DiscoverFragmentDirections
 import com.bumptech.glide.RequestManager
 import javax.inject.Inject
 
@@ -17,7 +18,7 @@ class DiscoverRecyclerViewAdapter @Inject constructor(
     private val glide: RequestManager
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private lateinit var discoverViewModel: DiscoverViewModel
+    private val categoryCoverMap = mutableMapOf<String, String>()
 
     class DiscoverScreenViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
@@ -35,19 +36,33 @@ class DiscoverRecyclerViewAdapter @Inject constructor(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val categoryCover = holder.itemView.findViewById<ImageView>(R.id.bookImage)
         val categoryTitle = holder.itemView.findViewById<TextView>(R.id.bookCategory)
-        val categoryCoverId = // Find a way to get string
-            discoverViewModel.getRandomBookCoverForCategory(discoverScreenCategories[position])
-        val categoryCoverUrl = "https://covers.openlibrary.org/b/id/${categoryCoverId}-S.jpg"
-        Log.i("AdapterCover", categoryCoverUrl)
+
+        val categoryCoverId = categoryCoverMap[discoverScreenCategories[position]]
+        val categoryCoverUrl = if (categoryCoverId?.startsWith("S") == true) {
+            NINOVA_LOGO_URL
+        } else {
+            "https://covers.openlibrary.org/b/id/${categoryCoverId}-M.jpg"
+        }
+
         categoryTitle.isSelected = true
 
         holder.itemView.apply {
             glide.load(categoryCoverUrl).circleCrop().into(categoryCover)
             categoryTitle.text = discoverScreenCategories[position]
         }
+
+        holder.itemView.setOnClickListener {
+            val action =
+                DiscoverFragmentDirections.actionNavigationDiscoveryToNavigationDiscoveryCategory(
+                    discoverScreenCategories[position]
+                )
+            Navigation.findNavController(it).navigate(action)
+        }
     }
 
-    fun setViewModel(discoverViewModel: DiscoverViewModel) {
-        this.discoverViewModel = discoverViewModel
+    fun updateData(newData: MutableMap<String, String>) {
+        categoryCoverMap.clear()
+        categoryCoverMap.putAll(newData)
+        notifyDataSetChanged()
     }
 }

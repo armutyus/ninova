@@ -5,7 +5,7 @@ import com.armutyus.ninova.model.googlebooksmodel.BookDetails
 import com.armutyus.ninova.model.googlebooksmodel.GoogleApiBooks
 import kotlinx.coroutines.flow.Flow
 
-interface ApiBooksRepositoryInterface {
+interface GoogleBooksRepositoryInterface {
 
     suspend fun getBookDetails(bookId: String): Flow<Response<BookDetails>>
 

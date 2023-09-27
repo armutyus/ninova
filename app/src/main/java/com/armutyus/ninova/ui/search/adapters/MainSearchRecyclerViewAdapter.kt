@@ -39,7 +39,7 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
         val layoutInflater = LayoutInflater.from(parent.context)
 
         return when (viewType) {
-            GOOGLE_BOOK_TYPE -> ApiBookRowViewHolder(
+            GOOGLE_BOOK_TYPE -> GoogleBookRowViewHolder(
                 layoutInflater.inflate(
                     R.layout.search_main_row,
                     parent,
@@ -62,8 +62,8 @@ class MainSearchRecyclerViewAdapter @Inject constructor(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         return when (holder.itemViewType) {
             GOOGLE_BOOK_TYPE -> {
-                holder as ApiBookRowViewHolder
-                holder.bindApiBook(
+                holder as GoogleBookRowViewHolder
+                holder.bindGoogleBook(
                     adapterData[position] as DataModel.GoogleBookItem,
                     glide,
                     searchFragment,

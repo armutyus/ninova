@@ -13,9 +13,9 @@ interface OpenLibraryApiService {
         "Content-Type: application/json",
         "Platform: android"
     )
-    @GET("subjects/{name}.json")
+    @GET("subjects/{name}.json?")
     suspend fun getBooksByCategory(
         @Path("name") category: String,
-        @Query("limit") maxResults: Int = 50
+        @Query("offset") offset: Int
     ): Response<OpenLibraryResponse>
 }

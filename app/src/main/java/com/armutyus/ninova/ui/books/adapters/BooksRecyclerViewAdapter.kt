@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
-import com.armutyus.ninova.constants.Cache.currentBook
 import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.constants.Constants.BOOK_DETAILS_INTENT
 import com.armutyus.ninova.constants.Constants.BOOK_TYPE_FOR_DETAILS
@@ -70,7 +69,7 @@ class BooksRecyclerViewAdapter @Inject constructor(
         holder.itemView.setOnClickListener {
             bookDetailsIntent.putExtra(BOOK_TYPE_FOR_DETAILS, LOCAL_BOOK_TYPE)
             currentLocalBook = book
-            currentBook = null
+            //currentBook = null
             holder.itemView.context.startActivity(bookDetailsIntent)
         }
 

@@ -1,5 +1,6 @@
 package com.armutyus.ninova.repository
 
+import android.util.Log
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.constants.Util.Companion.toLocalizedString
@@ -16,12 +17,15 @@ class OpenLibRepositoryImpl @Inject constructor(
     private val openLibraryApiService: OpenLibraryApiService,
     private val coroutineContext: CoroutineDispatcher = Dispatchers.IO
 ) : OpenLibRepositoryInterface {
-    override suspend fun getBooksByCategory(category: String): Flow<Response<OpenLibraryResponse>> =
+    override suspend fun getBooksByCategory(
+        category: String,
+        offset: Int
+    ): Flow<Response<OpenLibraryResponse>> =
         withContext(coroutineContext) {
             flow {
                 try {
                     emit(Response.Loading)
-                    val response = openLibraryApiService.getBooksByCategory(category)
+                    val response = openLibraryApiService.getBooksByCategory(category, offset)
                     if (response.isSuccessful) {
                         response.body()?.let {
                             return@let emit(Response.Success(it))
@@ -39,7 +43,7 @@ class OpenLibRepositoryImpl @Inject constructor(
     override suspend fun getRandomBookCoverForCategory(category: String): String =
         withContext(coroutineContext) {
             try {
-                val response = openLibraryApiService.getBooksByCategory(category, 10)
+                val response = openLibraryApiService.getBooksByCategory(category, 0)
                 if (response.isSuccessful) {
                     response.body()?.let {
                         return@let it.works.random().cover_id
@@ -49,7 +53,11 @@ class OpenLibRepositoryImpl @Inject constructor(
                     R.string.something_went_wrong.toLocalizedString()
                 }
             } catch (e: Exception) {
-                R.string.error_with_message.toLocalizedString(e.localizedMessage)
+                Log.i(
+                    "CategoryCoverError",
+                    R.string.error_with_message.toLocalizedString(e.localizedMessage)
+                )
+                R.string.something_went_wrong.toLocalizedString()
             }
         }
 }
