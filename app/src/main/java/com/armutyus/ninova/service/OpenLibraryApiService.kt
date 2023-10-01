@@ -5,7 +5,6 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface OpenLibraryApiService {
     @Headers(
@@ -13,9 +12,8 @@ interface OpenLibraryApiService {
         "Content-Type: application/json",
         "Platform: android"
     )
-    @GET("subjects/{name}.json?")
+    @GET("{url}")
     suspend fun getBooksByCategory(
-        @Path("name") category: String,
-        @Query("offset") offset: Int
+        @Path("url") fixedUrl: String,
     ): Response<OpenLibraryResponse>
 }

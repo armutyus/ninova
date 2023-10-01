@@ -11,6 +11,6 @@ interface OpenLibRepositoryInterface {
         offset: Int
     ): Flow<Response<OpenLibraryResponse>>
 
-    suspend fun getRandomBookCoverForCategory(category: String): String
+    suspend fun getRandomBookCoverForCategory(category: String): Flow<Response<String>>
 
 }

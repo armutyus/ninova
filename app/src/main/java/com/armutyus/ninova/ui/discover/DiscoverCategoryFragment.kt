@@ -20,11 +20,11 @@ class DiscoverCategoryFragment @Inject constructor(
     private val discoverCategoryAdapter: DiscoverCategoryRecyclerViewAdapter
 ) : Fragment(R.layout.fragment_discover_category) {
 
-    private var fragmentBinding: FragmentDiscoverCategoryBinding? = null
-    private var offset = 0
-    private val args: DiscoverCategoryFragmentArgs by navArgs()
 
+    private val args: DiscoverCategoryFragmentArgs by navArgs()
     private val discoverViewModel by activityViewModels<DiscoverViewModel>()
+    private var fragmentBinding: FragmentDiscoverCategoryBinding? = null
+    private var isNewBooksLoading = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -52,28 +52,27 @@ class DiscoverCategoryFragment @Inject constructor(
 
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+                Log.i("DiscoverFr", lastVisibleItemPosition.toString())
 
                 if (lastVisibleItemPosition == discoverCategoryAdapter.itemCount - 1 && dy > 0) {
-                    loadBooks()
+                    loadBooks(lastVisibleItemPosition + 1)
                 }
 
             }
         })
 
-        loadBooks()
+        loadBooks(0)
         runObservers()
     }
 
     override fun onResume() {
         super.onResume()
         discoverCategoryAdapter.clearData()
-        offset = 0
     }
 
     override fun onPause() {
         super.onPause()
         discoverCategoryAdapter.clearData()
-        offset = 0
     }
 
     override fun onDestroyView() {
@@ -93,6 +92,7 @@ class DiscoverCategoryFragment @Inject constructor(
                 }
 
                 is Response.Success -> {
+                    fragmentBinding?.progressBar?.visibility = View.GONE
                     val bookList = response.data.works.toList()
                     Log.i("CategoryObserver", bookList.size.toString())
                     discoverCategoryAdapter.setData(bookList)
@@ -101,9 +101,13 @@ class DiscoverCategoryFragment @Inject constructor(
         }
     }
 
-    private fun loadBooks() {
+    private fun loadBooks(offset: Int) {
+        if (isNewBooksLoading) {
+            return
+        }
+        isNewBooksLoading = true
         discoverViewModel.booksFromApi(args.categoryTitle, offset).invokeOnCompletion {
-            offset += discoverCategoryAdapter.itemCount
+            isNewBooksLoading = false
         }
     }
 

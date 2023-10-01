@@ -24,9 +24,17 @@ class OpenLibRepositoryImpl @Inject constructor(
         withContext(coroutineContext) {
             flow {
                 try {
+                    val categoryUrl = if (category.contains(" ")) {
+                        category.replace(" ", "_")
+                    } else {
+                        category
+                    }
+                    val fixedUrl = "subjects/$categoryUrl.json?offset=$offset"
                     emit(Response.Loading)
-                    val response = openLibraryApiService.getBooksByCategory(category, offset)
+                    val response = openLibraryApiService.getBooksByCategory(fixedUrl)
                     if (response.isSuccessful) {
+                        Log.i("ApiRequest", response.raw().request().url().toString())
+                        Log.i("ApiRequest", offset.toString())
                         response.body()?.let {
                             return@let emit(Response.Success(it))
                         }
@@ -40,24 +48,28 @@ class OpenLibRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun getRandomBookCoverForCategory(category: String): String =
+    override suspend fun getRandomBookCoverForCategory(category: String): Flow<Response<String>> =
         withContext(coroutineContext) {
-            try {
-                val response = openLibraryApiService.getBooksByCategory(category, 0)
-                if (response.isSuccessful) {
-                    response.body()?.let {
-                        return@let it.works.random().cover_id
+            flow {
+                try {
+                    emit(Response.Loading)
+                    val fixedUrl = "subjects/$category.json"
+                    val response = openLibraryApiService.getBooksByCategory(fixedUrl)
+                    if (response.isSuccessful) {
+                        response.body()?.let {
+                            return@let emit(Response.Success(it.works.random().cover_id))
+                        }
+                            ?: emit(Response.Failure(R.string.something_went_wrong.toLocalizedString()))
+                    } else {
+                        emit(Response.Failure(R.string.something_went_wrong.toLocalizedString()))
                     }
-                        ?: R.string.something_went_wrong.toLocalizedString()
-                } else {
-                    R.string.something_went_wrong.toLocalizedString()
+                } catch (e: Exception) {
+                    Log.i(
+                        "CategoryCoverError",
+                        R.string.error_with_message.toLocalizedString(e.localizedMessage)
+                    )
+                    emit(Response.Failure(R.string.something_went_wrong.toLocalizedString()))
                 }
-            } catch (e: Exception) {
-                Log.i(
-                    "CategoryCoverError",
-                    R.string.error_with_message.toLocalizedString(e.localizedMessage)
-                )
-                R.string.something_went_wrong.toLocalizedString()
             }
         }
 }

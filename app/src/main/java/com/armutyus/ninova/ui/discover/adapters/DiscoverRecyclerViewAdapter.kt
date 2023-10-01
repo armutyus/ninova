@@ -12,6 +12,7 @@ import com.armutyus.ninova.constants.Constants.NINOVA_LOGO_URL
 import com.armutyus.ninova.constants.Constants.discoverScreenCategories
 import com.armutyus.ninova.ui.discover.DiscoverFragmentDirections
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import javax.inject.Inject
 
 class DiscoverRecyclerViewAdapter @Inject constructor(
@@ -38,7 +39,7 @@ class DiscoverRecyclerViewAdapter @Inject constructor(
         val categoryTitle = holder.itemView.findViewById<TextView>(R.id.bookCategory)
 
         val categoryCoverId = categoryCoverMap[discoverScreenCategories[position]]
-        val categoryCoverUrl = if (categoryCoverId?.startsWith("S") == true) {
+        val categoryCoverUrl = if (categoryCoverId == null) {
             NINOVA_LOGO_URL
         } else {
             "https://covers.openlibrary.org/b/id/${categoryCoverId}-M.jpg"
@@ -47,7 +48,8 @@ class DiscoverRecyclerViewAdapter @Inject constructor(
         categoryTitle.isSelected = true
 
         holder.itemView.apply {
-            glide.load(categoryCoverUrl).circleCrop().into(categoryCover)
+            glide.load(categoryCoverUrl).circleCrop()
+                .transition(DrawableTransitionOptions.withCrossFade()).into(categoryCover)
             categoryTitle.text = discoverScreenCategories[position]
         }
 
@@ -61,8 +63,7 @@ class DiscoverRecyclerViewAdapter @Inject constructor(
     }
 
     fun updateData(newData: MutableMap<String, String>) {
-        categoryCoverMap.clear()
         categoryCoverMap.putAll(newData)
-        notifyDataSetChanged()
+        notifyDataSetChanged() // TODO -> need to find a better to way to update
     }
 }
