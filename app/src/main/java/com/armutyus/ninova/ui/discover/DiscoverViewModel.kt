@@ -1,6 +1,5 @@
 package com.armutyus.ninova.ui.discover
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -54,7 +53,6 @@ class DiscoverViewModel @Inject constructor(
     }
 
     fun booksFromApi(category: String, offset: Int) = viewModelScope.launch {
-        Log.i("DiscoverVM", offset.toString())
         openLibRepository.getBooksByCategory(category, offset).collectLatest { response ->
             _booksFromApiResponse.postValue(response)
         }

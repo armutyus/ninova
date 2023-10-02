@@ -29,12 +29,10 @@ class OpenLibRepositoryImpl @Inject constructor(
                     } else {
                         category
                     }
-                    val fixedUrl = "subjects/$categoryUrl.json?offset=$offset"
+                    val fixedUrl = "subjects/$categoryUrl.json?limit=50&offset=$offset"
                     emit(Response.Loading)
                     val response = openLibraryApiService.getBooksByCategory(fixedUrl)
                     if (response.isSuccessful) {
-                        Log.i("ApiRequest", response.raw().request().url().toString())
-                        Log.i("ApiRequest", offset.toString())
                         response.body()?.let {
                             return@let emit(Response.Success(it))
                         }
@@ -53,7 +51,7 @@ class OpenLibRepositoryImpl @Inject constructor(
             flow {
                 try {
                     emit(Response.Loading)
-                    val fixedUrl = "subjects/$category.json"
+                    val fixedUrl = "subjects/$category.json?limit=50"
                     val response = openLibraryApiService.getBooksByCategory(fixedUrl)
                     if (response.isSuccessful) {
                         response.body()?.let {

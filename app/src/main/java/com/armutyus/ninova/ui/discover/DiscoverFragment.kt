@@ -74,8 +74,8 @@ class DiscoverFragment @Inject constructor(
             }
         }
         discoverViewModel.categoryCoverId.observe(viewLifecycleOwner) {
-            if (it != null) {
-                discoverAdapter.updateData(it)
+            it?.forEach { (category, coverId) ->
+                discoverAdapter.updateData(category, coverId)
             }
         }
     }
