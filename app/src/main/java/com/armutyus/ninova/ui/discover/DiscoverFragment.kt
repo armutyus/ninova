@@ -60,7 +60,6 @@ class DiscoverFragment @Inject constructor(
             when (response) {
                 is Response.Loading -> {
                     fragmentBinding?.progressBar?.visibility = View.VISIBLE
-                    fragmentBinding?.discoverRecyclerView?.visibility = View.GONE
                 }
 
                 is Response.Failure -> {
@@ -69,7 +68,6 @@ class DiscoverFragment @Inject constructor(
 
                 is Response.Success -> {
                     fragmentBinding?.progressBar?.visibility = View.GONE
-                    fragmentBinding?.discoverRecyclerView?.visibility = View.VISIBLE
                 }
             }
         }

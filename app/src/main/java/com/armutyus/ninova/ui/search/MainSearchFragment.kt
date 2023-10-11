@@ -155,7 +155,7 @@ class MainSearchFragment @Inject constructor(
         }
 
         booksViewModel.localBookList.observe(viewLifecycleOwner) {
-            Cache.currentBook?.isBookAddedCheck(booksViewModel).also {
+            Cache.currentGoogleBook?.isBookAddedCheck(booksViewModel).also {
                 searchFragmentAdapter.notifyDataSetChanged()
             }
         }

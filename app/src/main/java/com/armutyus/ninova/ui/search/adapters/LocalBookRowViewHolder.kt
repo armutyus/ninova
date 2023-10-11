@@ -32,7 +32,7 @@ class LocalBookRowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                     Constants.LOCAL_BOOK_TYPE
                 )
                 Cache.currentLocalBook = book
-                Cache.currentBook = null
+                Cache.currentGoogleBook = null
                 itemView.context.startActivity(bookDetailsIntent)
             }
         }

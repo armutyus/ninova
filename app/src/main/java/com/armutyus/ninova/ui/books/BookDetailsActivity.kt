@@ -23,8 +23,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.armutyus.ninova.R
-import com.armutyus.ninova.constants.Cache.currentBook
 import com.armutyus.ninova.constants.Cache.currentBookIdExtra
+import com.armutyus.ninova.constants.Cache.currentGoogleBook
 import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.constants.Constants.BOOK_TYPE_FOR_DETAILS
 import com.armutyus.ninova.constants.Constants.GOOGLE_BOOK_TYPE
@@ -73,7 +73,6 @@ class BookDetailsActivity : AppCompatActivity() {
 
     @Inject
     lateinit var bookToShelfAdapter: BookToShelfRecyclerViewAdapter
-
 
     @Named(MAIN_INTENT)
     @Inject
@@ -148,7 +147,7 @@ class BookDetailsActivity : AppCompatActivity() {
             }
 
             GOOGLE_BOOK_TYPE -> {
-                supportActionBar?.title = currentBook?.volumeInfo?.title
+                supportActionBar?.title = currentGoogleBook?.volumeInfo?.title
                 setupBookInfo()
                 isBookAddedCheck()
                 setVisibilitiesForBookRemoved()
@@ -157,7 +156,7 @@ class BookDetailsActivity : AppCompatActivity() {
                     if (this::bookDetails.isInitialized) {
                         val book =
                             DataModel.LocalBook(
-                                currentBook?.id!!,
+                                currentGoogleBook?.id!!,
                                 bookDetails.authors ?: listOf(),
                                 bookDetails.categories ?: listOf(),
                                 bookDetails.imageLinks?.smallThumbnail,
@@ -184,14 +183,14 @@ class BookDetailsActivity : AppCompatActivity() {
                 }
 
                 binding.removeBookFromLibraryButton.setOnClickListener {
-                    booksViewModel.deleteBookById(currentBook?.id!!).invokeOnCompletion {
-                        deleteBookFromFirestore(currentBook?.id!!)
+                    booksViewModel.deleteBookById(currentGoogleBook?.id!!).invokeOnCompletion {
+                        deleteBookFromFirestore(currentGoogleBook?.id!!)
                         setVisibilitiesForBookRemoved()
                     }
                 }
 
                 binding.shelvesOfBooks.setOnClickListener {
-                    currentBookIdExtra = currentBook?.id!!
+                    currentBookIdExtra = currentGoogleBook?.id!!
                     showAddShelfDialog()
                 }
             }
@@ -207,7 +206,7 @@ class BookDetailsActivity : AppCompatActivity() {
             booksViewModel.loadBookWithShelves(it.bookId)
             binding.userBookNotesEditText.setText(it.bookNotes)
         }
-        currentBook?.let { googleBookItem ->
+        currentGoogleBook?.let { googleBookItem ->
             booksViewModel.loadBookWithShelves(googleBookItem.id!!)
             booksViewModel.loadBookList()
             val userNotesFromLocal =
@@ -222,7 +221,7 @@ class BookDetailsActivity : AppCompatActivity() {
             LOCAL_BOOK_TYPE -> saveUserNotes()
             GOOGLE_BOOK_TYPE -> {
                 currentLocalBook =
-                    booksViewModel.localBookList.value?.firstOrNull { it.bookId == currentBook?.id }
+                    booksViewModel.localBookList.value?.firstOrNull { it.bookId == currentGoogleBook?.id }
                 if (currentLocalBook != null) {
                     saveUserNotes()
                 }
@@ -303,7 +302,7 @@ class BookDetailsActivity : AppCompatActivity() {
 
     private fun isBookAddedCheck() {
         booksViewModel.loadBookList().invokeOnCompletion {
-            if (currentBook?.isBookAddedCheck(booksViewModel) == true) {
+            if (currentGoogleBook?.isBookAddedCheck(booksViewModel) == true) {
                 setVisibilitiesForBookAdded()
             } else {
                 setVisibilitiesForBookRemoved()
@@ -377,10 +376,10 @@ class BookDetailsActivity : AppCompatActivity() {
     }
 
     private fun setupBookInfo() {
-        if (currentBook == null) {
+        if (currentGoogleBook == null) {
             setVisibilitiesForBookNull()
         } else {
-            booksViewModel.getBookDetailsById(currentBook?.id!!)
+            booksViewModel.getBookDetailsById(currentGoogleBook?.id!!)
         }
     }
 
@@ -535,29 +534,30 @@ class BookDetailsActivity : AppCompatActivity() {
     private fun applyBookDetailChanges(bookDetails: BookDetailsInfo) {
         glide
             .load(
-                currentBook?.volumeInfo?.imageLinks?.thumbnail
+                currentGoogleBook?.volumeInfo?.imageLinks?.thumbnail
                     ?: bookDetails.imageLinks?.smallThumbnail
             )
             .centerCrop()
             .into(binding.bookCoverImageView)
-        binding.bookDetailTitleText.text = currentBook?.volumeInfo?.title ?: bookDetails.title
+        binding.bookDetailTitleText.text = currentGoogleBook?.volumeInfo?.title ?: bookDetails.title
         binding.bookDetailSubTitleText.text =
-            currentBook?.volumeInfo?.subtitle ?: bookDetails.subtitle
+            currentGoogleBook?.volumeInfo?.subtitle ?: bookDetails.subtitle
         binding.bookDetailAuthorsText.text =
-            currentBook?.volumeInfo?.authors?.joinToString(", ")
+            currentGoogleBook?.volumeInfo?.authors?.joinToString(", ")
                 ?: bookDetails.authors?.joinToString(", ")
         binding.bookDetailPagesNumber.text =
-            currentBook?.volumeInfo?.pageCount?.toString() ?: bookDetails.pageCount?.toString()
+            currentGoogleBook?.volumeInfo?.pageCount?.toString()
+                ?: bookDetails.pageCount?.toString()
         binding.bookDetailCategories.text =
-            currentBook?.volumeInfo?.categories?.joinToString(", ")
+            currentGoogleBook?.volumeInfo?.categories?.joinToString(", ")
                 ?: bookDetails.categories?.joinToString(", ")
         binding.bookDetailPublisher.text =
-            currentBook?.volumeInfo?.publisher ?: bookDetails.publisher
+            currentGoogleBook?.volumeInfo?.publisher ?: bookDetails.publisher
         binding.bookDetailPublishDate.text =
-            currentBook?.volumeInfo?.publishedDate ?: bookDetails.publishedDate
+            currentGoogleBook?.volumeInfo?.publishedDate ?: bookDetails.publishedDate
 
         val formattedBookDescription = if (bookDetails.description == null) {
-            currentBook?.volumeInfo?.description
+            currentGoogleBook?.volumeInfo?.description
         } else {
             Html.fromHtml(
                 bookDetails.description,

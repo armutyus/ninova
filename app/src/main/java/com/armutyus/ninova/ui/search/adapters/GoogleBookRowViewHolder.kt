@@ -88,7 +88,7 @@ class GoogleBookRowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                     Constants.BOOK_TYPE_FOR_DETAILS,
                     Constants.GOOGLE_BOOK_TYPE
                 )
-                Cache.currentBook = book
+                Cache.currentGoogleBook = book
                 Cache.currentLocalBook = null
                 itemView.context.startActivity(bookDetailsIntent)
             }

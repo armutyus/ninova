@@ -1,5 +1,6 @@
 package com.armutyus.ninova.service
 
+import com.armutyus.ninova.model.openlibrarymodel.BookDetailsResponse
 import com.armutyus.ninova.model.openlibrarymodel.OpenLibraryResponse
 import retrofit2.Response
 import retrofit2.http.GET
@@ -16,4 +17,9 @@ interface OpenLibraryApiService {
     suspend fun getBooksByCategory(
         @Path("url") fixedUrl: String,
     ): Response<OpenLibraryResponse>
+
+    @GET("{url}")
+    suspend fun getBookDetails(
+        @Path("url") fixedUrl: String,
+    ): Response<BookDetailsResponse>
 }

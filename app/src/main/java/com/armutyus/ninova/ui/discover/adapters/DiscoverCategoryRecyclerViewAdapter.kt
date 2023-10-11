@@ -1,5 +1,6 @@
 package com.armutyus.ninova.ui.discover.adapters
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,14 +8,20 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.model.openlibrarymodel.OpenLibraryWork
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import javax.inject.Inject
+import javax.inject.Named
 
 class DiscoverCategoryRecyclerViewAdapter @Inject constructor(
     private val glide: RequestManager
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    @Named(Constants.BOOK_DETAILS_INTENT)
+    @Inject
+    lateinit var bookDetailsIntent: Intent
 
     private val adapterData = mutableListOf<OpenLibraryWork>()
 
@@ -50,6 +57,10 @@ class DiscoverCategoryRecyclerViewAdapter @Inject constructor(
             bookTitle.text = book.title
             bookPublishedYear.text = book.first_publish_year.toString()
             bookTitle.text = book.title
+
+            setOnClickListener {
+                book
+            }
         }
 
     }
