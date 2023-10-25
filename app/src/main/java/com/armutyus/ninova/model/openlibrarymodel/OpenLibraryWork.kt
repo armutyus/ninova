@@ -1,5 +1,7 @@
 package com.armutyus.ninova.model.openlibrarymodel
 
+import com.armutyus.ninova.ui.books.BooksViewModel
+
 data class OpenLibraryWork(
     val authors: List<Author>,
     val cover_id: String,
@@ -7,4 +9,9 @@ data class OpenLibraryWork(
     val key: String, // This is the key for book itself. Get description from Works API
     val lending_edition: String, // This is the key for book itself. Get publisher and pages from Books API
     val title: String
-)
+) {
+    fun isBookAddedCheck(booksViewModel: BooksViewModel): Boolean {
+        val searchBookList = booksViewModel.localBookList.value?.firstOrNull { it.bookId == key }
+        return searchBookList != null
+    }
+}

@@ -19,7 +19,12 @@ interface OpenLibraryApiService {
     ): Response<OpenLibraryResponse>
 
     @GET("{url}")
-    suspend fun getBookDetails(
+    suspend fun getBookKeyDetails(
         @Path("url") fixedUrl: String,
-    ): Response<BookDetailsResponse>
+    ): Response<BookDetailsResponse.BookKeyResponse>
+
+    @GET("{url}")
+    suspend fun getBookLendingDetails(
+        @Path("url") fixedUrl: String,
+    ): Response<BookDetailsResponse.BookLendingKeyResponse>
 }

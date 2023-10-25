@@ -26,18 +26,22 @@ import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Cache.currentBookIdExtra
 import com.armutyus.ninova.constants.Cache.currentGoogleBook
 import com.armutyus.ninova.constants.Cache.currentLocalBook
+import com.armutyus.ninova.constants.Cache.currentOpenLibBook
 import com.armutyus.ninova.constants.Constants.BOOK_TYPE_FOR_DETAILS
 import com.armutyus.ninova.constants.Constants.GOOGLE_BOOK_TYPE
 import com.armutyus.ninova.constants.Constants.LOCAL_BOOK_TYPE
 import com.armutyus.ninova.constants.Constants.MAIN_INTENT
+import com.armutyus.ninova.constants.Constants.OPEN_LIB_BOOK_TYPE
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.ActivityBookDetailsBinding
 import com.armutyus.ninova.databinding.AddBookToShelfBottomSheetBinding
 import com.armutyus.ninova.databinding.CustomDialogEditTextLayoutBinding
 import com.armutyus.ninova.model.googlebooksmodel.BookDetailsInfo
 import com.armutyus.ninova.model.googlebooksmodel.DataModel
+import com.armutyus.ninova.model.openlibrarymodel.BookDetailsResponse
 import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.LocalShelf
+import com.armutyus.ninova.ui.discover.DiscoverViewModel
 import com.armutyus.ninova.ui.shelves.ShelvesViewModel
 import com.armutyus.ninova.ui.shelves.adapters.BookToShelfRecyclerViewAdapter
 import com.bumptech.glide.RequestManager
@@ -59,13 +63,15 @@ class BookDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBookDetailsBinding
     private lateinit var bookToShelfBottomSheetBinding: AddBookToShelfBottomSheetBinding
     private lateinit var customDialogEditTextLayoutBinding: CustomDialogEditTextLayoutBinding
-    private lateinit var bookDetails: BookDetailsInfo
+    private lateinit var googleBookDetails: BookDetailsInfo
+    private lateinit var openLibBookDetails: BookDetailsResponse.CombinedResponse
     private var notesTabDisabled = true
     private lateinit var tabLayout: TabLayout
     private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
     private val booksViewModel by viewModels<BooksViewModel>()
+    private val discoverViewModel by viewModels<DiscoverViewModel>()
     private val shelvesViewModel by viewModels<ShelvesViewModel>()
 
     @Inject
@@ -149,28 +155,28 @@ class BookDetailsActivity : AppCompatActivity() {
             GOOGLE_BOOK_TYPE -> {
                 supportActionBar?.title = currentGoogleBook?.volumeInfo?.title
                 setupBookInfo()
-                isBookAddedCheck()
+                isGoogleBookAddedCheck()
                 setVisibilitiesForBookRemoved()
 
                 binding.addBookToLibraryButton.setOnClickListener {
-                    if (this::bookDetails.isInitialized) {
+                    if (this::googleBookDetails.isInitialized) {
                         val book =
                             DataModel.LocalBook(
                                 currentGoogleBook?.id!!,
-                                bookDetails.authors ?: listOf(),
-                                bookDetails.categories ?: listOf(),
-                                bookDetails.imageLinks?.smallThumbnail,
-                                bookDetails.imageLinks?.thumbnail,
+                                googleBookDetails.authors ?: listOf(),
+                                googleBookDetails.categories ?: listOf(),
+                                googleBookDetails.imageLinks?.smallThumbnail,
+                                googleBookDetails.imageLinks?.thumbnail,
                                 Html.fromHtml(
-                                    bookDetails.description ?: "",
+                                    googleBookDetails.description ?: "",
                                     Html.FROM_HTML_OPTION_USE_CSS_COLORS
                                 ).toString(),
                                 "",
-                                bookDetails.pageCount.toString(),
-                                bookDetails.publishedDate,
-                                bookDetails.publisher,
-                                bookDetails.subtitle,
-                                bookDetails.title
+                                googleBookDetails.pageCount.toString(),
+                                googleBookDetails.publishedDate,
+                                googleBookDetails.publisher,
+                                googleBookDetails.subtitle,
+                                googleBookDetails.title
                             )
                         booksViewModel.insertBook(book).invokeOnCompletion {
                             uploadBookToFirestore(book)
@@ -178,7 +184,7 @@ class BookDetailsActivity : AppCompatActivity() {
                             booksViewModel.loadBookList()
                         }
                     } else {
-                        Log.i("bookDetails", "bookDetails not initialized.")
+                        Log.i("googleBookDetails", "googleBookDetails not initialized.")
                     }
                 }
 
@@ -193,6 +199,11 @@ class BookDetailsActivity : AppCompatActivity() {
                     currentBookIdExtra = currentGoogleBook?.id!!
                     showAddShelfDialog()
                 }
+            }
+
+            OPEN_LIB_BOOK_TYPE -> {
+                supportActionBar?.title = currentOpenLibBook?.title
+
             }
 
             else -> {}
@@ -300,9 +311,19 @@ class BookDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun isBookAddedCheck() {
+    private fun isGoogleBookAddedCheck() {
         booksViewModel.loadBookList().invokeOnCompletion {
             if (currentGoogleBook?.isBookAddedCheck(booksViewModel) == true) {
+                setVisibilitiesForBookAdded()
+            } else {
+                setVisibilitiesForBookRemoved()
+            }
+        }
+    }
+
+    private fun isOpenLibBookAddedCheck() {
+        booksViewModel.loadBookList().invokeOnCompletion {
+            if (currentOpenLibBook?.isBookAddedCheck(booksViewModel) == true) {
                 setVisibilitiesForBookAdded()
             } else {
                 setVisibilitiesForBookRemoved()
@@ -391,6 +412,17 @@ class BookDetailsActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupOpenLibBookInfo() {
+        if (currentOpenLibBook == null) {
+            setVisibilitiesForBookNull()
+        } else {
+            discoverViewModel.getBookDetails(
+                currentOpenLibBook?.key!!,
+                currentOpenLibBook?.lending_edition!!
+            )
+        }
+    }
+
     private fun observeBookDetailsResponse() {
         booksViewModel.bookDetails.observe(this) { response ->
             when (response) {
@@ -400,13 +432,12 @@ class BookDetailsActivity : AppCompatActivity() {
 
                 is Response.Success -> {
                     binding.progressBar.visibility = View.GONE
-                    bookDetails = response.data.volumeInfo
-                    if (type == LOCAL_BOOK_TYPE) {
-                        applyLocalBookDetailChanges(bookDetails)
+                    googleBookDetails = response.data.volumeInfo
+                    if (type == LOCAL_BOOK_TYPE && currentLocalBook?.bookId?.startsWith("OL") == false) {
+                        applyLocalBookDetailChanges(googleBookDetails)
                     } else {
-                        applyBookDetailChanges(bookDetails)
+                        applyGoogleBookDetailChanges(googleBookDetails)
                     }
-
                 }
 
                 is Response.Failure -> {
@@ -422,6 +453,33 @@ class BookDetailsActivity : AppCompatActivity() {
                         Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT)
                             .show()
                     }
+                }
+            }
+        }
+
+        discoverViewModel.combinedResponse.observe(this) { combinedResponseData ->
+
+            if (combinedResponseData.loading) {
+                binding.progressBar.visibility = View.VISIBLE
+            } else if (combinedResponseData.error.isNotBlank()) {
+                binding.progressBar.visibility = View.GONE
+                if (type == LOCAL_BOOK_TYPE) {
+                    Toast.makeText(
+                        this,
+                        R.string.details_activity_load_error,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    setVisibilitiesForBookNull()
+                    Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT)
+                        .show()
+                }
+            } else {
+                openLibBookDetails = combinedResponseData
+                if (type == LOCAL_BOOK_TYPE && currentLocalBook?.bookId?.startsWith("OL") == true) {
+                    applyLocalBookDetailChanges(googleBookDetails)
+                } else {
+                    applyGoogleBookDetailChanges(googleBookDetails)
                 }
             }
         }
@@ -531,7 +589,7 @@ class BookDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun applyBookDetailChanges(bookDetails: BookDetailsInfo) {
+    private fun applyGoogleBookDetailChanges(bookDetails: BookDetailsInfo) {
         glide
             .load(
                 currentGoogleBook?.volumeInfo?.imageLinks?.thumbnail
@@ -603,6 +661,45 @@ class BookDetailsActivity : AppCompatActivity() {
         binding.bookDetailDescription.text = formattedBookDescription
 
         updateLocalBook(bookDetails)
+    }
+
+    private fun applyOpenLibDetailChangesToLocalBook(bookDetails: BookDetailsResponse.CombinedResponse?) {
+        val bookCoverUrl =
+            "https://covers.openlibrary.org/b/id/${currentOpenLibBook?.cover_id}-M.jpg"
+        glide
+            .load(
+                currentLocalBook?.bookCoverSmallThumbnail
+                    ?: bookCoverUrl
+            )
+            .centerCrop()
+            .into(binding.bookCoverImageView)
+        binding.bookDetailTitleText.text = currentOpenLibBook?.title ?: currentLocalBook?.bookTitle
+        binding.bookDetailSubTitleText.text = currentLocalBook?.bookSubtitle
+        binding.bookDetailAuthorsText.text =
+            currentOpenLibBook?.authors?.joinToString(", ")
+                ?: currentLocalBook?.bookAuthors?.joinToString(", ")
+        binding.bookDetailPagesNumber.text =
+            bookDetails?.number_of_pages ?: currentLocalBook?.bookPages
+        binding.bookDetailCategories.text =
+                // TODO -> get categories from discover category fragment ?:
+            currentLocalBook?.bookCategories?.joinToString(", ")
+        binding.bookDetailPublisher.text =
+            bookDetails?.publishers?.joinToString(", ") ?: currentLocalBook?.bookPublisher
+        binding.bookDetailPublishDate.text =
+            currentOpenLibBook?.first_publish_year?.toString()
+                ?: currentLocalBook?.bookPublishedDate
+
+        val formattedBookDescription = if (bookDetails?.description == null) {
+            currentLocalBook?.bookDescription
+        } else {
+            Html.fromHtml(
+                bookDetails.description,
+                Html.FROM_HTML_OPTION_USE_CSS_COLORS
+            ).toString()
+        }
+        binding.bookDetailDescription.text = formattedBookDescription
+
+        // TODO -> updateLocalBook(bookDetails)
     }
 
     private fun showLocalBookDetails() {

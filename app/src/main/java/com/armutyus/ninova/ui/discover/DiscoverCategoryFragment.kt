@@ -52,7 +52,6 @@ class DiscoverCategoryFragment @Inject constructor(
 
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-                Log.i("DiscoverFr", lastVisibleItemPosition.toString())
 
                 if (lastVisibleItemPosition == discoverCategoryAdapter.itemCount - 1 && dy > 0) {
                     loadBooks(lastVisibleItemPosition + 1)
@@ -94,7 +93,6 @@ class DiscoverCategoryFragment @Inject constructor(
                 is Response.Success -> {
                     fragmentBinding?.progressBar?.visibility = View.GONE
                     val bookList = response.data.works.toList()
-                    Log.i("CategoryObserver", bookList.size.toString())
                     discoverCategoryAdapter.setData(bookList)
                 }
             }

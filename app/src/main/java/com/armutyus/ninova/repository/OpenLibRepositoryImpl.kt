@@ -47,20 +47,39 @@ class OpenLibRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun getBookDetails(
+    override suspend fun getBookKeyDetails(
         bookKey: String
-    ): Flow<Response<BookDetailsResponse>> =
+    ): Flow<Response<BookDetailsResponse.BookKeyResponse>> =
         withContext(coroutineContext) {
             flow {
                 try {
-                    val fixedBookKey = if (bookKey.startsWith("/")) {
-                        bookKey.substringAfterLast("/")
-                    } else {
-                        bookKey
-                    }
+                    val fixedBookKey = bookKey.substringAfterLast("/")
                     val fixedUrl = "works/$fixedBookKey.json"
                     emit(Response.Loading)
-                    val response = openLibraryApiService.getBookDetails(fixedUrl)
+                    val response = openLibraryApiService.getBookKeyDetails(fixedUrl)
+                    if (response.isSuccessful) {
+                        response.body()?.let {
+                            return@let emit(Response.Success(it))
+                        }
+                            ?: emit(Response.Failure(R.string.something_went_wrong.toLocalizedString()))
+                    } else {
+                        emit(Response.Failure(R.string.something_went_wrong.toLocalizedString()))
+                    }
+                } catch (e: Exception) {
+                    emit(Response.Failure(R.string.error_with_message.toLocalizedString(e.localizedMessage)))
+                }
+            }
+        }
+
+    override suspend fun getBookLendingDetails(
+        bookLendingKey: String
+    ): Flow<Response<BookDetailsResponse.BookLendingKeyResponse>> =
+        withContext(coroutineContext) {
+            flow {
+                try {
+                    val fixedUrl = "books/$bookLendingKey.json"
+                    emit(Response.Loading)
+                    val response = openLibraryApiService.getBookLendingDetails(fixedUrl)
                     if (response.isSuccessful) {
                         response.body()?.let {
                             return@let emit(Response.Success(it))

@@ -58,6 +58,7 @@ object Constants {
     const val GOOGLE_BOOK_TYPE = 0
     const val LOCAL_BOOK_TYPE = 1
     const val OPEN_LIB_BOOK_TYPE = 2
+    const val OPEN_LIB_BOOK_INFO = "openLibBookInfo"
 
     //DiscoverScreenCategories
     val discoverScreenCategories = listOf(

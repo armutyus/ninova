@@ -8,7 +8,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Cache.currentOpenLibBook
 import com.armutyus.ninova.constants.Constants
+import com.armutyus.ninova.constants.Constants.BOOK_TYPE_FOR_DETAILS
+import com.armutyus.ninova.constants.Constants.OPEN_LIB_BOOK_TYPE
 import com.armutyus.ninova.model.openlibrarymodel.OpenLibraryWork
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -56,13 +59,16 @@ class DiscoverCategoryRecyclerViewAdapter @Inject constructor(
             bookAuthor.text = bookAuthors.joinToString(", ")
             bookTitle.text = book.title
             bookPublishedYear.text = book.first_publish_year.toString()
-            bookTitle.text = book.title
 
             setOnClickListener {
-                book
+                bookDetailsIntent.putExtra(
+                    BOOK_TYPE_FOR_DETAILS,
+                    OPEN_LIB_BOOK_TYPE
+                )
+                currentOpenLibBook = book
+                holder.itemView.context.startActivity(bookDetailsIntent)
             }
         }
-
     }
 
     fun setData(data: List<OpenLibraryWork>) {

@@ -27,9 +27,9 @@ class DiscoverViewModel @Inject constructor(
     val booksFromApiResponse: LiveData<Response<OpenLibraryResponse>>
         get() = _booksFromApiResponse
 
-    private val _bookDetailsResponse = MutableLiveData<Response<BookDetailsResponse>>()
-    val bookDetailsResponse: LiveData<Response<BookDetailsResponse>>
-        get() = _bookDetailsResponse
+    private val _combinedResponse = MutableLiveData<BookDetailsResponse.CombinedResponse>()
+    val combinedResponse: LiveData<BookDetailsResponse.CombinedResponse>
+        get() = _combinedResponse
 
     private val _categoryCoverId = MutableLiveData<MutableMap<String, String>>(mutableMapOf())
     val categoryCoverId: LiveData<MutableMap<String, String>>
@@ -64,9 +64,67 @@ class DiscoverViewModel @Inject constructor(
         }
     }
 
-    fun getBookDetails(bookKey: String) = viewModelScope.launch {
-        openLibRepository.getBookDetails(bookKey).collectLatest { response ->
-            _bookDetailsResponse.postValue(response)
+    fun getBookDetails(bookKey: String, bookLendingKey: String) = viewModelScope.launch {
+        openLibRepository.getBookKeyDetails(bookKey).collectLatest { response ->
+            when (response) {
+                is Response.Success -> {
+                    _combinedResponse.postValue(
+                        _combinedResponse.value?.copy(
+                            description = response.data.description,
+                            loading = false,
+                            error = ""
+                        )
+                    )
+                }
+
+                is Response.Loading -> {
+                    _combinedResponse.postValue(
+                        _combinedResponse.value?.copy(
+                            loading = true
+                        )
+                    )
+                }
+
+                is Response.Failure -> {
+                    _combinedResponse.postValue(
+                        _combinedResponse.value?.copy(
+                            loading = false,
+                            error = response.errorMessage
+                        )
+                    )
+                }
+            }
+        }
+        openLibRepository.getBookLendingDetails(bookLendingKey).collectLatest { response ->
+            when (response) {
+                is Response.Success -> {
+                    _combinedResponse.postValue(
+                        _combinedResponse.value?.copy(
+                            publishers = response.data.publishers,
+                            number_of_pages = response.data.number_of_pages,
+                            loading = false,
+                            error = ""
+                        )
+                    )
+                }
+
+                is Response.Loading -> {
+                    _combinedResponse.postValue(
+                        _combinedResponse.value?.copy(
+                            loading = true
+                        )
+                    )
+                }
+
+                is Response.Failure -> {
+                    _combinedResponse.postValue(
+                        _combinedResponse.value?.copy(
+                            loading = false,
+                            error = response.errorMessage
+                        )
+                    )
+                }
+            }
         }
     }
 
