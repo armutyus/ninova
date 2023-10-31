@@ -8,6 +8,12 @@ object Constants {
 
     const val VERSION_NAME = BuildConfig.VERSION_NAME
 
+    //Firebase
+    const val DELETED_FIRESTORE = "Deleted from firestore"
+    const val DELETING_FIRESTORE = "Deleting from firestore"
+    const val UPLOADING_FIRESTORE = "Uploading to firestore"
+    const val UPLOADED_FIRESTORE = "Uploaded to firestore"
+
     //Messages
     val ERROR_MESSAGE = R.string.unexpected_error.toLocalizedString()
 
@@ -28,7 +34,6 @@ object Constants {
     const val REGISTER = "register"
     const val SETTINGS_ACTION_KEY = "action"
     const val SYSTEM_THEME = "system"
-
 
     //References
     const val GOOGLE_BOOKS_BASE_URL = "https://www.googleapis.com/books/v1/"

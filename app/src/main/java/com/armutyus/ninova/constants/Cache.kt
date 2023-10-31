@@ -8,6 +8,7 @@ object Cache {
     var currentGoogleBook: DataModel.GoogleBookItem? = null
     var currentLocalBook: DataModel.LocalBook? = null
     var currentOpenLibBook: OpenLibraryWork? = null
+    var currentOpenLibBookCategory: List<String>? = null
     var currentShelf: LocalShelf? = null
     var currentBookIdExtra: String? = null
 }

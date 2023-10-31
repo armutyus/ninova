@@ -3,13 +3,16 @@ package com.armutyus.ninova.ui.discover
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Cache.currentOpenLibBookCategory
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.constants.Util.Companion.fadeIn
 import com.armutyus.ninova.databinding.FragmentDiscoverCategoryBinding
@@ -19,7 +22,6 @@ import javax.inject.Inject
 class DiscoverCategoryFragment @Inject constructor(
     private val discoverCategoryAdapter: DiscoverCategoryRecyclerViewAdapter
 ) : Fragment(R.layout.fragment_discover_category) {
-
 
     private val args: DiscoverCategoryFragmentArgs by navArgs()
     private val discoverViewModel by activityViewModels<DiscoverViewModel>()
@@ -32,6 +34,8 @@ class DiscoverCategoryFragment @Inject constructor(
         val binding = FragmentDiscoverCategoryBinding.bind(view)
         fragmentBinding = binding
 
+        currentOpenLibBookCategory = listOf(args.categoryTitle)
+
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
         binding.appNameTextView.fadeIn(1000)
@@ -40,6 +44,15 @@ class DiscoverCategoryFragment @Inject constructor(
         recyclerView.adapter = discoverCategoryAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.visibility = View.VISIBLE
+
+        val backPressCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                discoverCategoryAdapter.clearData()
+                discoverViewModel.clearBooksFromApiResponseData()
+                findNavController().navigateUp()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressCallback)
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -62,16 +75,6 @@ class DiscoverCategoryFragment @Inject constructor(
 
         loadBooks(0)
         runObservers()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        discoverCategoryAdapter.clearData()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        discoverCategoryAdapter.clearData()
     }
 
     override fun onDestroyView() {

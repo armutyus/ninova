@@ -115,4 +115,5 @@
     <string name="light">Açık</string>
     <string name="dark">Koyu</string>
     <string name="system">Sistem</string>
+    <string name="some_details_not_loaded">Bazı detaylar yüklenemedi</string>
 </resources>

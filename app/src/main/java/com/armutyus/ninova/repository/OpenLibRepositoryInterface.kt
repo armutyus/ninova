@@ -7,15 +7,15 @@ import kotlinx.coroutines.flow.Flow
 
 interface OpenLibRepositoryInterface {
 
-    suspend fun getBooksByCategory(
+    fun getBooksByCategory(
         category: String,
         offset: Int
     ): Flow<Response<OpenLibraryResponse>>
 
-    suspend fun getBookKeyDetails(bookKey: String): Flow<Response<BookDetailsResponse.BookKeyResponse>>
+    fun getBookKeyDetails(bookKey: String): Flow<Response<BookDetailsResponse.BookKeyResponse>>
 
-    suspend fun getBookLendingDetails(bookLendingKey: String): Flow<Response<BookDetailsResponse.BookLendingKeyResponse>>
+    fun getBookLendingDetails(bookLendingKey: String): Flow<Response<BookDetailsResponse.BookLendingKeyResponse>>
 
-    suspend fun getRandomBookCoverForCategory(category: String): Flow<Response<String>>
+    fun getRandomBookCoverForCategory(category: String): Flow<Response<String>>
 
 }

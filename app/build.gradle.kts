@@ -74,8 +74,8 @@ dependencies {
 
     implementation("com.airbnb.android:lottie:6.1.0")
 
-    implementation("com.google.dagger:hilt-android:2.48")
-    ksp("com.google.dagger:hilt-android-compiler:2.48")
+    implementation("com.google.dagger:hilt-android:2.48.1")
+    ksp("com.google.dagger:hilt-android-compiler:2.48.1")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
@@ -84,28 +84,28 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.8.0")
     implementation("androidx.viewpager2:viewpager2:1.0.0")
     implementation("androidx.fragment:fragment-ktx:1.6.1")
-    implementation("androidx.recyclerview:recyclerview:1.3.1")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.preference:preference-ktx:1.2.1")
 
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
-    implementation("com.github.bumptech.glide:glide:4.15.1")
-    ksp("com.github.bumptech.glide:compiler:4.15.1")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    ksp("com.github.bumptech.glide:compiler:4.16.0")
 
     implementation("com.klinkerapps:link_builder:2.0.5")
 
-    implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
+    implementation(platform("com.google.firebase:firebase-bom:32.4.1"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-storage-ktx")
 
-    implementation("androidx.room:room-runtime:2.5.2")
-    ksp("androidx.room:room-compiler:2.5.2")
-    implementation("androidx.room:room-ktx:2.5.2")
+    implementation("androidx.room:room-runtime:2.6.0")
+    ksp("androidx.room:room-compiler:2.6.0")
+    implementation("androidx.room:room-ktx:2.6.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

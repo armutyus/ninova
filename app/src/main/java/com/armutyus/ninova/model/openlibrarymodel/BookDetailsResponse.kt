@@ -16,7 +16,8 @@ sealed class BookDetailsResponse {
         val number_of_pages: String?,
         val publishers: List<String>?,
         val loading: Boolean,
-        val error: String
+        val keyError: String,
+        val lendingKeyError: String
     )
 
 }

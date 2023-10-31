@@ -123,4 +123,5 @@
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="system">System</string>
+    <string name="some_details_not_loaded">Some details could not be loaded</string>
 </resources>

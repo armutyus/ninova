@@ -27,7 +27,16 @@ class DiscoverViewModel @Inject constructor(
     val booksFromApiResponse: LiveData<Response<OpenLibraryResponse>>
         get() = _booksFromApiResponse
 
-    private val _combinedResponse = MutableLiveData<BookDetailsResponse.CombinedResponse>()
+    private val _combinedResponse = MutableLiveData(
+        BookDetailsResponse.CombinedResponse(
+            description = "",
+            number_of_pages = "",
+            publishers = listOf(),
+            keyError = "",
+            lendingKeyError = "",
+            loading = false
+        )
+    )
     val combinedResponse: LiveData<BookDetailsResponse.CombinedResponse>
         get() = _combinedResponse
 
@@ -72,7 +81,7 @@ class DiscoverViewModel @Inject constructor(
                         _combinedResponse.value?.copy(
                             description = response.data.description,
                             loading = false,
-                            error = ""
+                            keyError = ""
                         )
                     )
                 }
@@ -89,7 +98,7 @@ class DiscoverViewModel @Inject constructor(
                     _combinedResponse.postValue(
                         _combinedResponse.value?.copy(
                             loading = false,
-                            error = response.errorMessage
+                            keyError = response.errorMessage
                         )
                     )
                 }
@@ -103,7 +112,7 @@ class DiscoverViewModel @Inject constructor(
                             publishers = response.data.publishers,
                             number_of_pages = response.data.number_of_pages,
                             loading = false,
-                            error = ""
+                            lendingKeyError = ""
                         )
                     )
                 }
@@ -120,12 +129,16 @@ class DiscoverViewModel @Inject constructor(
                     _combinedResponse.postValue(
                         _combinedResponse.value?.copy(
                             loading = false,
-                            error = response.errorMessage
+                            lendingKeyError = response.errorMessage
                         )
                     )
                 }
             }
         }
+    }
+
+    fun clearBooksFromApiResponseData() = viewModelScope.launch {
+        _booksFromApiResponse.value = Response.Loading
     }
 
 }

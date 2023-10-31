@@ -69,7 +69,6 @@ class BooksRecyclerViewAdapter @Inject constructor(
         holder.itemView.setOnClickListener {
             bookDetailsIntent.putExtra(BOOK_TYPE_FOR_DETAILS, LOCAL_BOOK_TYPE)
             currentLocalBook = book
-            //currentGoogleBook = null
             holder.itemView.context.startActivity(bookDetailsIntent)
         }
 
