@@ -27,13 +27,16 @@ object Constants {
     //Preferences
     const val CHANGE_EMAIL = "change_email"
     const val CHANGE_PASSWORD = "change_password"
-    const val DARK_THEME = "dark"
+    const val NINOVA_DARK_THEME = "ninova_dark"
+    const val NINOVA_LIGHT_THEME = "ninova_light"
+    const val NINOVA_SYSTEM_THEME = "ninova_system"
+    const val BERGAMA_LIGHT_THEME = "bergama_light"
+    const val BERGAMA_DARK_THEME = "bergama_dark"
+    const val BERGAMA_SYSTEM_THEME = "bergama_system"
     const val MAIN_SHARED_PREF = "main_shared_preferences"
     const val FORGOT_PASSWORD = "forgot_password"
-    const val LIGHT_THEME = "light"
     const val REGISTER = "register"
     const val SETTINGS_ACTION_KEY = "action"
-    const val SYSTEM_THEME = "system"
 
     //References
     const val GOOGLE_BOOKS_BASE_URL = "https://www.googleapis.com/books/v1/"

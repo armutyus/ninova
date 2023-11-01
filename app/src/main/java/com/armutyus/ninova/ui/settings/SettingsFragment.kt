@@ -24,17 +24,20 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Constants.ABOUT_INTENT
+import com.armutyus.ninova.constants.Constants.BERGAMA_DARK_THEME
+import com.armutyus.ninova.constants.Constants.BERGAMA_LIGHT_THEME
+import com.armutyus.ninova.constants.Constants.BERGAMA_SYSTEM_THEME
 import com.armutyus.ninova.constants.Constants.CHANGE_EMAIL
 import com.armutyus.ninova.constants.Constants.CHANGE_PASSWORD
-import com.armutyus.ninova.constants.Constants.DARK_THEME
-import com.armutyus.ninova.constants.Constants.LIGHT_THEME
 import com.armutyus.ninova.constants.Constants.LOGIN_INTENT
 import com.armutyus.ninova.constants.Constants.MAIN_INTENT
+import com.armutyus.ninova.constants.Constants.NINOVA_DARK_THEME
+import com.armutyus.ninova.constants.Constants.NINOVA_LIGHT_THEME
+import com.armutyus.ninova.constants.Constants.NINOVA_SYSTEM_THEME
 import com.armutyus.ninova.constants.Constants.PRIVACY_POLICY_URL
 import com.armutyus.ninova.constants.Constants.REGISTER
 import com.armutyus.ninova.constants.Constants.REGISTER_INTENT
 import com.armutyus.ninova.constants.Constants.SETTINGS_ACTION_KEY
-import com.armutyus.ninova.constants.Constants.SYSTEM_THEME
 import com.armutyus.ninova.constants.Constants.VERSION_NAME
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.CustomDialogPasswordLayoutBinding
@@ -170,19 +173,40 @@ class SettingsFragment @Inject constructor(
 
         if (p1 == "theme") {
             when (themePref) {
-                LIGHT_THEME -> {
-                    p0.edit().putString("theme", LIGHT_THEME).apply()
+                NINOVA_LIGHT_THEME -> {
+                    p0.edit().putString("theme", NINOVA_LIGHT_THEME).apply()
+                    requireActivity().theme.applyStyle(R.style.Theme_Ninova, true)
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 }
 
-                DARK_THEME -> {
-                    p0.edit().putString("theme", DARK_THEME).apply()
+                NINOVA_DARK_THEME -> {
+                    p0.edit().putString("theme", NINOVA_DARK_THEME).apply()
+                    requireActivity().theme.applyStyle(R.style.Theme_Ninova, true)
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 }
 
-                SYSTEM_THEME -> {
-                    p0.edit().putString("theme", SYSTEM_THEME).apply()
+                NINOVA_SYSTEM_THEME -> {
+                    p0.edit().putString("theme", NINOVA_SYSTEM_THEME).apply()
+                    requireActivity().application.theme.applyStyle(R.style.Theme_Ninova, true)
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                }
+
+                BERGAMA_LIGHT_THEME -> {
+                    p0.edit().putString("theme", BERGAMA_LIGHT_THEME).apply()
+                    requireActivity().theme.applyStyle(R.style.Theme_Bergama, true)
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+
+                BERGAMA_DARK_THEME -> {
+                    p0.edit().putString("theme", BERGAMA_DARK_THEME).apply()
+                    requireActivity().theme.applyStyle(R.style.Theme_Bergama, true)
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
+
+                BERGAMA_SYSTEM_THEME -> {
+                    p0.edit().putString("theme", BERGAMA_SYSTEM_THEME).apply()
+                    requireActivity().theme.applyStyle(R.style.Theme_Bergama, true)
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 }
             }
         }

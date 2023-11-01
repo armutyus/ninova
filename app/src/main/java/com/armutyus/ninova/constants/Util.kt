@@ -30,6 +30,7 @@ class Util {
 
         fun Int.toLocalizedString(vararg formatArgs: Any? = emptyArray()): String =
             NinovaApplication.instance.getString(this, *formatArgs)
+
     }
 
 }

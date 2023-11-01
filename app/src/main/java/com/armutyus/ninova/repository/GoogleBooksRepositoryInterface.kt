@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface GoogleBooksRepositoryInterface {
 
-    suspend fun getBookDetails(bookId: String): Flow<Response<BookDetails>>
+    fun getBookDetails(bookId: String): Flow<Response<BookDetails>>
 
-    suspend fun searchBooksFromApi(searchQuery: String): Flow<Response<GoogleApiBooks>>
+    fun searchBooksFromApi(searchQuery: String): Flow<Response<GoogleApiBooks>>
 
 }

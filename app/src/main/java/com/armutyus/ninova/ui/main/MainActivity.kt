@@ -3,6 +3,7 @@ package com.armutyus.ninova.ui.main
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -63,7 +64,6 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.fragmentFactory = entryPoint.getFragmentFactory()
         installSplashScreen().apply {
             setKeepOnScreenCondition {
-                checkUserThemePreference()
                 !splashViewModel.isUserAuthenticated
             }
         }
@@ -140,25 +140,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkUserThemePreference() {
-        when (themePreferences.getString("theme", Constants.SYSTEM_THEME)) {
-            Constants.LIGHT_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.LIGHT_THEME)?.apply()
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
-
-            Constants.DARK_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.DARK_THEME)?.apply()
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-
-            Constants.SYSTEM_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.SYSTEM_THEME)?.apply()
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            }
-        }
-    }
-
     private fun destinationChangeListener(navView: BottomNavigationView) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
@@ -184,6 +165,48 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun getTheme(): Resources.Theme {
+        val theme = super.getTheme()
+        when (themePreferences.getString("theme", Constants.NINOVA_SYSTEM_THEME)) {
+            Constants.NINOVA_LIGHT_THEME -> {
+                themePreferences.edit()?.putString("theme", Constants.NINOVA_LIGHT_THEME)?.apply()
+                theme.applyStyle(R.style.Theme_Ninova, true)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+
+            Constants.NINOVA_DARK_THEME -> {
+                themePreferences.edit()?.putString("theme", Constants.NINOVA_DARK_THEME)?.apply()
+                theme.applyStyle(R.style.Theme_Ninova, true)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+
+            Constants.NINOVA_SYSTEM_THEME -> {
+                themePreferences.edit()?.putString("theme", Constants.NINOVA_SYSTEM_THEME)?.apply()
+                theme.applyStyle(R.style.Theme_Ninova, true)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            }
+
+            Constants.BERGAMA_LIGHT_THEME -> {
+                themePreferences.edit()?.putString("theme", Constants.BERGAMA_LIGHT_THEME)?.apply()
+                theme.applyStyle(R.style.Theme_Bergama, true)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+
+            Constants.BERGAMA_DARK_THEME -> {
+                themePreferences.edit()?.putString("theme", Constants.BERGAMA_DARK_THEME)?.apply()
+                theme.applyStyle(R.style.Theme_Bergama, true)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+
+            Constants.BERGAMA_SYSTEM_THEME -> {
+                themePreferences.edit()?.putString("theme", Constants.BERGAMA_SYSTEM_THEME)?.apply()
+                theme.applyStyle(R.style.Theme_Bergama, true)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+        }
+        return theme
     }
 
     private fun fetchBooks() {

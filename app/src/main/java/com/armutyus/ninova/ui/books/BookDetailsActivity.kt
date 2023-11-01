@@ -3,7 +3,9 @@ package com.armutyus.ninova.ui.books
 import android.Manifest
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -18,9 +20,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Cache.currentBookIdExtra
@@ -28,6 +32,7 @@ import com.armutyus.ninova.constants.Cache.currentGoogleBook
 import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.constants.Cache.currentOpenLibBook
 import com.armutyus.ninova.constants.Cache.currentOpenLibBookCategory
+import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.constants.Constants.BOOK_TYPE_FOR_DETAILS
 import com.armutyus.ninova.constants.Constants.DELETED_FIRESTORE
 import com.armutyus.ninova.constants.Constants.DELETING_FIRESTORE
@@ -91,6 +96,9 @@ class BookDetailsActivity : AppCompatActivity() {
 
     private val type: Int
         get() = intent?.getIntExtra(BOOK_TYPE_FOR_DETAILS, -1) ?: -1
+
+    private val themePreferences: SharedPreferences
+        get() = PreferenceManager.getDefaultSharedPreferences(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -322,6 +330,48 @@ class BookDetailsActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun getTheme(): Resources.Theme {
+        val theme = super.getTheme()
+        when (themePreferences.getString("theme", Constants.NINOVA_SYSTEM_THEME)) {
+            Constants.NINOVA_LIGHT_THEME -> {
+                themePreferences.edit()?.putString("theme", Constants.NINOVA_LIGHT_THEME)?.apply()
+                theme.applyStyle(R.style.Theme_Ninova, true)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+
+            Constants.NINOVA_DARK_THEME -> {
+                themePreferences.edit()?.putString("theme", Constants.NINOVA_DARK_THEME)?.apply()
+                theme.applyStyle(R.style.Theme_Ninova, true)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+
+            Constants.NINOVA_SYSTEM_THEME -> {
+                themePreferences.edit()?.putString("theme", Constants.NINOVA_SYSTEM_THEME)?.apply()
+                theme.applyStyle(R.style.Theme_Ninova, true)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            }
+
+            Constants.BERGAMA_LIGHT_THEME -> {
+                themePreferences.edit()?.putString("theme", Constants.BERGAMA_LIGHT_THEME)?.apply()
+                theme.applyStyle(R.style.Theme_Bergama, true)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+
+            Constants.BERGAMA_DARK_THEME -> {
+                themePreferences.edit()?.putString("theme", Constants.BERGAMA_DARK_THEME)?.apply()
+                theme.applyStyle(R.style.Theme_Bergama, true)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+
+            Constants.BERGAMA_SYSTEM_THEME -> {
+                themePreferences.edit()?.putString("theme", Constants.BERGAMA_SYSTEM_THEME)?.apply()
+                theme.applyStyle(R.style.Theme_Bergama, true)
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+        }
+        return theme
     }
 
     private fun saveUserNotes() {
@@ -891,7 +941,6 @@ class BookDetailsActivity : AppCompatActivity() {
     }
 
     private fun updateLocalBookWithOpenLibBook(bookDetails: BookDetailsResponse.CombinedResponse) {
-
         currentLocalBook?.let {
             if (bookDetails.number_of_pages != null && it.bookPages != bookDetails.number_of_pages) {
                 it.bookPages = binding.bookDetailPagesNumber.text.toString()
