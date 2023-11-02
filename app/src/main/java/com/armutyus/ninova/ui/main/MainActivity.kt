@@ -13,7 +13,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.MenuProvider
 import androidx.navigation.NavController
@@ -27,6 +26,7 @@ import com.armutyus.ninova.constants.Cache.currentShelf
 import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.constants.Constants.MAIN_SHARED_PREF
 import com.armutyus.ninova.constants.Response
+import com.armutyus.ninova.constants.Util.Companion.checkAndApplyTheme
 import com.armutyus.ninova.databinding.ActivityMainBinding
 import com.armutyus.ninova.fragmentfactory.NinovaFragmentFactoryEntryPoint
 import com.armutyus.ninova.ui.books.BooksViewModel
@@ -169,43 +169,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun getTheme(): Resources.Theme {
         val theme = super.getTheme()
-        when (themePreferences.getString("theme", Constants.NINOVA_SYSTEM_THEME)) {
-            Constants.NINOVA_LIGHT_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.NINOVA_LIGHT_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Ninova, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
-
-            Constants.NINOVA_DARK_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.NINOVA_DARK_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Ninova, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-
-            Constants.NINOVA_SYSTEM_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.NINOVA_SYSTEM_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Ninova, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            }
-
-            Constants.BERGAMA_LIGHT_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.BERGAMA_LIGHT_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Bergama, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
-
-            Constants.BERGAMA_DARK_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.BERGAMA_DARK_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Bergama, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-
-            Constants.BERGAMA_SYSTEM_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.BERGAMA_SYSTEM_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Bergama, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-        }
+        checkAndApplyTheme(themePreferences, theme)
         return theme
     }
 

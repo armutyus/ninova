@@ -20,7 +20,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
@@ -32,7 +31,6 @@ import com.armutyus.ninova.constants.Cache.currentGoogleBook
 import com.armutyus.ninova.constants.Cache.currentLocalBook
 import com.armutyus.ninova.constants.Cache.currentOpenLibBook
 import com.armutyus.ninova.constants.Cache.currentOpenLibBookCategory
-import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.constants.Constants.BOOK_TYPE_FOR_DETAILS
 import com.armutyus.ninova.constants.Constants.DELETED_FIRESTORE
 import com.armutyus.ninova.constants.Constants.DELETING_FIRESTORE
@@ -43,6 +41,7 @@ import com.armutyus.ninova.constants.Constants.OPEN_LIB_BOOK_TYPE
 import com.armutyus.ninova.constants.Constants.UPLOADED_FIRESTORE
 import com.armutyus.ninova.constants.Constants.UPLOADING_FIRESTORE
 import com.armutyus.ninova.constants.Response
+import com.armutyus.ninova.constants.Util.Companion.checkAndApplyTheme
 import com.armutyus.ninova.databinding.ActivityBookDetailsBinding
 import com.armutyus.ninova.databinding.AddBookToShelfBottomSheetBinding
 import com.armutyus.ninova.databinding.CustomDialogEditTextLayoutBinding
@@ -77,8 +76,8 @@ class BookDetailsActivity : AppCompatActivity() {
     private lateinit var openLibBookDetails: BookDetailsResponse.CombinedResponse
     private var notesTabDisabled = true
     private lateinit var tabLayout: TabLayout
-    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
+    private lateinit var permissionResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
     private val booksViewModel by viewModels<BooksViewModel>()
     private val discoverViewModel by viewModels<DiscoverViewModel>()
@@ -334,43 +333,7 @@ class BookDetailsActivity : AppCompatActivity() {
 
     override fun getTheme(): Resources.Theme {
         val theme = super.getTheme()
-        when (themePreferences.getString("theme", Constants.NINOVA_SYSTEM_THEME)) {
-            Constants.NINOVA_LIGHT_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.NINOVA_LIGHT_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Ninova, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
-
-            Constants.NINOVA_DARK_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.NINOVA_DARK_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Ninova, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-
-            Constants.NINOVA_SYSTEM_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.NINOVA_SYSTEM_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Ninova, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            }
-
-            Constants.BERGAMA_LIGHT_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.BERGAMA_LIGHT_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Bergama, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
-
-            Constants.BERGAMA_DARK_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.BERGAMA_DARK_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Bergama, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-
-            Constants.BERGAMA_SYSTEM_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.BERGAMA_SYSTEM_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Bergama, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-        }
+        checkAndApplyTheme(themePreferences, theme)
         return theme
     }
 
@@ -986,7 +949,7 @@ class BookDetailsActivity : AppCompatActivity() {
             } else {
                 val galleryIntent =
                     Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                activityResultLauncher.launch(galleryIntent)
+                permissionResultLauncher.launch(galleryIntent)
             }
         }
     }
@@ -996,7 +959,18 @@ class BookDetailsActivity : AppCompatActivity() {
     }
 
     private fun registerLauncher() {
-        activityResultLauncher = registerForActivityResult(
+        permissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { result ->
+            if (result) {
+                val galleryIntent =
+                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                permissionResultLauncher.launch(galleryIntent)
+            } else {
+                Toast.makeText(this, R.string.permission_needed, Toast.LENGTH_LONG).show()
+            }
+        }
+        permissionResultLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
             if (result.resultCode == RESULT_OK) {
@@ -1005,17 +979,6 @@ class BookDetailsActivity : AppCompatActivity() {
                     glide.load(uri).centerCrop().into(binding.bookCoverImageView)
                     uploadCustomBookCoverToFirestore(uri)
                 }
-            }
-        }
-        permissionLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { result ->
-            if (result) {
-                val galleryIntent =
-                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                activityResultLauncher.launch(galleryIntent)
-            } else {
-                Toast.makeText(this, R.string.permission_needed, Toast.LENGTH_LONG).show()
             }
         }
         pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->

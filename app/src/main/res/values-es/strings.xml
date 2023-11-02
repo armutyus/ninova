@@ -114,10 +114,10 @@
     <string name="or">o</string>
     <string name="ninova_light">Ninova Claro</string>
     <string name="ninova_dark">Ninova Oscuro</string>
-    <string name="ninova_system">Ninova Sistema</string>
     <string name="bergama_light">Bergama Claro</string>
     <string name="bergama_dark">Bergama Oscure</string>
-    <string name="bergama_system">Bergama Sistema</string>
+    <string name="alexandria_light">Alexandria Claro</string>
+    <string name="alexandria_dark">Alexandria Oscure</string>
     <string name="some_details_not_loaded">Algunos detalles no se pudieron cargar</string>
 </resources>
 

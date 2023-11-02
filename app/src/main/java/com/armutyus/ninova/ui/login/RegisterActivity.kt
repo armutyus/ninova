@@ -9,10 +9,8 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import com.armutyus.ninova.R
-import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.constants.Constants.CHANGE_EMAIL
 import com.armutyus.ninova.constants.Constants.CHANGE_PASSWORD
 import com.armutyus.ninova.constants.Constants.FORGOT_PASSWORD
@@ -21,6 +19,7 @@ import com.armutyus.ninova.constants.Constants.MAIN_INTENT
 import com.armutyus.ninova.constants.Constants.REGISTER
 import com.armutyus.ninova.constants.Constants.SETTINGS_ACTION_KEY
 import com.armutyus.ninova.constants.Response
+import com.armutyus.ninova.constants.Util.Companion.checkAndApplyTheme
 import com.armutyus.ninova.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.EmailAuthProvider
@@ -81,43 +80,7 @@ class RegisterActivity : AppCompatActivity() {
 
     override fun getTheme(): Resources.Theme {
         val theme = super.getTheme()
-        when (themePreferences.getString("theme", Constants.NINOVA_SYSTEM_THEME)) {
-            Constants.NINOVA_LIGHT_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.NINOVA_LIGHT_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Ninova, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
-
-            Constants.NINOVA_DARK_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.NINOVA_DARK_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Ninova, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-
-            Constants.NINOVA_SYSTEM_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.NINOVA_SYSTEM_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Ninova, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            }
-
-            Constants.BERGAMA_LIGHT_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.BERGAMA_LIGHT_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Bergama, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
-
-            Constants.BERGAMA_DARK_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.BERGAMA_DARK_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Bergama, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-
-            Constants.BERGAMA_SYSTEM_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.BERGAMA_SYSTEM_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Bergama, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-        }
+        checkAndApplyTheme(themePreferences, theme)
         return theme
     }
 

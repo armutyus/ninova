@@ -24,16 +24,16 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
 import com.armutyus.ninova.R
 import com.armutyus.ninova.constants.Constants.ABOUT_INTENT
+import com.armutyus.ninova.constants.Constants.ALEXANDRIA_DARK_THEME
+import com.armutyus.ninova.constants.Constants.ALEXANDRIA_LIGHT_THEME
 import com.armutyus.ninova.constants.Constants.BERGAMA_DARK_THEME
 import com.armutyus.ninova.constants.Constants.BERGAMA_LIGHT_THEME
-import com.armutyus.ninova.constants.Constants.BERGAMA_SYSTEM_THEME
 import com.armutyus.ninova.constants.Constants.CHANGE_EMAIL
 import com.armutyus.ninova.constants.Constants.CHANGE_PASSWORD
 import com.armutyus.ninova.constants.Constants.LOGIN_INTENT
 import com.armutyus.ninova.constants.Constants.MAIN_INTENT
 import com.armutyus.ninova.constants.Constants.NINOVA_DARK_THEME
 import com.armutyus.ninova.constants.Constants.NINOVA_LIGHT_THEME
-import com.armutyus.ninova.constants.Constants.NINOVA_SYSTEM_THEME
 import com.armutyus.ninova.constants.Constants.PRIVACY_POLICY_URL
 import com.armutyus.ninova.constants.Constants.REGISTER
 import com.armutyus.ninova.constants.Constants.REGISTER_INTENT
@@ -169,43 +169,49 @@ class SettingsFragment @Inject constructor(
     }
 
     override fun onSharedPreferenceChanged(p0: SharedPreferences?, p1: String?) {
-        val themePref = p0?.getString("theme", "system")
+        val themePref = p0?.getString("theme", NINOVA_LIGHT_THEME)
 
         if (p1 == "theme") {
             when (themePref) {
                 NINOVA_LIGHT_THEME -> {
                     p0.edit().putString("theme", NINOVA_LIGHT_THEME).apply()
                     requireActivity().theme.applyStyle(R.style.Theme_Ninova, true)
+                    requireActivity().recreate()
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 }
 
                 NINOVA_DARK_THEME -> {
                     p0.edit().putString("theme", NINOVA_DARK_THEME).apply()
                     requireActivity().theme.applyStyle(R.style.Theme_Ninova, true)
+                    requireActivity().recreate()
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                }
-
-                NINOVA_SYSTEM_THEME -> {
-                    p0.edit().putString("theme", NINOVA_SYSTEM_THEME).apply()
-                    requireActivity().application.theme.applyStyle(R.style.Theme_Ninova, true)
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                 }
 
                 BERGAMA_LIGHT_THEME -> {
                     p0.edit().putString("theme", BERGAMA_LIGHT_THEME).apply()
                     requireActivity().theme.applyStyle(R.style.Theme_Bergama, true)
+                    requireActivity().recreate()
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 }
 
                 BERGAMA_DARK_THEME -> {
                     p0.edit().putString("theme", BERGAMA_DARK_THEME).apply()
                     requireActivity().theme.applyStyle(R.style.Theme_Bergama, true)
+                    requireActivity().recreate()
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 }
 
-                BERGAMA_SYSTEM_THEME -> {
-                    p0.edit().putString("theme", BERGAMA_SYSTEM_THEME).apply()
-                    requireActivity().theme.applyStyle(R.style.Theme_Bergama, true)
+                ALEXANDRIA_LIGHT_THEME -> {
+                    p0.edit().putString("theme", ALEXANDRIA_LIGHT_THEME).apply()
+                    requireActivity().theme.applyStyle(R.style.Theme_Alexandria, true)
+                    requireActivity().recreate()
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+
+                ALEXANDRIA_DARK_THEME -> {
+                    p0.edit().putString("theme", ALEXANDRIA_DARK_THEME).apply()
+                    requireActivity().theme.applyStyle(R.style.Theme_Alexandria, true)
+                    requireActivity().recreate()
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 }
             }

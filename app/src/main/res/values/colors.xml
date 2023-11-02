@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Ninova theme colors -->
     <color name="seed">#00796b</color>
     <color name="md_theme_light_primary">#006B5E</color>
     <color name="md_theme_light_onPrimary">#FFFFFF</color>
@@ -60,7 +61,7 @@
     <color name="md_theme_dark_surfaceTint">#55DBC6</color>
     <color name="md_theme_dark_surfaceTintColor">#55DBC6</color>
 
-    <!-- Red theme colors -->
+    <!-- Bergama theme colors -->
     <color name="red_md_theme_light_primary">#BC102C</color>
     <color name="red_md_theme_light_onPrimary">#FFFFFF</color>
     <color name="red_md_theme_light_primaryContainer">#FFDAD8</color>
@@ -121,4 +122,67 @@
     <color name="red_md_theme_dark_surfaceTint">#FFB3B1</color>
     <color name="red_md_theme_dark_outlineVariant">#524343</color>
     <color name="red_md_theme_dark_scrim">#000000</color>
+
+    <!-- Alexandria theme colors -->
+    <color name="yellow_seed">#d5a000</color>
+    <color name="yellow_md_theme_light_primary">#795900</color>
+    <color name="yellow_md_theme_light_onPrimary">#FFFFFF</color>
+    <color name="yellow_md_theme_light_primaryContainer">#FFDF9E</color>
+    <color name="yellow_md_theme_light_onPrimaryContainer">#261A00</color>
+    <color name="yellow_md_theme_light_secondary">#865300</color>
+    <color name="yellow_md_theme_light_onSecondary">#FFFFFF</color>
+    <color name="yellow_md_theme_light_secondaryContainer">#FFDDB9</color>
+    <color name="yellow_md_theme_light_onSecondaryContainer">#2B1700</color>
+    <color name="yellow_md_theme_light_tertiary">#9C4233</color>
+    <color name="yellow_md_theme_light_onTertiary">#FFFFFF</color>
+    <color name="yellow_md_theme_light_tertiaryContainer">#FFDAD4</color>
+    <color name="yellow_md_theme_light_onTertiaryContainer">#3F0300</color>
+    <color name="yellow_md_theme_light_error">#BA1A1A</color>
+    <color name="yellow_md_theme_light_errorContainer">#FFDAD6</color>
+    <color name="yellow_md_theme_light_onError">#FFFFFF</color>
+    <color name="yellow_md_theme_light_onErrorContainer">#410002</color>
+    <color name="yellow_md_theme_light_background">#FFFBFF</color>
+    <color name="yellow_md_theme_light_onBackground">#251A00</color>
+    <color name="yellow_md_theme_light_surface">#FFFBFF</color>
+    <color name="yellow_md_theme_light_onSurface">#251A00</color>
+    <color name="yellow_md_theme_light_surfaceVariant">#EDE1CF</color>
+    <color name="yellow_md_theme_light_onSurfaceVariant">#4D4639</color>
+    <color name="yellow_md_theme_light_outline">#7F7667</color>
+    <color name="yellow_md_theme_light_inverseOnSurface">#FFEFD3</color>
+    <color name="yellow_md_theme_light_inverseSurface">#3F2E00</color>
+    <color name="yellow_md_theme_light_inversePrimary">#F7BE2E</color>
+    <color name="yellow_md_theme_light_shadow">#000000</color>
+    <color name="yellow_md_theme_light_surfaceTint">#795900</color>
+    <color name="yellow_md_theme_light_outlineVariant">#D0C5B4</color>
+    <color name="yellow_md_theme_light_scrim">#000000</color>
+    <color name="yellow_md_theme_dark_primary">#F7BE2E</color>
+    <color name="yellow_md_theme_dark_onPrimary">#402E00</color>
+    <color name="yellow_md_theme_dark_primaryContainer">#5B4300</color>
+    <color name="yellow_md_theme_dark_onPrimaryContainer">#FFDF9E</color>
+    <color name="yellow_md_theme_dark_secondary">#FFB962</color>
+    <color name="yellow_md_theme_dark_onSecondary">#472A00</color>
+    <color name="yellow_md_theme_dark_secondaryContainer">#663E00</color>
+    <color name="yellow_md_theme_dark_onSecondaryContainer">#FFDDB9</color>
+    <color name="yellow_md_theme_dark_tertiary">#FFB4A6</color>
+    <color name="yellow_md_theme_dark_onTertiary">#5F150A</color>
+    <color name="yellow_md_theme_dark_tertiaryContainer">#7D2C1E</color>
+    <color name="yellow_md_theme_dark_onTertiaryContainer">#FFDAD4</color>
+    <color name="yellow_md_theme_dark_error">#FFB4AB</color>
+    <color name="yellow_md_theme_dark_errorContainer">#93000A</color>
+    <color name="yellow_md_theme_dark_onError">#690005</color>
+    <color name="yellow_md_theme_dark_onErrorContainer">#FFDAD6</color>
+    <color name="yellow_md_theme_dark_background">#251A00</color>
+    <color name="yellow_md_theme_dark_onBackground">#FFDF9C</color>
+    <color name="yellow_md_theme_dark_surface">#251A00</color>
+    <color name="yellow_md_theme_dark_onSurface">#FFDF9C</color>
+    <color name="yellow_md_theme_dark_surfaceVariant">#4D4639</color>
+    <color name="yellow_md_theme_dark_onSurfaceVariant">#D0C5B4</color>
+    <color name="yellow_md_theme_dark_outline">#998F80</color>
+    <color name="yellow_md_theme_dark_inverseOnSurface">#251A00</color>
+    <color name="yellow_md_theme_dark_inverseSurface">#FFDF9C</color>
+    <color name="yellow_md_theme_dark_inversePrimary">#795900</color>
+    <color name="yellow_md_theme_dark_shadow">#000000</color>
+    <color name="yellow_md_theme_dark_surfaceTint">#F7BE2E</color>
+    <color name="yellow_md_theme_dark_outlineVariant">#4D4639</color>
+    <color name="yellow_md_theme_dark_scrim">#000000</color>
 </resources>

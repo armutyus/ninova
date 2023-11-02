@@ -114,9 +114,9 @@
     <string name="or">ou</string>
     <string name="ninova_light">Ninova Clair</string>
     <string name="ninova_dark">Ninova Sombre</string>
-    <string name="ninova_system">Ninova Système</string>
     <string name="bergama_light">Bergama Clair</string>
     <string name="bergama_dark">Bergama Sombre</string>
-    <string name="bergama_system">Bergama Système</string>
+    <string name="alexandria_light">Alexandria Clair</string>
+    <string name="alexandria_dark">Alexandria Sombre</string>
     <string name="some_details_not_loaded">Certaines informations n\'ont pas pu être chargées</string>
 </resources>

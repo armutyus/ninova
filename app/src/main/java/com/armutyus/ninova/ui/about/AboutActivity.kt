@@ -7,10 +7,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
-import com.armutyus.ninova.R
-import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.constants.Constants.FIREBASE_URL
 import com.armutyus.ninova.constants.Constants.GLIDE_URL
 import com.armutyus.ninova.constants.Constants.GOOGLE_BOOKS_API_URL
@@ -18,6 +15,7 @@ import com.armutyus.ninova.constants.Constants.LINK_BUILDER_URL
 import com.armutyus.ninova.constants.Constants.LOTTIE_FILES_URL
 import com.armutyus.ninova.constants.Constants.RETROFIT_URL
 import com.armutyus.ninova.constants.Constants.VERSION_NAME
+import com.armutyus.ninova.constants.Util.Companion.checkAndApplyTheme
 import com.armutyus.ninova.databinding.ActivityAboutBinding
 import com.klinker.android.link_builder.Link
 import com.klinker.android.link_builder.applyLinks
@@ -45,81 +43,48 @@ class AboutActivity : AppCompatActivity() {
 
     override fun getTheme(): Resources.Theme {
         val theme = super.getTheme()
-        when (themePreferences.getString("theme", Constants.NINOVA_SYSTEM_THEME)) {
-            Constants.NINOVA_LIGHT_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.NINOVA_LIGHT_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Ninova, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
-
-            Constants.NINOVA_DARK_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.NINOVA_DARK_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Ninova, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-
-            Constants.NINOVA_SYSTEM_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.NINOVA_SYSTEM_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Ninova, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            }
-
-            Constants.BERGAMA_LIGHT_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.BERGAMA_LIGHT_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Bergama, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
-
-            Constants.BERGAMA_DARK_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.BERGAMA_DARK_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Bergama, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-
-            Constants.BERGAMA_SYSTEM_THEME -> {
-                themePreferences.edit()?.putString("theme", Constants.BERGAMA_SYSTEM_THEME)?.apply()
-                theme.applyStyle(R.style.Theme_Bergama, true)
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-        }
+        checkAndApplyTheme(themePreferences, theme)
         return theme
     }
 
     private fun getLinks(): List<Link> {
 
+        val textColor = Color.parseColor("#005FAF")
+        val highlightColor = Color.parseColor("#001C3A")
+
         val firebaseUrl = Link("Firebase")
-            .setTextColor(Color.parseColor("#005FAF"))
-            .setTextColorOfHighlightedLink(Color.parseColor("#001C3A"))
+            .setTextColor(textColor)
+            .setTextColorOfHighlightedLink(highlightColor)
             .setHighlightAlpha(0f)
             .setOnClickListener { openLink(FIREBASE_URL) }
 
         val glideUrl = Link("Glide Library")
-            .setTextColor(Color.parseColor("#005FAF"))
-            .setTextColorOfHighlightedLink(Color.parseColor("#001C3A"))
+            .setTextColor(textColor)
+            .setTextColorOfHighlightedLink(highlightColor)
             .setHighlightAlpha(0f)
             .setOnClickListener { openLink(GLIDE_URL) }
 
         val googleBooksApiUrl = Link("Google Books API")
-            .setTextColor(Color.parseColor("#005FAF"))
-            .setTextColorOfHighlightedLink(Color.parseColor("#001C3A"))
+            .setTextColor(textColor)
+            .setTextColorOfHighlightedLink(highlightColor)
             .setHighlightAlpha(0f)
             .setOnClickListener { openLink(GOOGLE_BOOKS_API_URL) }
 
         val linkBuilder = Link("Link Builder")
-            .setTextColor(Color.parseColor("#005FAF"))
-            .setTextColorOfHighlightedLink(Color.parseColor("#001C3A"))
+            .setTextColor(textColor)
+            .setTextColorOfHighlightedLink(highlightColor)
             .setHighlightAlpha(0f)
             .setOnClickListener { openLink(LINK_BUILDER_URL) }
 
         val lottieAnimations = Link("Lottie Animations")
-            .setTextColor(Color.parseColor("#005FAF"))
-            .setTextColorOfHighlightedLink(Color.parseColor("#001C3A"))
+            .setTextColor(textColor)
+            .setTextColorOfHighlightedLink(highlightColor)
             .setHighlightAlpha(0f)
             .setOnClickListener { openLink(LOTTIE_FILES_URL) }
 
         val retrofitUrl = Link("Retrofit")
-            .setTextColor(Color.parseColor("#005FAF"))
-            .setTextColorOfHighlightedLink(Color.parseColor("#001C3A"))
+            .setTextColor(textColor)
+            .setTextColorOfHighlightedLink(highlightColor)
             .setHighlightAlpha(0f)
             .setOnClickListener { openLink(RETROFIT_URL) }
 

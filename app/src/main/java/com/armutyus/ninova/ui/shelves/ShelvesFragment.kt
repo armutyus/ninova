@@ -55,8 +55,8 @@ class ShelvesFragment @Inject constructor(
     private val binding get() = fragmentBinding
     private val shelvesViewModel by activityViewModels<ShelvesViewModel>()
     private lateinit var bottomSheetBinding: AddNewShelfBottomSheetBinding
-    private lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
+    private lateinit var permissionResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
 
     private val swipeCallBack = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -359,7 +359,7 @@ class ShelvesFragment @Inject constructor(
             } else {
                 val galleryIntent =
                     Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                activityResultLauncher.launch(galleryIntent)
+                permissionResultLauncher.launch(galleryIntent)
             }
         }
     }
@@ -369,7 +369,7 @@ class ShelvesFragment @Inject constructor(
     }
 
     private fun registerLauncher() {
-        activityResultLauncher = registerForActivityResult(
+        permissionResultLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
             if (result.resultCode == AppCompatActivity.RESULT_OK) {
@@ -385,7 +385,7 @@ class ShelvesFragment @Inject constructor(
             if (result) {
                 val galleryIntent =
                     Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                activityResultLauncher.launch(galleryIntent)
+                permissionResultLauncher.launch(galleryIntent)
             } else {
                 Toast.makeText(requireContext(), R.string.permission_needed, Toast.LENGTH_LONG)
                     .show()

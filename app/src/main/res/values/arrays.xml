@@ -3,18 +3,18 @@
     <string-array name="theme_entries">
         <item>@string/ninova_light</item>
         <item>@string/ninova_dark</item>
-        <item>@string/ninova_system</item>
         <item>@string/bergama_light</item>
         <item>@string/bergama_dark</item>
-        <item>@string/bergama_system</item>
+        <item>@string/alexandria_light</item>
+        <item>@string/alexandria_dark</item>
     </string-array>
 
     <string-array name="theme_values">
         <item>ninova_light</item>
         <item>ninova_dark</item>
-        <item>ninova_system</item>
         <item>bergama_light</item>
         <item>bergama_dark</item>
-        <item>bergama_system</item>
+        <item>alexandria_light</item>
+        <item>alexandria_dark</item>
     </string-array>
 </resources>
