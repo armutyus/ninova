@@ -11,7 +11,8 @@ data class OpenLibraryWork(
     val title: String
 ) {
     fun isBookAddedCheck(booksViewModel: BooksViewModel): Boolean {
-        val searchBookList = booksViewModel.localBookList.value?.firstOrNull { it.bookId == key }
+        val bookId = key.substringAfterLast("/") + lending_edition
+        val searchBookList = booksViewModel.localBookList.value?.firstOrNull { it.bookId == bookId }
         return searchBookList != null
     }
 }

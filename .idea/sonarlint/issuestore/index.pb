@@ -77,3 +77,7 @@ P
  app/src/main/AndroidManifest.xml,8/c/8c55c3ccc257e5907959013f99656e4c8ec3903e
 u
 Eapp/src/main/java/com/armutyus/ninova/ui/settings/SettingsFragment.kt,6/a/6a179026b0e638423208992f4792382cc930e798
+ƒ
+Sapp/src/main/java/com/armutyus/ninova/model/openlibrarymodel/OpenLibraryResponse.kt,b/5/b51b012dd70163ab0473fe877b73db9c0ebf76a9
+ƒ
+Sapp/src/main/java/com/armutyus/ninova/model/openlibrarymodel/BookDetailsResponse.kt,a/a/aa52df6638ac58a910fb6c993bb38a8f0e60263a

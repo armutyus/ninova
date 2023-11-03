@@ -62,10 +62,8 @@ class DiscoverRecyclerViewAdapter @Inject constructor(
         }
     }
 
-    fun updateData(category: String, coverId: String?) {
-        if (coverId != null) {
-            categoryCoverMap.putIfAbsent(category, coverId)
-        }
-        notifyItemChanged(discoverScreenCategories.indexOf(category)) // TODO -> now better but could be even smoother
+    fun updateData(categoryCoverIdMap: MutableMap<String, String>) {
+        categoryCoverMap.putAll(categoryCoverIdMap)
+        notifyDataSetChanged()
     }
 }

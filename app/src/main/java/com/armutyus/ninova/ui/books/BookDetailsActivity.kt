@@ -231,11 +231,12 @@ class BookDetailsActivity : AppCompatActivity() {
                 isOpenLibBookAddedCheck()
                 setVisibilitiesForBookRemoved()
 
+                val bookKey = currentOpenLibBook?.key!!.substringAfterLast("/")
+
                 binding.addBookToLibraryButton.setOnClickListener {
                     if (this::openLibBookDetails.isInitialized) {
                         val authorList = currentOpenLibBook?.authors?.map { it.name }
-                        val bookId =
-                            currentOpenLibBook?.key!!.substringAfterLast("/") + currentOpenLibBook?.lending_edition
+                        val bookId = bookKey + currentOpenLibBook?.lending_edition
                         val bookCoverUrl =
                             "https://covers.openlibrary.org/b/id/${currentOpenLibBook?.cover_id}-M.jpg"
                         val bookLargeCoverUrl =
@@ -269,15 +270,15 @@ class BookDetailsActivity : AppCompatActivity() {
                 }
 
                 binding.removeBookFromLibraryButton.setOnClickListener {
-                    booksViewModel.deleteBookById(currentOpenLibBook?.key!!.substringAfterLast("/"))
+                    booksViewModel.deleteBookById(bookKey)
                         .invokeOnCompletion {
-                            deleteBookFromFirestore(currentOpenLibBook?.key!!.substringAfterLast("/"))
+                            deleteBookFromFirestore(bookKey)
                             setVisibilitiesForBookRemoved()
                         }
                 }
 
                 binding.shelvesOfBooks.setOnClickListener {
-                    currentBookIdExtra = currentOpenLibBook?.key!!.substringAfterLast("/")
+                    currentBookIdExtra = bookKey + currentOpenLibBook?.lending_edition
                     showAddShelfDialog()
                 }
             }
@@ -299,10 +300,11 @@ class BookDetailsActivity : AppCompatActivity() {
             binding.userBookNotesEditText.setText(userNotesFromLocal)
         }
         currentOpenLibBook?.let { openLibBookItem ->
-            booksViewModel.loadBookWithShelves(openLibBookItem.key)
+            val bookId = openLibBookItem.key + openLibBookItem.lending_edition
+            booksViewModel.loadBookWithShelves(bookId)
             booksViewModel.loadBookList()
             val userNotesFromLocal =
-                booksViewModel.localBookList.value?.firstOrNull { it.bookId == openLibBookItem.key }?.bookNotes
+                booksViewModel.localBookList.value?.firstOrNull { it.bookId == bookId }?.bookNotes
             binding.userBookNotesEditText.setText(userNotesFromLocal)
         }
     }
@@ -521,8 +523,9 @@ class BookDetailsActivity : AppCompatActivity() {
         if (currentOpenLibBook == null) {
             setVisibilitiesForBookNull()
         } else {
+            val bookKey = currentOpenLibBook?.key!!.substringAfterLast("/")
             discoverViewModel.getBookDetails(
-                currentOpenLibBook?.key!!,
+                bookKey,
                 currentOpenLibBook?.lending_edition!!
             )
         }
@@ -567,7 +570,7 @@ class BookDetailsActivity : AppCompatActivity() {
         discoverViewModel.combinedResponse.observe(this) { combinedResponseData ->
             if (combinedResponseData.loading) {
                 binding.progressBar.visibility = View.VISIBLE
-            } else if (combinedResponseData.keyError.isNotBlank() || combinedResponseData.lendingKeyError.isNotBlank()) {
+            } else if (combinedResponseData.keyError?.isNotBlank() == true && combinedResponseData.lendingKeyError?.isNotBlank() == true) {
                 binding.progressBar.visibility = View.GONE
                 if (type == LOCAL_BOOK_TYPE) {
                     Toast.makeText(
@@ -789,7 +792,7 @@ class BookDetailsActivity : AppCompatActivity() {
         binding.bookDetailPublishDate.text =
             currentOpenLibBook?.first_publish_year?.toString()
 
-        val formattedBookDescription = if (bookDetails.description == null) {
+        val formattedBookDescription = if (bookDetails.description.isNullOrBlank()) {
             currentLocalBook?.bookDescription
         } else {
             Html.fromHtml(
@@ -798,7 +801,6 @@ class BookDetailsActivity : AppCompatActivity() {
             ).toString()
         }
         binding.bookDetailDescription.text = formattedBookDescription
-
     }
 
     private fun applyOpenLibDetailChangesToLocalBook(bookDetails: BookDetailsResponse.CombinedResponse) {

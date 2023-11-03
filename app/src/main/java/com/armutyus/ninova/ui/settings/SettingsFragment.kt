@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -156,15 +157,18 @@ class SettingsFragment @Inject constructor(
 
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        removeBackButtonAndMenu()
+    }
+
     override fun onResume() {
         super.onResume()
-        removeBackButtonAndMenu()
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
     }
 
     override fun onPause() {
         super.onPause()
-        removeBackButtonAndMenu()
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 

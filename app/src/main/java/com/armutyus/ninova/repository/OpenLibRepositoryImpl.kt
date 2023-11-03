@@ -25,7 +25,7 @@ class OpenLibRepositoryImpl @Inject constructor(
             } else {
                 category
             }
-            val fixedUrl = "subjects/$categoryUrl.json?limit=50&offset=$offset"
+            val fixedUrl = "subjects/$categoryUrl.json?sort=rating&limit=50&offset=$offset"
             emit(Response.Loading)
             val response = openLibraryApiService.getBooksByCategory(fixedUrl)
             if (response.isSuccessful) {
@@ -44,8 +44,7 @@ class OpenLibRepositoryImpl @Inject constructor(
         bookKey: String
     ): Flow<Response<BookDetailsResponse.BookKeyResponse>> =
         flow {
-            val fixedBookKey = bookKey.substringAfterLast("/")
-            val fixedUrl = "works/$fixedBookKey.json"
+            val fixedUrl = "works/$bookKey.json"
             emit(Response.Loading)
             val response = openLibraryApiService.getBookKeyDetails(fixedUrl)
             if (response.isSuccessful) {
@@ -82,7 +81,7 @@ class OpenLibRepositoryImpl @Inject constructor(
     override fun getRandomBookCoverForCategory(category: String): Flow<Response<String>> =
         flow {
             emit(Response.Loading)
-            val fixedUrl = "subjects/$category.json?limit=50"
+            val fixedUrl = "subjects/$category.json?sort=rating&limit=30"
             val response = openLibraryApiService.getBooksByCategory(fixedUrl)
             if (response.isSuccessful) {
                 response.body()?.let {

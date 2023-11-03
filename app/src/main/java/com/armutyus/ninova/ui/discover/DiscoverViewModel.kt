@@ -27,16 +27,7 @@ class DiscoverViewModel @Inject constructor(
     val booksFromApiResponse: LiveData<Response<OpenLibraryResponse>>
         get() = _booksFromApiResponse
 
-    private val _combinedResponse = MutableLiveData(
-        BookDetailsResponse.CombinedResponse(
-            description = "",
-            number_of_pages = "",
-            publishers = listOf(),
-            keyError = "",
-            lendingKeyError = "",
-            loading = false
-        )
-    )
+    private val _combinedResponse = MutableLiveData(BookDetailsResponse.CombinedResponse())
     val combinedResponse: LiveData<BookDetailsResponse.CombinedResponse>
         get() = _combinedResponse
 
@@ -51,7 +42,7 @@ class DiscoverViewModel @Inject constructor(
     }
 
     private fun getRandomBookCoverForCategory() = viewModelScope.launch {
-        discoverScreenCategories.forEach { category ->
+        discoverScreenCategories.shuffled().forEach { category ->
             openLibRepository.getRandomBookCoverForCategory(category).collectLatest { response ->
                 when (response) {
                     is Response.Success -> {
@@ -74,16 +65,43 @@ class DiscoverViewModel @Inject constructor(
     }
 
     fun getBookDetails(bookKey: String, bookLendingKey: String) = viewModelScope.launch {
-        openLibRepository.getBookKeyDetails(bookKey).collectLatest { response ->
-            when (response) {
+        openLibRepository.getBookKeyDetails(bookKey).collectLatest { keyResponse ->
+            when (keyResponse) {
                 is Response.Success -> {
-                    _combinedResponse.postValue(
-                        _combinedResponse.value?.copy(
-                            description = response.data.description,
-                            loading = false,
-                            keyError = ""
-                        )
-                    )
+                    openLibRepository.getBookLendingDetails(bookLendingKey)
+                        .collectLatest { lendingResponse ->
+                            when (lendingResponse) {
+                                is Response.Success -> {
+                                    _combinedResponse.postValue(
+                                        _combinedResponse.value?.copy(
+                                            publishers = lendingResponse.data.publishers,
+                                            number_of_pages = lendingResponse.data.number_of_pages,
+                                            description = keyResponse.data.description,
+                                            loading = false,
+                                            keyError = null,
+                                            lendingKeyError = null
+                                        )
+                                    )
+                                }
+
+                                is Response.Loading -> {
+                                    _combinedResponse.postValue(
+                                        _combinedResponse.value?.copy(
+                                            loading = true
+                                        )
+                                    )
+                                }
+
+                                is Response.Failure -> {
+                                    _combinedResponse.postValue(
+                                        _combinedResponse.value?.copy(
+                                            loading = false,
+                                            lendingKeyError = lendingResponse.errorMessage
+                                        )
+                                    )
+                                }
+                            }
+                        }
                 }
 
                 is Response.Loading -> {
@@ -98,38 +116,7 @@ class DiscoverViewModel @Inject constructor(
                     _combinedResponse.postValue(
                         _combinedResponse.value?.copy(
                             loading = false,
-                            keyError = response.errorMessage
-                        )
-                    )
-                }
-            }
-        }
-        openLibRepository.getBookLendingDetails(bookLendingKey).collectLatest { response ->
-            when (response) {
-                is Response.Success -> {
-                    _combinedResponse.postValue(
-                        _combinedResponse.value?.copy(
-                            publishers = response.data.publishers,
-                            number_of_pages = response.data.number_of_pages,
-                            loading = false,
-                            lendingKeyError = ""
-                        )
-                    )
-                }
-
-                is Response.Loading -> {
-                    _combinedResponse.postValue(
-                        _combinedResponse.value?.copy(
-                            loading = true
-                        )
-                    )
-                }
-
-                is Response.Failure -> {
-                    _combinedResponse.postValue(
-                        _combinedResponse.value?.copy(
-                            loading = false,
-                            lendingKeyError = response.errorMessage
+                            keyError = keyResponse.errorMessage
                         )
                     )
                 }

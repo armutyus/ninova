@@ -12,12 +12,12 @@ sealed class BookDetailsResponse {
     )
 
     data class CombinedResponse(
-        val description: String?,
-        val number_of_pages: String?,
-        val publishers: List<String>?,
-        val loading: Boolean,
-        val keyError: String,
-        val lendingKeyError: String
+        val description: String? = null,
+        val number_of_pages: String? = null,
+        val publishers: List<String>? = null,
+        val loading: Boolean = false,
+        val keyError: String? = null,
+        val lendingKeyError: String? = null
     )
 
 }
