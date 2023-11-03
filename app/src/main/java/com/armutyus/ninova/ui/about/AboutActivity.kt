@@ -38,7 +38,6 @@ class AboutActivity : AppCompatActivity() {
 
         val creditsLinkText = binding.aboutCreditsLinksTextView
         creditsLinkText.applyLinks(getLinks())
-
     }
 
     override fun getTheme(): Resources.Theme {
@@ -48,7 +47,6 @@ class AboutActivity : AppCompatActivity() {
     }
 
     private fun getLinks(): List<Link> {
-
         val textColor = Color.parseColor("#005FAF")
         val highlightColor = Color.parseColor("#001C3A")
 

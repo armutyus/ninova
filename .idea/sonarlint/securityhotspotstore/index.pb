@@ -81,3 +81,9 @@ Eapp/src/main/java/com/armutyus/ninova/ui/settings/SettingsFragment.kt,6/a/6a17
 Sapp/src/main/java/com/armutyus/ninova/model/openlibrarymodel/OpenLibraryResponse.kt,b/5/b51b012dd70163ab0473fe877b73db9c0ebf76a9
 ƒ
 Sapp/src/main/java/com/armutyus/ninova/model/openlibrarymodel/BookDetailsResponse.kt,a/a/aa52df6638ac58a910fb6c993bb38a8f0e60263a
+s
+Capp/src/main/java/com/armutyus/ninova/ui/splash/SplashRepository.kt,e/a/eaa67818a4dd5bd67a7f441c6937483cc65fb2f9
+r
+Bapp/src/main/java/com/armutyus/ninova/ui/splash/SplashViewModel.kt,8/f/8f0539679561f32ee390b9fa9e8fec5542fa3ffb
+k
+;app/src/main/java/com/armutyus/ninova/constants/Response.kt,9/3/933b44566cbfaa88b4d3605f26ff1c10fbab2a94
