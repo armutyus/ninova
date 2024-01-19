@@ -16,4 +16,9 @@
         android:icon="@drawable/home_library"
         android:title="@string/title_shelves" />
 
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/title_profile" />
+
 </menu>

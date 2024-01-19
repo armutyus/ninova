@@ -43,6 +43,13 @@
     </fragment>
 
     <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.armutyus.ninova.ui.profile.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_profile">
+    </fragment>
+
+    <fragment
         android:id="@+id/mainSearchFragment"
         android:name="com.armutyus.ninova.ui.search.MainSearchFragment"
         android:label="@string/title_search"

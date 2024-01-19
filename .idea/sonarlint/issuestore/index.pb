@@ -125,3 +125,7 @@ m
 =app/src/main/java/com/armutyus/ninova/roomdb/DataConverter.kt,5/e/5e81893db4cd8c30ae320a25bb0719755990d2e9
 s
 Capp/src/main/java/com/armutyus/ninova/roomdb/entities/LocalShelf.kt,2/5/25c8d8e7b764c7dc9fb14a8205c5bd1e7284cccd
+s
+Capp/src/main/java/com/armutyus/ninova/ui/profile/ProfileFragment.kt,c/1/c1f996272163babcbf9e10cca3a34d68e7dcf1b3
+t
+Dapp/src/main/java/com/armutyus/ninova/ui/profile/ProfileViewModel.kt,a/a/aa940e94fc63f6c6889e536aa54009a4282f0597
