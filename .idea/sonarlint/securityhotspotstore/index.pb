@@ -129,3 +129,11 @@ s
 Capp/src/main/java/com/armutyus/ninova/ui/profile/ProfileFragment.kt,c/1/c1f996272163babcbf9e10cca3a34d68e7dcf1b3
 t
 Dapp/src/main/java/com/armutyus/ninova/ui/profile/ProfileViewModel.kt,a/a/aa940e94fc63f6c6889e536aa54009a4282f0597
+t
+Dapp/src/main/java/com/armutyus/ninova/roomdb/entities/UserProfile.kt,b/d/bd1fb86b668eeaf7111306b94cb25b1f72df7d93
+w
+Gapp/src/main/java/com/armutyus/ninova/roomdb/entities/ShelfWithBooks.kt,9/4/94cec5c7be557790329c284efdb86c7ef94ec5e5
+z
+Japp/src/main/java/com/armutyus/ninova/roomdb/entities/BookShelfCrossRef.kt,3/b/3b4a57e8479e4c9c45a7c2a351042873259f444c
+x
+Happ/src/main/java/com/armutyus/ninova/roomdb/entities/BookWithShelves.kt,c/d/cd4db1afc94811826e77531b615033d831020d0f

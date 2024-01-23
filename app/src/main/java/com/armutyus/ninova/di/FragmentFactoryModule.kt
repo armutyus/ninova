@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import com.armutyus.ninova.ui.books.BooksFragment
 import com.armutyus.ninova.ui.discover.DiscoverCategoryFragment
 import com.armutyus.ninova.ui.discover.DiscoverFragment
+import com.armutyus.ninova.ui.profile.ProfileFragment
 import com.armutyus.ninova.ui.search.MainSearchFragment
 import com.armutyus.ninova.ui.settings.SettingsFragment
 import com.armutyus.ninova.ui.shelves.ShelfWithBooksFragment
@@ -42,6 +43,11 @@ abstract class FragmentFactoryModule {
     @IntoMap
     @FragmentKey(MainSearchFragment::class)
     abstract fun bindMainSearchFragment(fragment: MainSearchFragment): Fragment
+
+    @Binds
+    @IntoMap
+    @FragmentKey(ProfileFragment::class)
+    abstract fun bindProfileFragment(fragment: ProfileFragment): Fragment
 
     @Binds
     @IntoMap

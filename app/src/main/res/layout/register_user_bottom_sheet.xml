@@ -68,7 +68,6 @@
         android:layout_gravity="center"
         android:layout_marginHorizontal="24dp"
         android:layout_marginBottom="24dp"
-        android:text="@string/action_register">
-    </com.google.android.material.button.MaterialButton>
+        android:text="@string/action_register"/>
 
 </LinearLayout>

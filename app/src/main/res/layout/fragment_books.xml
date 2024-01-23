@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,11 +11,9 @@
         android:id="@+id/mainBooksRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="?actionBarSize"
-        android:paddingVertical="16dp"
-        android:paddingHorizontal="16dp"
+        android:layout_marginBottom="@dimen/navigation_bar_container_height"
         android:visibility="gone"
-        tools:visibility="visible"/>
+        tools:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/progress_bar"
@@ -48,7 +45,7 @@
             android:layout_height="250dp"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            app:lottie_rawRes="@raw/homenotfound"/>
+            app:lottie_rawRes="@raw/homenotfound" />
 
         <TextView
             android:layout_width="wrap_content"

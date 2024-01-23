@@ -6,7 +6,7 @@ constraintlayout = "2.1.4"
 coreKtx = "1.12.0"
 coreSplashscreen = "1.0.1"
 espressoCore = "3.5.1"
-firebaseBom = "32.7.0"
+firebaseBom = "32.7.1"
 firebaseCrashlyticsGradle = "2.9.9"
 fragmentKtx = "1.6.2"
 glide = "4.16.0"
@@ -89,6 +89,7 @@ firebase = [
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-application" }
+androidx-room = { id = "androidx.room", version.ref = "roomRuntime"}
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-android" }
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
