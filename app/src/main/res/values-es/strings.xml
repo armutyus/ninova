@@ -121,6 +121,9 @@
     <string name="some_details_not_loaded">Algunos detalles no se pudieron cargar</string>
     <string name="small_welcome_text">BIENVENIDO A NINOVA</string>
     <string name="title_profile">Perfil</string>
+    <string name="your_reviews">Tus Reseñas</string>
+    <string name="your_ratings">Tus Calificaciones</string>
+    <string name="edit_profile">Editar Perfil</string>
 </resources>
 
 
