@@ -9,7 +9,7 @@
         android:id="@+id/navigation_books"
         android:name="com.armutyus.ninova.ui.books.BooksFragment"
         android:label="@string/title_books"
-        tools:layout="@layout/fragment_books"></fragment>
+        tools:layout="@layout/fragment_books"/>
 
     <fragment
         android:id="@+id/navigation_discovery"
@@ -45,7 +45,11 @@
         android:id="@+id/navigation_profile"
         android:name="com.armutyus.ninova.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_profile"></fragment>
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_navigation_profile_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/mainSearchFragment"

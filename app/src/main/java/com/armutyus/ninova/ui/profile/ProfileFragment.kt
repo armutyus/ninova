@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.Navigation
 import com.armutyus.ninova.R
 import com.armutyus.ninova.databinding.FragmentProfileBinding
 import javax.inject.Inject
@@ -19,6 +20,11 @@ class ProfileFragment @Inject constructor() : Fragment(R.layout.fragment_profile
 
         val binding = FragmentProfileBinding.bind(view)
         fragmentBinding = binding
+
+        binding.appSettings.setOnClickListener {
+            val action = ProfileFragmentDirections.actionNavigationProfileToSettingsFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
     }
 
     override fun onDestroyView() {

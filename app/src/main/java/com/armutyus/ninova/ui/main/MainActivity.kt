@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity() {
             addMenuProvider(object : MenuProvider {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                     menu.clear()
-                    menuInflater.inflate(R.menu.settings_menu, menu)
+                    menuInflater.inflate(R.menu.main_menu, menu)
                 }
 
                 override fun onMenuItemSelected(item: MenuItem): Boolean {
@@ -101,10 +101,6 @@ class MainActivity : AppCompatActivity() {
 
                         R.id.menu_search -> {
                             navController.navigate(R.id.action_main_to_search)
-                        }
-
-                        R.id.settings -> {
-                            navController.navigate(R.id.action_main_to_settings)
                         }
 
                     }
