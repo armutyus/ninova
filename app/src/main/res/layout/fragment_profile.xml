@@ -40,6 +40,7 @@
             android:background="?selectableItemBackground"
             android:padding="6dp"
             android:src="@drawable/ic_edit_profile"
+            app:shapeAppearanceOverlay="@style/circleImageViewStyle"
             tools:ignore="contentDescription">
         </ImageButton>
 

@@ -5,10 +5,11 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class UserProfile(
-    @PrimaryKey(autoGenerate = false) val uid: String,
-    val name: String,
-    val email: String,
-    val imageUrl: String,
+    @PrimaryKey(autoGenerate = false) var uid: String,
+    var name: String,
+    var email: String,
+    var photoUrl: String,
+    var createdAt: String,
 ) {
-    constructor() : this("", "", "", "")
+    constructor() : this("", "", "", "", "")
 }
