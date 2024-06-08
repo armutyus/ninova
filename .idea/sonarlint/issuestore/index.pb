@@ -137,3 +137,7 @@ z
 Japp/src/main/java/com/armutyus/ninova/roomdb/entities/BookShelfCrossRef.kt,3/b/3b4a57e8479e4c9c45a7c2a351042873259f444c
 x
 Happ/src/main/java/com/armutyus/ninova/roomdb/entities/BookWithShelves.kt,c/d/cd4db1afc94811826e77531b615033d831020d0f
+
+Oapp/src/main/java/com/armutyus/ninova/repository/FirebaseRepositoryInterface.kt,2/6/26fd3e5453fe70d4594e5dac292d6cf83a8f301d
+w
+Gapp/src/main/java/com/armutyus/ninova/ui/profile/EditProfileFragment.kt,6/0/60a47d013339555f4acbf35c23c5d27ccdaee81a

@@ -61,6 +61,7 @@ object Constants {
     const val EMAIL = "email"
     const val NAME = "name"
     const val PHOTO_URL = "photoUrl"
+    const val PROFILE_BANNER = "profileBanner"
 
     //BookViewType
     const val BOOK_TYPE_FOR_DETAILS = "bookTypeForDetails"

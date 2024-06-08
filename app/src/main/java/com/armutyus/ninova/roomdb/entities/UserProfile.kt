@@ -9,7 +9,8 @@ data class UserProfile(
     var name: String,
     var email: String,
     var photoUrl: String,
+    var profileBanner: String,
     var createdAt: String,
 ) {
-    constructor() : this("", "", "", "", "")
+    constructor() : this("", "", "", "","", "")
 }

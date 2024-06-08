@@ -53,4 +53,6 @@ interface FirebaseRepositoryInterface {
 
     suspend fun sendResetPassword(email: String): Response<Boolean>
 
+    suspend fun updateUserProfile(userUpdates: Map<String, Any?>): Response<Boolean>
+
 }

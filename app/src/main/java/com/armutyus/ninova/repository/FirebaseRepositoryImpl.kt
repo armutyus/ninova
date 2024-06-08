@@ -8,6 +8,7 @@ import com.armutyus.ninova.constants.Constants.EMAIL
 import com.armutyus.ninova.constants.Constants.ERROR_MESSAGE
 import com.armutyus.ninova.constants.Constants.NAME
 import com.armutyus.ninova.constants.Constants.PHOTO_URL
+import com.armutyus.ninova.constants.Constants.PROFILE_BANNER
 import com.armutyus.ninova.constants.Constants.SHELVES_REF
 import com.armutyus.ninova.constants.Constants.USERS_REF
 import com.armutyus.ninova.constants.Response
@@ -84,6 +85,7 @@ class FirebaseRepositoryImpl @Inject constructor(
                             NAME to displayName,
                             EMAIL to email,
                             PHOTO_URL to photoUrl?.toString(),
+                            PROFILE_BANNER to "",
                             CREATED_AT to FieldValue.serverTimestamp()
                         )
                     ).await()
@@ -399,6 +401,28 @@ class FirebaseRepositoryImpl @Inject constructor(
                 reAuthResult.let {
                     return@let Response.Success(true)
                 }
+            } catch (e: Exception) {
+                Response.Failure(e.localizedMessage ?: ERROR_MESSAGE)
+            }
+        }
+
+    override suspend fun updateUserProfile(userUpdates: Map<String, Any?>): Response<Boolean> =
+        withContext(coroutineContext) {
+            try {
+                Response.Loading
+                val currentUser = auth.currentUser
+                currentUser?.let { user ->
+                    /*val userUpdates = mutableMapOf<String, Any?>()
+
+                    name?.let { userUpdates[NAME] = it }
+                    photoUrl?.let { userUpdates[PHOTO_URL] = it }
+                    profileBanner?.let { userUpdates[PROFILE_BANNER] = it }*/
+
+                    if (userUpdates.isNotEmpty()) {
+                        db.collection(USERS_REF).document(user.uid).update(userUpdates).await()
+                    }
+                }
+                Response.Success(true)
             } catch (e: Exception) {
                 Response.Failure(e.localizedMessage ?: ERROR_MESSAGE)
             }

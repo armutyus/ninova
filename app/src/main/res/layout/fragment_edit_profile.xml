@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".ui.profile.EditProfileFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/bannerImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:src="@drawable/gradient_background"
+            android:clickable="true"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
+            tools:ignore="ContentDescription"/>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/profileImageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_profile"
+            android:layout_centerInParent="true"
+            android:clickable="true"
+            app:shapeAppearanceOverlay="@style/circleImageViewStyle"
+            tools:ignore="ContentDescription" />
+
+        <ImageButton
+            android:id="@+id/editProfileButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/bannerImageView"
+            android:layout_alignEnd="@+id/bannerImageView"
+            android:background="?selectableItemBackground"
+            android:padding="6dp"
+            android:src="@drawable/ic_edit_profile"
+            app:shapeAppearanceOverlay="@style/circleImageViewStyle"
+            tools:ignore="contentDescription">
+        </ImageButton>
+    </RelativeLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/userReviews"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        app:cardElevation="6dp"
+        app:contentPadding="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Username" />
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>
