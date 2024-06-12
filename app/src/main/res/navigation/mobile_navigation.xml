@@ -9,7 +9,7 @@
         android:id="@+id/navigation_books"
         android:name="com.armutyus.ninova.ui.books.BooksFragment"
         android:label="@string/title_books"
-        tools:layout="@layout/fragment_books"/>
+        tools:layout="@layout/fragment_books" />
 
     <fragment
         android:id="@+id/navigation_discovery"

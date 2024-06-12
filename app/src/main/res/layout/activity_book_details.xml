@@ -87,7 +87,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
-        android:text="@string/add_this_book_to_your_library"/>
+        android:text="@string/add_this_book_to_your_library" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/removeBookFromLibraryButton"
@@ -95,7 +95,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:visibility="gone"
-        android:text="@string/remove_this_book_from_your_library"/>
+        android:text="@string/remove_this_book_from_your_library" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/bookDetailTabLayout"

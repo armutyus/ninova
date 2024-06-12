@@ -12,5 +12,5 @@ data class UserProfile(
     var profileBanner: String,
     var createdAt: String,
 ) {
-    constructor() : this("", "", "", "","", "")
+    constructor() : this("", "", "", "", "", "")
 }

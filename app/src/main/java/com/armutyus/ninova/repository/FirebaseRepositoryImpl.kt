@@ -412,12 +412,6 @@ class FirebaseRepositoryImpl @Inject constructor(
                 Response.Loading
                 val currentUser = auth.currentUser
                 currentUser?.let { user ->
-                    /*val userUpdates = mutableMapOf<String, Any?>()
-
-                    name?.let { userUpdates[NAME] = it }
-                    photoUrl?.let { userUpdates[PHOTO_URL] = it }
-                    profileBanner?.let { userUpdates[PROFILE_BANNER] = it }*/
-
                     if (userUpdates.isNotEmpty()) {
                         db.collection(USERS_REF).document(user.uid).update(userUpdates).await()
                     }

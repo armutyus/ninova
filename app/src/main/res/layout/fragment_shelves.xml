@@ -40,7 +40,7 @@
         app:elevation="6dp"
         android:src="@drawable/ic_add_button_white"
         app:fabSize="mini"
-        android:contentDescription="@string/add_shelves"/>
+        android:contentDescription="@string/add_shelves" />
 
     <LinearLayout
         android:id="@+id/progress_bar"

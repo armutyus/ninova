@@ -8,6 +8,6 @@
         android:id="@+id/bottomSheetShelfCheckBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/upload_library"/>
+        android:text="@string/upload_library" />
 
 </LinearLayout>

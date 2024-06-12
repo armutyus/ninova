@@ -25,7 +25,7 @@
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:src="@drawable/ic_shelf_cover"
-                tools:ignore="ContentDescription"/>
+                tools:ignore="ContentDescription" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -59,7 +59,7 @@
                         android:paddingEnd="8dp"
                         android:gravity="bottom"
                         android:drawablePadding="4dp"
-                        app:drawableStartCompat="@drawable/ic_books_in_shelf"/>
+                        app:drawableStartCompat="@drawable/ic_books_in_shelf" />
 
                     <TextView
                         android:id="@+id/shelfCreatedDateText"
@@ -71,7 +71,7 @@
                         android:textSize="12sp"
                         android:gravity="bottom"
                         android:drawablePadding="4dp"
-                        app:drawableStartCompat="@drawable/ic_release_date"/>
+                        app:drawableStartCompat="@drawable/ic_release_date" />
 
                 </LinearLayout>
 

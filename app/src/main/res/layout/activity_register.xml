@@ -92,7 +92,7 @@
             android:layout_gravity="center"
             android:layout_marginHorizontal="24dp"
             android:layout_marginBottom="24dp"
-            android:text="@string/action_register"/>
+            android:text="@string/action_register" />
 
     </LinearLayout>
 
@@ -147,7 +147,7 @@
             android:layout_gravity="center"
             android:layout_marginHorizontal="24dp"
             android:layout_marginBottom="24dp"
-            android:text="@string/approve"/>
+            android:text="@string/approve" />
 
     </LinearLayout>
 
@@ -222,7 +222,7 @@
             android:layout_gravity="center"
             android:layout_marginHorizontal="24dp"
             android:layout_marginBottom="24dp"
-            android:text="@string/save"/>
+            android:text="@string/save" />
 
     </LinearLayout>
 
@@ -258,7 +258,7 @@
             android:layout_gravity="center"
             android:layout_marginHorizontal="24dp"
             android:layout_marginBottom="24dp"
-            android:text="@string/send"/>
+            android:text="@string/send" />
 
     </LinearLayout>
 

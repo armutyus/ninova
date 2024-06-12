@@ -141,3 +141,9 @@ Happ/src/main/java/com/armutyus/ninova/roomdb/entities/BookWithShelves.kt,c/d/c
 Oapp/src/main/java/com/armutyus/ninova/repository/FirebaseRepositoryInterface.kt,2/6/26fd3e5453fe70d4594e5dac292d6cf83a8f301d
 w
 Gapp/src/main/java/com/armutyus/ninova/ui/profile/EditProfileFragment.kt,6/0/60a47d013339555f4acbf35c23c5d27ccdaee81a
+v
+Fapp/src/main/java/com/armutyus/ninova/ui/settings/SettingsViewModel.kt,4/5/45255a146851affa5b55dfea5cdbb6816d11a285
+‡
+Wapp/src/main/java/com/armutyus/ninova/ui/shelves/listeners/OnShelfCoverClickListener.kt,d/7/d7c3276a40e0c3867059c7c4e30d1b679faafa6c
+‡
+Wapp/src/main/java/com/armutyus/ninova/ui/shelves/adapters/ShelvesRecyclerViewAdapter.kt,1/1/1166fd42519ead19b2a092dc7e54cc0116e78815

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -20,7 +19,7 @@
             android:layout_height="200dp"
             android:src="@drawable/gradient_background"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
-            tools:ignore="ContentDescription"/>
+            tools:ignore="ContentDescription" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/profileImageView"
@@ -41,8 +40,7 @@
             android:padding="6dp"
             android:src="@drawable/ic_edit_profile"
             app:shapeAppearanceOverlay="@style/circleImageViewStyle"
-            tools:ignore="contentDescription">
-        </ImageButton>
+            tools:ignore="contentDescription"></ImageButton>
 
         <TextView
             android:id="@+id/usernameTextView"
@@ -53,8 +51,7 @@
             android:textStyle="bold"
             android:layout_centerHorizontal="true"
             android:layout_alignBottom="@+id/bannerImageView"
-            android:layout_marginBottom="8dp"
-            />
+            android:layout_marginBottom="8dp" />
     </RelativeLayout>
 
     <com.google.android.material.card.MaterialCardView

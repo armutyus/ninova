@@ -25,7 +25,7 @@
                 android:layout_width="40dp"
                 android:layout_height="60dp"
                 android:src="@drawable/example_book"
-                tools:ignore="ContentDescription"/>
+                tools:ignore="ContentDescription" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -68,7 +68,7 @@
                         android:textSize="11sp"
                         android:gravity="bottom"
                         android:drawablePadding="4dp"
-                        app:drawableStartCompat="@drawable/ic_pages_icon"/>
+                        app:drawableStartCompat="@drawable/ic_pages_icon" />
 
                     <TextView
                         android:id="@+id/bookReleaseDateText"
@@ -79,7 +79,7 @@
                         android:textSize="11sp"
                         android:gravity="bottom"
                         android:drawablePadding="4dp"
-                        app:drawableStartCompat="@drawable/ic_release_date"/>
+                        app:drawableStartCompat="@drawable/ic_release_date" />
 
                 </LinearLayout>
 
