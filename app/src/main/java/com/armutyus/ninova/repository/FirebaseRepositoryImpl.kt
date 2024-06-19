@@ -18,9 +18,9 @@ import com.armutyus.ninova.roomdb.entities.LocalShelf
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.userProfileChangeRequest
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
@@ -157,7 +157,7 @@ class FirebaseRepositoryImpl @Inject constructor(
             try {
                 Response.Loading
                 val uid = auth.currentUser?.uid!!
-                val querySnapshot: QuerySnapshot =
+                val querySnapshot =
                     db.collection(USERS_REF).document(uid).collection(BOOKS_REF)
                         .get().await()
                 val bookList = querySnapshot.documents.mapNotNull { documentSnapshot ->
@@ -176,7 +176,7 @@ class FirebaseRepositoryImpl @Inject constructor(
             try {
                 Response.Loading
                 val uid = auth.currentUser?.uid!!
-                val querySnapshot: QuerySnapshot =
+                val querySnapshot =
                     db.collection(USERS_REF).document(uid).collection(SHELVES_REF)
                         .get().await()
                 val shelfList = querySnapshot.documents.mapNotNull { documentSnapshot ->
@@ -195,7 +195,7 @@ class FirebaseRepositoryImpl @Inject constructor(
             try {
                 Response.Loading
                 val uid = auth.currentUser?.uid!!
-                val querySnapshot: QuerySnapshot =
+                val querySnapshot =
                     db.collection(USERS_REF).document(uid).collection(BOOKSHELF_CROSS_REF)
                         .get().await()
                 val crossRefList = querySnapshot.documents.mapNotNull { documentSnapshot ->
@@ -457,6 +457,19 @@ class FirebaseRepositoryImpl @Inject constructor(
                     imageReference.downloadUrl
                 }
                 return@withContext Response.Success(urlTask.await())
+            } catch (e: Exception) {
+                Response.Failure(e.localizedMessage ?: ERROR_MESSAGE)
+            }
+        }
+
+    override suspend fun getUserProfile(): Response<DocumentSnapshot> =
+        withContext(coroutineContext) {
+            try {
+                Response.Loading
+                val uid = auth.currentUser?.uid!!
+                val documentSnapshot =
+                    db.collection(USERS_REF).document(uid).get().await()
+                Response.Success(documentSnapshot)
             } catch (e: Exception) {
                 Response.Failure(e.localizedMessage ?: ERROR_MESSAGE)
             }

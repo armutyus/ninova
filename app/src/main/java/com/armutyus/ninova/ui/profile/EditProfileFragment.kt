@@ -28,6 +28,7 @@ import com.armutyus.ninova.databinding.FragmentEditProfileBinding
 import com.bumptech.glide.RequestManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -70,20 +71,11 @@ class EditProfileFragment @Inject constructor(
         }
 
         fragmentBinding?.saveChangesButton?.setOnClickListener {
-            val userUpdates = mutableMapOf<String, Any?>()
-            if (bannerImageUrl.isNotEmpty()) {
-                userUpdates[PROFILE_BANNER] = bannerImageUrl
-            } else {
-                userUpdates[PROFILE_BANNER] = ""
-            }
-            if (profileImageUrl.isNotEmpty()) {
-                userUpdates[PHOTO_URL] = profileImageUrl
-            } else {
-                userUpdates[PHOTO_URL] = ""
-            }
-            userUpdates[NAME] = fragmentBinding?.usernameEditText?.text.toString()
-            updateUserProfile(userUpdates)
+            saveChanges()
         }
+
+        profileViewModel.getUserProfile()
+        userProfileObserver()
     }
 
     override fun onDestroyView() {
@@ -95,18 +87,17 @@ class EditProfileFragment @Inject constructor(
         profileViewModel.updateUserProfile(userUpdates) { response ->
             when (response) {
                 is Response.Loading -> {
-                    fragmentBinding?.saveChangesButton?.text = ""
+                    fragmentBinding?.saveChangesButton?.text = R.string.empty_text.toString()
                     fragmentBinding?.progressBar?.visibility = View.VISIBLE
                 }
 
                 is Response.Success -> {
-                    fragmentBinding?.saveChangesButton?.text = ""
+                    fragmentBinding?.saveChangesButton?.text = R.string.empty_text.toString()
                     fragmentBinding?.progressBar?.visibility = View.GONE
                     fragmentBinding?.doneButton?.visibility = View.VISIBLE
                     lifecycleScope.launch {
                         delay(3000)
                         fragmentBinding?.doneButton?.visibility = View.GONE
-                        delay(300)
                         fragmentBinding?.saveChangesButton?.text = getText(R.string.save)
                     }
                     Toast.makeText(
@@ -224,6 +215,25 @@ class EditProfileFragment @Inject constructor(
         }
     }
 
+    private fun userProfileObserver() {
+        profileViewModel.userProfile.observe(viewLifecycleOwner) { response ->
+            when (response) {
+                is Response.Success -> {
+                    val userDocument = response.data
+                    setProfileData(userDocument)
+                }
+
+                is Response.Failure -> {
+                    Log.e("EditProfileFragment User Profile Observer", response.errorMessage)
+                }
+
+                is Response.Loading -> {
+                    Log.i("EditProfileFragment User Profile Observer", "Loading")
+                }
+            }
+        }
+    }
+
     private fun loadImageWithGlide(uri: Uri, isBannerImage: Boolean) {
         val imageView = if (isBannerImage) {
             fragmentBinding?.bannerImageView
@@ -232,6 +242,36 @@ class EditProfileFragment @Inject constructor(
         }
         imageView?.let {
             glide.load(uri).centerCrop().into(it)
+        }
+    }
+
+    private fun saveChanges() {
+        val userUpdates = mutableMapOf<String, Any?>()
+        if (bannerImageUrl.isNotEmpty()) {
+            userUpdates[PROFILE_BANNER] = bannerImageUrl
+        } else {
+            userUpdates[PROFILE_BANNER] = ""
+        }
+        if (profileImageUrl.isNotEmpty()) {
+            userUpdates[PHOTO_URL] = profileImageUrl
+        } else {
+            userUpdates[PHOTO_URL] = ""
+        }
+        userUpdates[NAME] = fragmentBinding?.usernameEditText?.text.toString()
+        updateUserProfile(userUpdates)
+    }
+
+    private fun setProfileData(userDocument: DocumentSnapshot) {
+        fragmentBinding?.usernameEditText?.setText(userDocument.getString(NAME))
+        fragmentBinding?.profileImageView?.let {
+            glide.load(userDocument.getString(PHOTO_URL)).centerCrop().into(
+                it
+            )
+        }
+        fragmentBinding?.bannerImageView?.let {
+            glide.load(userDocument.getString(PROFILE_BANNER)).centerCrop().into(
+                it
+            )
         }
     }
 }

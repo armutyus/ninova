@@ -6,6 +6,7 @@ import com.armutyus.ninova.model.googlebooksmodel.DataModel
 import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.LocalShelf
 import com.google.firebase.auth.AuthCredential
+import com.google.firebase.firestore.DocumentSnapshot
 
 interface FirebaseRepositoryInterface {
 
@@ -56,5 +57,7 @@ interface FirebaseRepositoryInterface {
     suspend fun updateUserProfile(userUpdates: Map<String, Any?>): Response<Boolean>
 
     suspend fun uploadCustomProfileImageToFirestore(uri: Uri, isBannerImage: Boolean): Response<Uri>
+
+    suspend fun getUserProfile(): Response<DocumentSnapshot>
 
 }
