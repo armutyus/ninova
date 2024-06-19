@@ -55,4 +55,6 @@ interface FirebaseRepositoryInterface {
 
     suspend fun updateUserProfile(userUpdates: Map<String, Any?>): Response<Boolean>
 
+    suspend fun uploadCustomProfileImageToFirestore(uri: Uri, isBannerImage: Boolean): Response<Uri>
+
 }

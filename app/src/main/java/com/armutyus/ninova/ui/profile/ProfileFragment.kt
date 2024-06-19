@@ -25,10 +25,21 @@ class ProfileFragment @Inject constructor(
         val binding = FragmentProfileBinding.bind(view)
         fragmentBinding = binding
 
-        binding.appSettings.setOnClickListener {
+        fragmentBinding?.appSettings?.setOnClickListener {
             val action = ProfileFragmentDirections.actionNavigationProfileToSettingsFragment()
             Navigation.findNavController(it).navigate(action)
         }
+
+        fragmentBinding?.editProfile?.setOnClickListener {
+            val action = ProfileFragmentDirections.actionNavigationProfileToEditProfileFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
+
+        fragmentBinding?.editProfileButton?.setOnClickListener {
+            val action = ProfileFragmentDirections.actionNavigationProfileToEditProfileFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
+
     }
 
     override fun onDestroyView() {

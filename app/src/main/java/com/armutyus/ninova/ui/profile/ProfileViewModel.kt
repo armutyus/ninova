@@ -1,5 +1,6 @@
 package com.armutyus.ninova.ui.profile
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.armutyus.ninova.constants.Response
@@ -18,5 +19,16 @@ class ProfileViewModel @Inject constructor(
             val response = repository.updateUserProfile(userUpdates)
             onComplete(response)
         }
+
+    fun uploadCustomProfileImageToFirestore(
+        uri: Uri,
+        isBannerImage: Boolean,
+        onComplete: (Response<Uri>) -> Unit
+    ) =
+        viewModelScope.launch {
+            val response = repository.uploadCustomProfileImageToFirestore(uri, isBannerImage)
+            onComplete(response)
+        }
+
 
 }

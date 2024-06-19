@@ -3,6 +3,7 @@ package com.armutyus.ninova.ui.profile
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -19,8 +20,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Constants.NAME
+import com.armutyus.ninova.constants.Constants.PHOTO_URL
+import com.armutyus.ninova.constants.Constants.PROFILE_BANNER
 import com.armutyus.ninova.constants.Response
 import com.armutyus.ninova.databinding.FragmentEditProfileBinding
+import com.bumptech.glide.RequestManager
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
@@ -28,7 +33,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class EditProfileFragment @Inject constructor(
-    auth: FirebaseAuth
+    auth: FirebaseAuth,
+    private val glide: RequestManager
 ) : Fragment(R.layout.fragment_edit_profile) {
 
     private var fragmentBinding: FragmentEditProfileBinding? = null
@@ -38,6 +44,9 @@ class EditProfileFragment @Inject constructor(
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
 
     private val user = auth.currentUser
+    private var isBannerImage = false
+    private var bannerImageUrl = ""
+    private var profileImageUrl = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +58,32 @@ class EditProfileFragment @Inject constructor(
 
         val binding = FragmentEditProfileBinding.bind(view)
         fragmentBinding = binding
+
+        fragmentBinding?.profileImageView?.setOnClickListener {
+            isBannerImage = false
+            onImageClicked()
+        }
+
+        fragmentBinding?.bannerImageView?.setOnClickListener {
+            isBannerImage = true
+            onImageClicked()
+        }
+
+        fragmentBinding?.saveChangesButton?.setOnClickListener {
+            val userUpdates = mutableMapOf<String, Any?>()
+            if (bannerImageUrl.isNotEmpty()) {
+                userUpdates[PROFILE_BANNER] = bannerImageUrl
+            } else {
+                userUpdates[PROFILE_BANNER] = ""
+            }
+            if (profileImageUrl.isNotEmpty()) {
+                userUpdates[PHOTO_URL] = profileImageUrl
+            } else {
+                userUpdates[PHOTO_URL] = ""
+            }
+            userUpdates[NAME] = fragmentBinding?.usernameEditText?.text.toString()
+            updateUserProfile(userUpdates)
+        }
     }
 
     override fun onDestroyView() {
@@ -65,13 +100,14 @@ class EditProfileFragment @Inject constructor(
                 }
 
                 is Response.Success -> {
+                    fragmentBinding?.saveChangesButton?.text = ""
                     fragmentBinding?.progressBar?.visibility = View.GONE
                     fragmentBinding?.doneButton?.visibility = View.VISIBLE
                     lifecycleScope.launch {
                         delay(3000)
                         fragmentBinding?.doneButton?.visibility = View.GONE
                         delay(300)
-                        fragmentBinding?.saveChangesButton?.text = R.string.save.toString()
+                        fragmentBinding?.saveChangesButton?.text = getText(R.string.save)
                     }
                     Toast.makeText(
                         requireContext(),
@@ -93,7 +129,29 @@ class EditProfileFragment @Inject constructor(
         }
     }
 
-    private fun onProfilePhotoClicked() {
+    private fun uploadProfileImageToFirestore(uri: Uri) {
+        profileViewModel.uploadCustomProfileImageToFirestore(uri, isBannerImage) { response ->
+            when (response) {
+                is Response.Loading ->
+                    Log.i("shelfCoverUpload", "Uploading to firestore")
+
+                is Response.Success -> {
+                    val downloadUrl = response.data.toString()
+                    if (isBannerImage) {
+                        bannerImageUrl = downloadUrl
+                    } else {
+                        profileImageUrl = downloadUrl
+                    }
+                    Log.i("shelfCoverUpload", "Uploaded to firestore")
+                }
+
+                is Response.Failure ->
+                    Log.e("shelfCoverUpload", response.errorMessage)
+            }
+        }
+    }
+
+    private fun onImageClicked() {
         if (isPhotoPickerAvailable()) {
             pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         } else {
@@ -135,9 +193,9 @@ class EditProfileFragment @Inject constructor(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
             if (result.resultCode == AppCompatActivity.RESULT_OK) {
-                val uri = result.data?.data
-                if (uri != null) {
-                    //upload profile photo or banner to firestore
+                result.data?.data?.let { uri ->
+                    loadImageWithGlide(uri, isBannerImage)
+                    uploadProfileImageToFirestore(uri)
                 }
             }
         }
@@ -158,10 +216,22 @@ class EditProfileFragment @Inject constructor(
                 Log.d("PhotoPicker", "Selected URI: $uri")
                 val flag = Intent.FLAG_GRANT_READ_URI_PERMISSION
                 requireContext().contentResolver.takePersistableUriPermission(uri, flag)
-                //upload profile photo or banner to firestore
+                loadImageWithGlide(uri, isBannerImage)
+                uploadProfileImageToFirestore(uri)
             } else {
                 Log.d("PhotoPicker", "No media selected")
             }
+        }
+    }
+
+    private fun loadImageWithGlide(uri: Uri, isBannerImage: Boolean) {
+        val imageView = if (isBannerImage) {
+            fragmentBinding?.bannerImageView
+        } else {
+            fragmentBinding?.profileImageView
+        }
+        imageView?.let {
+            glide.load(uri).centerCrop().into(it)
         }
     }
 }

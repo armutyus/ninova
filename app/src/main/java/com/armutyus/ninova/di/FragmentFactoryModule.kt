@@ -53,7 +53,7 @@ abstract class FragmentFactoryModule {
     @Binds
     @IntoMap
     @FragmentKey(EditProfileFragment::class)
-    abstract fun bindProfileFragment(fragment: EditProfileFragment): Fragment
+    abstract fun bindEditProfileFragment(fragment: EditProfileFragment): Fragment
 
     @Binds
     @IntoMap

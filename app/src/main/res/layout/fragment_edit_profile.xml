@@ -46,7 +46,7 @@
             android:id="@+id/usernameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/prompt_username" />
+            android:hint="@string/prompt_username" />
     </com.google.android.material.card.MaterialCardView>
 
     <RelativeLayout
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_done"
             android:layout_centerInParent="true"
-            android:background="?selectable"
+            android:background="?selectableItemBackground"
             android:visibility="gone"
             android:contentDescription="@string/save" />
     </RelativeLayout>

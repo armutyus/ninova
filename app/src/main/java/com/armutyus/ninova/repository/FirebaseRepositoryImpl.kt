@@ -17,9 +17,11 @@ import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.LocalShelf
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.userProfileChangeRequest
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -413,10 +415,48 @@ class FirebaseRepositoryImpl @Inject constructor(
                 val currentUser = auth.currentUser
                 currentUser?.let { user ->
                     if (userUpdates.isNotEmpty()) {
-                        db.collection(USERS_REF).document(user.uid).update(userUpdates).await()
+                        db.collection(USERS_REF).document(user.uid)
+                            .set(userUpdates, SetOptions.merge())
+                            .continueWithTask {
+                                val profileUpdates = userProfileChangeRequest {
+                                    displayName = userUpdates[NAME].toString()
+                                    photoUri = Uri.parse(userUpdates[PHOTO_URL].toString())
+                                }
+                                user.updateProfile(profileUpdates)
+                            }
                     }
                 }
                 Response.Success(true)
+            } catch (e: Exception) {
+                Response.Failure(e.localizedMessage ?: ERROR_MESSAGE)
+            }
+        }
+
+    override suspend fun uploadCustomProfileImageToFirestore(
+        uri: Uri,
+        isBannerImage: Boolean
+    ): Response<Uri> =
+        withContext(coroutineContext) {
+            val uuid = UUID.randomUUID()
+            val imageName = "$uuid.jpg"
+            try {
+                Response.Loading
+                val reference = storage.reference
+                val imageReference = if (isBannerImage) {
+                    reference.child(auth.uid!!).child(PROFILE_BANNER).child(imageName)
+                } else {
+                    reference.child(auth.uid!!).child(PHOTO_URL).child(imageName)
+                }
+                val uploadTask = imageReference.putFile(uri)
+                val urlTask = uploadTask.continueWithTask { task ->
+                    if (!task.isSuccessful) {
+                        task.exception?.let {
+                            throw it
+                        }
+                    }
+                    imageReference.downloadUrl
+                }
+                return@withContext Response.Success(urlTask.await())
             } catch (e: Exception) {
                 Response.Failure(e.localizedMessage ?: ERROR_MESSAGE)
             }

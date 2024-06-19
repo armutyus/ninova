@@ -49,7 +49,16 @@
         <action
             android:id="@+id/action_navigation_profile_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_navigation_profile_to_editProfileFragment"
+            app:destination="@id/navigation_edit_profile" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_edit_profile"
+        android:name="com.armutyus.ninova.ui.profile.EditProfileFragment"
+        android:label="@string/edit_profile"
+        tools:layout="@layout/fragment_edit_profile"></fragment>
 
     <fragment
         android:id="@+id/mainSearchFragment"
