@@ -16,6 +16,7 @@ object Constants {
 
     //Messages
     val ERROR_MESSAGE = R.string.unexpected_error.toLocalizedString()
+    val GLIDE_LOAD_SKIP = "URI is null or empty, skipping image load."
 
     //Intents
     const val ABOUT_INTENT = "aboutIntent"

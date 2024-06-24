@@ -124,6 +124,9 @@
     <string name="your_reviews">Tus Reseñas</string>
     <string name="your_ratings">Tus Calificaciones</string>
     <string name="edit_profile">Editar Perfil</string>
+    <string name="coming_soon">¡Muy pronto!</string>
+    <string name="warning">ADVERTENCIA</string>
+    <string name="unsaved_changes_will_be_lost_are_you_sure_you_want_to_exit">Los cambios no guardados se perderán. ¿Estás seguro de que quieres salir?</string>
 </resources>
 
 

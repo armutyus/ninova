@@ -124,4 +124,7 @@
     <string name="your_reviews">İncelemelerin</string>
     <string name="your_ratings">Derecelendirmelerin</string>
     <string name="edit_profile">Profili Düzenle</string>
+    <string name="coming_soon">Yakında gelecek!</string>
+    <string name="warning">UYARI</string>
+    <string name="unsaved_changes_will_be_lost_are_you_sure_you_want_to_exit">Kaydedilmemiş değişiklikler kaybolacak. Çıkmak istediğinizden emin misiniz?</string>
 </resources>

@@ -437,15 +437,14 @@ class FirebaseRepositoryImpl @Inject constructor(
         isBannerImage: Boolean
     ): Response<Uri> =
         withContext(coroutineContext) {
-            val uuid = UUID.randomUUID()
-            val imageName = "$uuid.jpg"
             try {
                 Response.Loading
                 val reference = storage.reference
                 val imageReference = if (isBannerImage) {
-                    reference.child(auth.uid!!).child(PROFILE_BANNER).child(imageName)
+                    reference.child(auth.uid!!).child(PROFILE_BANNER)
+                        .child("profileBannerImage.jpg")
                 } else {
-                    reference.child(auth.uid!!).child(PHOTO_URL).child(imageName)
+                    reference.child(auth.uid!!).child(PHOTO_URL).child("profilePhoto.jpg")
                 }
                 val uploadTask = imageReference.putFile(uri)
                 val urlTask = uploadTask.continueWithTask { task ->

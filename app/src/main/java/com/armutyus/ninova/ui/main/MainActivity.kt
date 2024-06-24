@@ -142,6 +142,11 @@ class MainActivity : AppCompatActivity() {
     private fun destinationChangeListener(navView: BottomNavigationView) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
+                R.id.navigation_edit_profile -> {
+                    supportActionBar?.show()
+                    navView.visibility = View.GONE
+                }
+
                 R.id.mainSearchFragment -> {
                     supportActionBar?.hide()
                     navView.visibility = View.GONE

@@ -42,17 +42,18 @@
             app:shapeAppearanceOverlay="@style/circleImageViewStyle"
             tools:ignore="contentDescription"></ImageButton>
 
-        <TextView
-            android:id="@+id/usernameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/prompt_username"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:layout_centerHorizontal="true"
-            android:layout_alignBottom="@+id/bannerImageView"
-            android:layout_marginBottom="8dp" />
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/usernameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_text"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorControlNormal"
+        android:layout_gravity="center"
+        android:layout_margin="4dp" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/userReviews"

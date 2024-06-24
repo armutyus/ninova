@@ -21,6 +21,14 @@ class ProfileViewModel @Inject constructor(
     val userProfile: LiveData<Response<DocumentSnapshot>>
         get() = _userProfile
 
+    private val _profileBannerUrl = MutableLiveData<String>()
+    val profileBannerUrl: LiveData<String>
+        get() = _profileBannerUrl
+
+    private val _profilePhotoUrl = MutableLiveData<String>()
+    val profilePhotoUrl: LiveData<String>
+        get() = _profilePhotoUrl
+
     fun getUserProfile() = viewModelScope.launch {
         _userProfile.postValue(repository.getUserProfile())
     }
@@ -31,15 +39,38 @@ class ProfileViewModel @Inject constructor(
             onComplete(response)
         }
 
-    fun uploadCustomProfileImageToFirestore(
-        uri: Uri,
-        isBannerImage: Boolean,
-        onComplete: (Response<Uri>) -> Unit
-    ) =
-        viewModelScope.launch {
-            val response = repository.uploadCustomProfileImageToFirestore(uri, isBannerImage)
-            onComplete(response)
+    fun saveImagesToFirestore(
+        profileBannerUri: Uri?,
+        profilePhotoUri: Uri?,
+        onComplete: (Response<Boolean>) -> Unit
+    ) = viewModelScope.launch {
+        profileBannerUri?.let {
+            val profileBannerResponse =
+                repository.uploadCustomProfileImageToFirestore(profileBannerUri, true)
+            if (profileBannerResponse is Response.Failure) {
+                onComplete(profileBannerResponse)
+                return@launch
+            }
+
+            if (profileBannerResponse is Response.Success) {
+                _profileBannerUrl.value = profileBannerResponse.data.toString()
+            }
         }
+
+        profilePhotoUri?.let {
+            val profilePhotoResponse =
+                repository.uploadCustomProfileImageToFirestore(profilePhotoUri, false)
+            if (profilePhotoResponse is Response.Failure) {
+                onComplete(profilePhotoResponse)
+                return@launch
+            }
+
+            if (profilePhotoResponse is Response.Success) {
+                _profilePhotoUrl.value = profilePhotoResponse.data.toString()
+            }
+        }
+        onComplete(Response.Success(true))
+    }
 
 
 }

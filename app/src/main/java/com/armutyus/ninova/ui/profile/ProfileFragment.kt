@@ -3,10 +3,12 @@ package com.armutyus.ninova.ui.profile
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.Navigation
 import com.armutyus.ninova.R
+import com.armutyus.ninova.constants.Constants.GLIDE_LOAD_SKIP
 import com.armutyus.ninova.constants.Constants.NAME
 import com.armutyus.ninova.constants.Constants.PHOTO_URL
 import com.armutyus.ninova.constants.Constants.PROFILE_BANNER
@@ -36,6 +38,16 @@ class ProfileFragment @Inject constructor(
         fragmentBinding?.appSettings?.setOnClickListener {
             val action = ProfileFragmentDirections.actionNavigationProfileToSettingsFragment()
             Navigation.findNavController(it).navigate(action)
+        }
+
+        fragmentBinding?.userReviews?.setOnClickListener {
+            Toast.makeText(requireContext(), getString(R.string.coming_soon), Toast.LENGTH_LONG)
+                .show()
+        }
+
+        fragmentBinding?.userRatings?.setOnClickListener {
+            Toast.makeText(requireContext(), getString(R.string.coming_soon), Toast.LENGTH_LONG)
+                .show()
         }
 
         fragmentBinding?.editProfile?.setOnClickListener {
@@ -77,16 +89,34 @@ class ProfileFragment @Inject constructor(
     }
 
     private fun setProfileData(userDocument: DocumentSnapshot) {
-        fragmentBinding?.usernameTextView?.text = userDocument.getString(NAME)
-        fragmentBinding?.profileImageView?.let {
-            glide.load(userDocument.getString(PHOTO_URL)).centerCrop().into(
-                it
-            )
+        val profileImageUrl = userDocument.getString(PHOTO_URL)
+        val profileBannerUrl = userDocument.getString(PROFILE_BANNER)
+        val profileUserName = userDocument.getString(NAME)
+
+        if (profileUserName.isNullOrEmpty()) {
+            fragmentBinding?.usernameTextView?.text = user?.email?.substringBefore("@")
+        } else {
+            fragmentBinding?.usernameTextView?.text = profileUserName
         }
-        fragmentBinding?.bannerImageView?.let {
-            glide.load(userDocument.getString(PROFILE_BANNER)).centerCrop().into(
-                it
-            )
+
+        if (!profileImageUrl.isNullOrEmpty()) {
+            fragmentBinding?.profileImageView?.let {
+                glide.load(profileImageUrl).centerCrop().into(
+                    it
+                )
+            }
+        } else {
+            Log.d("GlideLoad", GLIDE_LOAD_SKIP)
+        }
+
+        if (!profileBannerUrl.isNullOrEmpty()) {
+            fragmentBinding?.bannerImageView?.let {
+                glide.load(profileBannerUrl).centerCrop().into(
+                    it
+                )
+            }
+        } else {
+            Log.d("GlideLoad", GLIDE_LOAD_SKIP)
         }
     }
 }
