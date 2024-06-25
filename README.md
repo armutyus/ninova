@@ -1,4 +1,4 @@
-![image](https://github.com/armutyus/ninova/assets/95186747/561c01d3-a13b-48a2-8a49-8441d08131ec)<p align="center">
+<p align="center">
   <img src="https://lh3.googleusercontent.com/M9iR9p8ZS_8GS2GMD5QK--_LvCaJ8Oplk0g9XMHN78Uf5eCw0pdAV6KSw0dO5RW9MJk" alt="readme header"/>
 </p>
 
@@ -41,14 +41,14 @@ I tried to use many up-to-date approaches and technologies while developing this
 ## Screenshots
 
 <p align="center" width="100%">
-    <img width="32%" src="https://play-lh.googleusercontent.com/wO51yqgtQWsq_b-tjbDVssdZhWsAvtQVM5j7SvhPPazNrr5p_egihsK1e9_1sFXRJQ=w5120-h2880-rw">
-    <img width="32%" src="https://play-lh.googleusercontent.com/RycVbpkFUwnnERhMSVI-6aNdE3Q_me7aw23pEcsy4CfrMqZLTTzQNS7D8LxzoYs3aCk=w5120-h2880-rw">
+    <img width="32%" src="https://play-lh.googleusercontent.com/AryX-ZvVJIcEauPBnzP5zps-yQEwyZBIB_7GTlV7AgZH7F3qUv8DGzkFJplWa4kPebc=w5120-h2880-rw">
+    <img width="32%" src="https://play-lh.googleusercontent.com/NlnwY9hUGFZsUhEWkmRmiw62vQTzk3LegDn7B9fQVH5kyURdM_rHSO6Cnhg5rLt95w=w5120-h2880-rw">
     <img width="32%" src="https://play-lh.googleusercontent.com/hZQSa2mUJfbmQUVcoLB16T-kwG0ZBPt20cmTWe3ycH9Ti-s37t0NVkkHUwNJaa637w=w5120-h2880-rw">
 </p>
 
 <p align="center" width="100%">
     <img width="32%" src="https://play-lh.googleusercontent.com/cD_7ngp3NzwhjBJ9nKbiuuR-3X-kBeZjclvR_geqvhuZbTMW4Yy2gQ2ygDFuywZHFipB=w5120-h2880-rw">
-    <img width="32%" src="https://play-lh.googleusercontent.com/88vopCKzYBZjT0faLTujxc8VunQpkaaCqV8JOc-r9YfT5HyYhuhCS5xkqRJr6enzoT0=w5120-h2880-rw">
+    <img width="32%" src="https://play-lh.googleusercontent.com/SnrGv4MY_RMix2N77WxnPEFTfruyMlc7_jxAWlsNcrUOV4wHynt6syMtUfPuWJ4A73k=w5120-h2880-rw">
     <img width="32%" src="https://play-lh.googleusercontent.com/gNsfigQmDdh-nDV5_cGYtgZfSyth5gIVKyX1cZHMyrdU-33jpuio4d7iAq1NnKrDrpf6=w5120-h2880-rw">
 </p>
 
