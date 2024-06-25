@@ -1,4 +1,4 @@
-<p align="center">
+![image](https://github.com/armutyus/ninova/assets/95186747/561c01d3-a13b-48a2-8a49-8441d08131ec)<p align="center">
   <img src="https://lh3.googleusercontent.com/M9iR9p8ZS_8GS2GMD5QK--_LvCaJ8Oplk0g9XMHN78Uf5eCw0pdAV6KSw0dO5RW9MJk" alt="readme header"/>
 </p>
 
@@ -54,6 +54,8 @@ I tried to use many up-to-date approaches and technologies while developing this
 
 <p align="center" width="100%">
     <img width="32%" src="https://play-lh.googleusercontent.com/NfEpG0-Msj0CR-mx2BcxgbBmOM2vmXSuuJV11O3FzqoQaTAIGpzmtVPfC6dbgEdO1ao=w5120-h2880-rw">
+    <img width="32%" src="https://play-lh.googleusercontent.com/m-fcxKEt8MRXRY7mH4g-uFGlYt5FKSEJ3L8j0joclCkzARKfd_yatyIc4o-OWAW4bw=w5120-h2880-rw">
+    <img width="32%" src="https://play-lh.googleusercontent.com/mdDr-Hwf9IkWD6LedO9sJwLv2N44kafJ8e8B151tzXQKYS4fBrkAbrsNo3QyjUtKOQ=w5120-h2880-rw">
 </p>
 
 ## Credits
