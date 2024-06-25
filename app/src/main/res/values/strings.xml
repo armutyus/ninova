@@ -119,6 +119,7 @@
     <string name="credits">CREDITS</string>
     <string name="credits_links" translatable="false">FlatIcon \nFirebase \nGlide Library \nGoogle Books API \nLink Builder \nLottie Animations \nRetrofit \n\nDiscover Category Icons made by Freepik, Eucalyp, Smashicons, ultimatearm, Good Ware, Andrean Prabowo, max.icons, photo3idea_studio, BZZRINCANTATION, Wichai.wi, Vitaly Gorbachev, nawicon, Icons_Field, lutfix</string>
     <string name="empty_text" translatable="false">-</string>
+    <string name="empty_text_view" translatable="false"> </string>
     <string name="or">or</string>
     <string name="ninova_light">Ninova Light</string>
     <string name="ninova_dark">Ninova Dark</string>
@@ -128,4 +129,11 @@
     <string name="alexandria_dark">Alexandria Dark</string>
     <string name="some_details_not_loaded">Some details could not be loaded</string>
     <string name="small_welcome_text">WELCOME TO NINOVA</string>
+    <string name="title_profile">Profile</string>
+    <string name="your_reviews">Your Reviews</string>
+    <string name="your_ratings">Your Ratings</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="coming_soon">Coming soon!</string>
+    <string name="warning">WARNING</string>
+    <string name="unsaved_changes_will_be_lost_are_you_sure_you_want_to_exit">Unsaved changes will be lost. Are you sure you want to exit?</string>
 </resources>

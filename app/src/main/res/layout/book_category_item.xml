@@ -22,8 +22,7 @@
             app:strokeColor="?attr/colorSecondaryContainer"
             app:strokeWidth="2dp"
             app:shapeAppearance="@style/circleImageViewStyle"
-            android:contentDescription="@string/title_books"
-            />
+            android:contentDescription="@string/title_books" />
 
         <TextView
             android:id="@+id/bookCategory"

@@ -16,6 +16,7 @@ import com.armutyus.ninova.model.googlebooksmodel.DataModel
 import com.armutyus.ninova.ui.books.BooksViewModel
 import com.armutyus.ninova.ui.search.MainSearchFragment
 import com.bumptech.glide.RequestManager
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.progressindicator.CircularProgressIndicator
 
 class GoogleBookRowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -85,7 +86,7 @@ class GoogleBookRowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             bookAuthor.text = book.volumeInfo?.authors?.joinToString(", ")
             bookPages.text = book.volumeInfo?.pageCount.toString()
             bookReleaseDate.text = book.volumeInfo?.publishedDate
-            setOnClickListener {
+            findViewById<MaterialCardView>(R.id.bookCard).setOnClickListener {
                 bookDetailsIntent.putExtra(
                     Constants.BOOK_TYPE_FOR_DETAILS,
                     Constants.GOOGLE_BOOK_TYPE

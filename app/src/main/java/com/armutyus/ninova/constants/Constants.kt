@@ -16,6 +16,7 @@ object Constants {
 
     //Messages
     val ERROR_MESSAGE = R.string.unexpected_error.toLocalizedString()
+    val GLIDE_LOAD_SKIP = "URI is null or empty, skipping image load."
 
     //Intents
     const val ABOUT_INTENT = "aboutIntent"
@@ -61,6 +62,7 @@ object Constants {
     const val EMAIL = "email"
     const val NAME = "name"
     const val PHOTO_URL = "photoUrl"
+    const val PROFILE_BANNER = "profileBanner"
 
     //BookViewType
     const val BOOK_TYPE_FOR_DETAILS = "bookTypeForDetails"

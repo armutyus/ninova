@@ -8,6 +8,7 @@ import com.armutyus.ninova.constants.Constants.EMAIL
 import com.armutyus.ninova.constants.Constants.ERROR_MESSAGE
 import com.armutyus.ninova.constants.Constants.NAME
 import com.armutyus.ninova.constants.Constants.PHOTO_URL
+import com.armutyus.ninova.constants.Constants.PROFILE_BANNER
 import com.armutyus.ninova.constants.Constants.SHELVES_REF
 import com.armutyus.ninova.constants.Constants.USERS_REF
 import com.armutyus.ninova.constants.Response
@@ -16,9 +17,11 @@ import com.armutyus.ninova.roomdb.entities.BookShelfCrossRef
 import com.armutyus.ninova.roomdb.entities.LocalShelf
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.userProfileChangeRequest
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -84,6 +87,7 @@ class FirebaseRepositoryImpl @Inject constructor(
                             NAME to displayName,
                             EMAIL to email,
                             PHOTO_URL to photoUrl?.toString(),
+                            PROFILE_BANNER to "",
                             CREATED_AT to FieldValue.serverTimestamp()
                         )
                     ).await()
@@ -153,7 +157,7 @@ class FirebaseRepositoryImpl @Inject constructor(
             try {
                 Response.Loading
                 val uid = auth.currentUser?.uid!!
-                val querySnapshot: QuerySnapshot =
+                val querySnapshot =
                     db.collection(USERS_REF).document(uid).collection(BOOKS_REF)
                         .get().await()
                 val bookList = querySnapshot.documents.mapNotNull { documentSnapshot ->
@@ -172,7 +176,7 @@ class FirebaseRepositoryImpl @Inject constructor(
             try {
                 Response.Loading
                 val uid = auth.currentUser?.uid!!
-                val querySnapshot: QuerySnapshot =
+                val querySnapshot =
                     db.collection(USERS_REF).document(uid).collection(SHELVES_REF)
                         .get().await()
                 val shelfList = querySnapshot.documents.mapNotNull { documentSnapshot ->
@@ -191,7 +195,7 @@ class FirebaseRepositoryImpl @Inject constructor(
             try {
                 Response.Loading
                 val uid = auth.currentUser?.uid!!
-                val querySnapshot: QuerySnapshot =
+                val querySnapshot =
                     db.collection(USERS_REF).document(uid).collection(BOOKSHELF_CROSS_REF)
                         .get().await()
                 val crossRefList = querySnapshot.documents.mapNotNull { documentSnapshot ->
@@ -399,6 +403,72 @@ class FirebaseRepositoryImpl @Inject constructor(
                 reAuthResult.let {
                     return@let Response.Success(true)
                 }
+            } catch (e: Exception) {
+                Response.Failure(e.localizedMessage ?: ERROR_MESSAGE)
+            }
+        }
+
+    override suspend fun updateUserProfile(userUpdates: Map<String, Any?>): Response<Boolean> =
+        withContext(coroutineContext) {
+            try {
+                Response.Loading
+                val currentUser = auth.currentUser
+                currentUser?.let { user ->
+                    if (userUpdates.isNotEmpty()) {
+                        db.collection(USERS_REF).document(user.uid)
+                            .set(userUpdates, SetOptions.merge())
+                            .continueWithTask {
+                                val profileUpdates = userProfileChangeRequest {
+                                    displayName = userUpdates[NAME].toString()
+                                    photoUri = Uri.parse(userUpdates[PHOTO_URL].toString())
+                                }
+                                user.updateProfile(profileUpdates)
+                            }
+                    }
+                }
+                Response.Success(true)
+            } catch (e: Exception) {
+                Response.Failure(e.localizedMessage ?: ERROR_MESSAGE)
+            }
+        }
+
+    override suspend fun uploadCustomProfileImageToFirestore(
+        uri: Uri,
+        isBannerImage: Boolean
+    ): Response<Uri> =
+        withContext(coroutineContext) {
+            try {
+                Response.Loading
+                val reference = storage.reference
+                val imageReference = if (isBannerImage) {
+                    reference.child(auth.uid!!).child(PROFILE_BANNER)
+                        .child("profileBannerImage.jpg")
+                } else {
+                    reference.child(auth.uid!!).child(PHOTO_URL).child("profilePhoto.jpg")
+                }
+                val uploadTask = imageReference.putFile(uri)
+                val urlTask = uploadTask.continueWithTask { task ->
+                    if (!task.isSuccessful) {
+                        task.exception?.let {
+                            throw it
+                        }
+                    }
+                    imageReference.downloadUrl
+                }
+                return@withContext Response.Success(urlTask.await())
+            } catch (e: Exception) {
+                Response.Failure(e.localizedMessage ?: ERROR_MESSAGE)
+            }
+        }
+
+    override suspend fun getUserProfile(): Response<DocumentSnapshot> =
+        withContext(coroutineContext) {
+            try {
+                Response.Loading
+                val uid = auth.currentUser?.uid!!
+                val documentSnapshot =
+                    db.collection(USERS_REF).document(uid).get().await()
+                Response.Success(documentSnapshot)
             } catch (e: Exception) {
                 Response.Failure(e.localizedMessage ?: ERROR_MESSAGE)
             }

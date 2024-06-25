@@ -18,6 +18,7 @@ import com.armutyus.ninova.constants.Constants.BOOK_TYPE_FOR_DETAILS
 import com.armutyus.ninova.constants.Constants.LOCAL_BOOK_TYPE
 import com.armutyus.ninova.model.googlebooksmodel.DataModel
 import com.bumptech.glide.RequestManager
+import com.google.android.material.card.MaterialCardView
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -68,7 +69,7 @@ class BooksRecyclerViewAdapter @Inject constructor(
         val bookReleaseDate = holder.itemView.findViewById<TextView>(R.id.bookReleaseDateText)
         val book = mainBooksList[position]
 
-        holder.itemView.setOnClickListener {
+        holder.itemView.findViewById<MaterialCardView>(R.id.bookCard).setOnClickListener {
             bookDetailsIntent.putExtra(BOOK_TYPE_FOR_DETAILS, LOCAL_BOOK_TYPE)
             currentLocalBook = book
             currentOpenLibBook = null

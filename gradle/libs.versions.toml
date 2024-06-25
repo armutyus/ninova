@@ -1,37 +1,37 @@
 [versions]
-activityKtx = "1.8.2"
-annotation = "1.7.1"
-appcompat = "1.6.1"
+activityKtx = "1.9.0"
+annotation = "1.8.0"
+appcompat = "1.7.0"
 constraintlayout = "2.1.4"
-coreKtx = "1.12.0"
+coreKtx = "1.13.1"
 coreSplashscreen = "1.0.1"
 espressoCore = "3.5.1"
-firebaseBom = "32.7.0"
-firebaseCrashlyticsGradle = "2.9.9"
-fragmentKtx = "1.6.2"
+firebaseBom = "33.1.1"
+firebaseCrashlyticsGradle = "3.0.2"
+fragmentKtx = "1.8.0"
 glide = "4.16.0"
-googleServices = "4.4.0"
+googleServices = "4.4.2"
 hiltAndroid = "2.50"
 hiltAndroidCompiler = "2.50"
 junit = "4.13.2"
 junitVersion = "1.1.5"
-kotlinxCoroutinesAndroid = "1.7.3"
+kotlinxCoroutinesAndroid = "1.8.0"
 legacySupportV4 = "1.0.0"
 lifecycleExtensions = "2.2.0"
-lifecycleRuntimeKtx = "2.7.0"
+lifecycleRuntimeKtx = "2.8.2"
 link_builder = "2.0.5"
 lottie = "6.3.0"
-material = "1.11.0"
-navigationFragmentKtx = "2.7.6"
+material = "1.12.0"
+navigationFragmentKtx = "2.7.7"
 preferenceKtx = "1.2.1"
 recyclerview = "1.3.2"
 retrofit = "2.9.0"
 roomRuntime = "2.6.1"
-viewpager2 = "1.0.0"
-android-application = "8.2.1"
-kotlin-android = "1.9.20"
+viewpager2 = "1.1.0"
+android-application = "8.5.0"
+kotlin-android = "2.0.0"
 dagger-hilt = "2.50"
-ksp = "1.9.20-1.0.14"
+ksp = "2.0.0-1.0.22"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtx" }
@@ -89,6 +89,7 @@ firebase = [
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-application" }
+androidx-room = { id = "androidx.room", version.ref = "roomRuntime"}
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin-android" }
 dagger-hilt = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

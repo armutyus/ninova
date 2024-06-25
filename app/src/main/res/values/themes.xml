@@ -30,7 +30,7 @@
         <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
     </style>
-    
+
     <style name="Theme.Bergama" parent="Theme.Material3.DayNight">
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
 
@@ -72,11 +72,13 @@
         <item name="colorSecondary">@color/yellow_md_theme_light_secondary</item>
         <item name="colorOnSecondary">@color/yellow_md_theme_light_onSecondary</item>
         <item name="colorSecondaryContainer">@color/yellow_md_theme_light_secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/yellow_md_theme_light_onSecondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/yellow_md_theme_light_onSecondaryContainer
+        </item>
         <item name="colorTertiary">@color/yellow_md_theme_light_tertiary</item>
         <item name="colorOnTertiary">@color/yellow_md_theme_light_onTertiary</item>
         <item name="colorTertiaryContainer">@color/yellow_md_theme_light_tertiaryContainer</item>
-        <item name="colorOnTertiaryContainer">@color/yellow_md_theme_light_onTertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/yellow_md_theme_light_onTertiaryContainer
+        </item>
         <item name="colorError">@color/yellow_md_theme_light_error</item>
         <item name="colorErrorContainer">@color/yellow_md_theme_light_errorContainer</item>
         <item name="colorOnError">@color/yellow_md_theme_light_onError</item>

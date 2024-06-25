@@ -4,7 +4,8 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
-import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.RoundRectShape
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -55,7 +56,21 @@ class ShelfWithBooksFragment @Inject constructor(
                 AppCompatResources.getDrawable(requireContext(), R.drawable.ic_delete_account)
             val intrinsicWidth = deleteIcon!!.intrinsicWidth
             val intrinsicHeight = deleteIcon.intrinsicHeight
-            val swipeBackground = ColorDrawable()
+            val cornerRadius = 32
+            val swipeBackground = ShapeDrawable(
+                RoundRectShape(
+                    floatArrayOf(
+                        0f,
+                        0f,
+                        cornerRadius.toFloat(),
+                        cornerRadius.toFloat(),
+                        cornerRadius.toFloat(),
+                        cornerRadius.toFloat(),
+                        0f,
+                        0f
+                    ), null, null
+                )
+            )
             val swipeBackgroundColor = R.color.md_theme_dark_errorContainer
             val deleteIconColor = R.color.md_theme_dark_onErrorContainer
             val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.DARKEN) }
@@ -66,9 +81,9 @@ class ShelfWithBooksFragment @Inject constructor(
             if (isCanceled) {
                 c.drawRect(
                     itemView.right + dX,
-                    itemView.top.toFloat() - 44,
+                    itemView.top.toFloat(),
                     itemView.right.toFloat(),
-                    itemView.bottom.toFloat() - 44,
+                    itemView.bottom.toFloat(),
                     clearPaint
                 )
                 super.onChildDraw(
@@ -83,20 +98,20 @@ class ShelfWithBooksFragment @Inject constructor(
                 return
             }
 
-            swipeBackground.color = resources.getColor(swipeBackgroundColor, context!!.theme)
+            swipeBackground.paint.color = resources.getColor(swipeBackgroundColor, context!!.theme)
             swipeBackground.setBounds(
                 itemView.right + dX.toInt(),
-                itemView.top - 44,
+                itemView.top,
                 itemView.right,
-                itemView.bottom - 44
+                itemView.bottom
             )
             swipeBackground.draw(c)
 
             val iconMargin = (itemHeight - intrinsicHeight) / 2
-            val iconTop = itemView.top - ((itemHeight / 2.5) - (intrinsicHeight * 3))
+            val iconTop = itemView.top - ((itemHeight / 3.2) - (intrinsicHeight * 2.7))
             val iconLeft = itemView.right - intrinsicWidth - (iconMargin / 2)
             val iconRight = itemView.right - (iconMargin / 3)
-            val iconBottom = itemView.bottom - ((itemHeight * 0.7) - (intrinsicHeight))
+            val iconBottom = itemView.bottom - ((itemHeight * 0.6) - (intrinsicHeight))
 
             deleteIcon.setBounds(iconLeft, iconTop.toInt(), iconRight, iconBottom.toInt())
             deleteIcon.setTint(resources.getColor(deleteIconColor, context!!.theme))

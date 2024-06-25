@@ -9,14 +9,13 @@
         android:id="@+id/navigation_books"
         android:name="com.armutyus.ninova.ui.books.BooksFragment"
         android:label="@string/title_books"
-        tools:layout="@layout/fragment_books">
-    </fragment>
+        tools:layout="@layout/fragment_books" />
 
     <fragment
         android:id="@+id/navigation_discovery"
         android:name="com.armutyus.ninova.ui.discover.DiscoverFragment"
         android:label="@string/title_discover"
-        tools:layout="@layout/fragment_discover" >
+        tools:layout="@layout/fragment_discover">
         <action
             android:id="@+id/action_navigation_discovery_to_navigation_discovery_category"
             app:destination="@id/navigation_discovery_category" />
@@ -26,7 +25,7 @@
         android:id="@+id/navigation_discovery_category"
         android:name="com.armutyus.ninova.ui.discover.DiscoverCategoryFragment"
         android:label="@string/title_discover"
-        tools:layout="@layout/fragment_discover_category" >
+        tools:layout="@layout/fragment_discover_category">
         <argument
             android:name="categoryTitle"
             app:argType="string" />
@@ -36,11 +35,30 @@
         android:id="@+id/navigation_shelves"
         android:name="com.armutyus.ninova.ui.shelves.ShelvesFragment"
         android:label="@string/title_shelves"
-        tools:layout="@layout/fragment_shelves" >
+        tools:layout="@layout/fragment_shelves">
         <action
             android:id="@+id/action_navigation_shelves_to_shelfWithBooksFragment"
             app:destination="@id/shelfWithBooksFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.armutyus.ninova.ui.profile.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_navigation_profile_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_navigation_profile_to_editProfileFragment"
+            app:destination="@id/navigation_edit_profile" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_edit_profile"
+        android:name="com.armutyus.ninova.ui.profile.EditProfileFragment"
+        android:label="@string/edit_profile"
+        tools:layout="@layout/fragment_edit_profile"></fragment>
 
     <fragment
         android:id="@+id/mainSearchFragment"
@@ -56,7 +74,7 @@
     <fragment
         android:id="@+id/shelfWithBooksFragment"
         android:name="com.armutyus.ninova.ui.shelves.ShelfWithBooksFragment"
-        tools:layout="@layout/fragment_shelf_with_books" >
+        tools:layout="@layout/fragment_shelf_with_books">
         <argument
             android:name="currentShelfId"
             app:argType="string" />

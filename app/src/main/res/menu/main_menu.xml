@@ -2,15 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/menu_search"
+    <item
+        android:id="@+id/menu_search"
         android:title="@string/search_button_title"
         android:icon="@drawable/ic_search"
-        app:showAsAction="ifRoom"
-        />
-    <item
-        android:id="@+id/settings"
-        android:title="@string/menu_settings"
-        android:icon="@drawable/ic_settings"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
 </menu>
