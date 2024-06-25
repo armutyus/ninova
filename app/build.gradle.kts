@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -22,8 +23,8 @@ android {
         applicationId = "com.armutyus.ninova"
         minSdk = 26
         targetSdk = 34
-        versionCode = 8
-        versionName = "1.1.2"
+        versionCode = 9
+        versionName = "1.2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -43,8 +44,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    tasks.withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
+    tasks.withType<KotlinCompile>().configureEach {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_1_8)
+        }
     }
 
     buildFeatures {

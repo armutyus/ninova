@@ -48,7 +48,7 @@
         android:id="@+id/usernameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/empty_text"
+        android:text="@string/empty_text_view"
         android:textSize="12sp"
         android:textStyle="bold"
         android:textColor="?attr/colorControlNormal"

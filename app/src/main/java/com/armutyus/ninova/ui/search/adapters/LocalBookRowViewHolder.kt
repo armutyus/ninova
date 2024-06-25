@@ -12,6 +12,7 @@ import com.armutyus.ninova.constants.Cache.currentOpenLibBook
 import com.armutyus.ninova.constants.Constants
 import com.armutyus.ninova.model.googlebooksmodel.DataModel
 import com.bumptech.glide.RequestManager
+import com.google.android.material.card.MaterialCardView
 
 class LocalBookRowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -28,7 +29,7 @@ class LocalBookRowViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             bookAuthor.text = book.bookAuthors?.joinToString(", ")
             bookPages.text = book.bookPages
             bookReleaseDate.text = book.bookPublishedDate
-            setOnClickListener {
+            findViewById<MaterialCardView>(R.id.bookCard).setOnClickListener {
                 bookDetailsIntent.putExtra(
                     Constants.BOOK_TYPE_FOR_DETAILS,
                     Constants.LOCAL_BOOK_TYPE

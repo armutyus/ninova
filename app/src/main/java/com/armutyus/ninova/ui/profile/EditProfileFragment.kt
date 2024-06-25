@@ -37,14 +37,12 @@ import com.armutyus.ninova.databinding.FragmentEditProfileBinding
 import com.bumptech.glide.RequestManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class EditProfileFragment @Inject constructor(
-    auth: FirebaseAuth,
     private val glide: RequestManager
 ) : Fragment(R.layout.fragment_edit_profile) {
 
@@ -54,7 +52,6 @@ class EditProfileFragment @Inject constructor(
     private lateinit var permissionResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
 
-    private val user = auth.currentUser
     private var isBannerImage = false
     private var bannerImageUri: Uri? = null
     private var profileImageUri: Uri? = null
@@ -297,9 +294,7 @@ class EditProfileFragment @Inject constructor(
         val profileBannerUrl = userDocument.getString(PROFILE_BANNER)
         val profileUserName = userDocument.getString(NAME)
 
-        if (profileUserName.isNullOrEmpty()) {
-            fragmentBinding?.usernameEditText?.setText(user?.email?.substringBefore("@"))
-        } else {
+        if (!profileUserName.isNullOrEmpty()) {
             fragmentBinding?.usernameEditText?.setText(profileUserName)
         }
 

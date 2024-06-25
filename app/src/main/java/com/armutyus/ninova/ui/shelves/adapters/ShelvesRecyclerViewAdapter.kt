@@ -16,6 +16,7 @@ import com.armutyus.ninova.ui.shelves.ShelvesFragment
 import com.armutyus.ninova.ui.shelves.ShelvesFragmentDirections
 import com.armutyus.ninova.ui.shelves.ShelvesViewModel
 import com.bumptech.glide.RequestManager
+import com.google.android.material.card.MaterialCardView
 import java.text.SimpleDateFormat
 import java.util.Locale
 import javax.inject.Inject
@@ -60,7 +61,7 @@ class ShelvesRecyclerViewAdapter @Inject constructor(
         val shelfCreatedDate = holder.itemView.findViewById<TextView>(R.id.shelfCreatedDateText)
         val shelf = mainShelfList[position]
 
-        holder.itemView.setOnClickListener {
+        holder.itemView.findViewById<MaterialCardView>(R.id.shelfCard).setOnClickListener {
             currentShelf = shelf
             val action =
                 ShelvesFragmentDirections.actionNavigationShelvesToShelfWithBooksFragment(shelf.shelfId)

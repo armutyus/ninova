@@ -9,9 +9,11 @@
     android:orientation="vertical">
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/shelfCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:focusable="true"
         app:cardElevation="6dp"
         app:contentPadding="16dp">
 
